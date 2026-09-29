@@ -25,6 +25,11 @@ class PinjamController extends Controller
 
     public function getData(Request $request)
     {
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
@@ -54,22 +59,23 @@ class PinjamController extends Controller
 
         $flattenedData = $data_pinjam->flatMap(function ($pinjam) {
             return $pinjam->pinjam_detail->map(function ($detail) use ($pinjam) {
-                $coverUrl = asset('storage/' . ($detail->buku->image ?? 'cover-buku/book-default-cover.jpg'));
+                $coverUrl = asset('storage/'.($detail->buku->image ?? 'cover-buku/book-default-cover.jpg'));
                 $url = route('admin.transaksi.pinjam.kembalikanBuku', ['no_pinjam' => $pinjam->no_pinjam, 'id_buku' => $detail->id_buku]);
+
                 return [
                     'id_buku' => $detail->id_buku,
                     'no_pinjam' => $pinjam->no_pinjam,
                     'tgl_pinjam' => Carbon::parse($pinjam->tgl_pinjam)->format('d-m-Y'),
                     'tgl_kembali' => Carbon::parse($detail->tgl_kembali)->format('d-m-Y'),
-                    'lama_pinjam' => $detail->lama_pinjam . ' hari',
+                    'lama_pinjam' => $detail->lama_pinjam.' hari',
                     'judul_buku' => $detail->buku->judul_buku ?? 'Buku Tidak Ditemukan',
-                    'status' => '<span class="badge badge-info px-2 py-1 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px;">' . $detail->status . '</span>',
-                    'gambar' => '<div class="rounded border p-1 bg-light shadow-sm d-inline-block" style="width: 44px; height: 58px; overflow: hidden;"><img src="' . $coverUrl . '" class="w-100 h-100" style="object-fit: cover; border-radius: 3px;" alt="Cover"></div>',
+                    'status' => '<span class="badge badge-info px-2 py-1 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px;">'.$detail->status.'</span>',
+                    'gambar' => '<div class="rounded border p-1 bg-light shadow-sm d-inline-block" style="width: 44px; height: 58px; overflow: hidden;"><img src="'.$coverUrl.'" class="w-100 h-100" style="object-fit: cover; border-radius: 3px;" alt="Cover"></div>',
                     'anggota' => $pinjam->anggota->nama ?? '-',
                     'petugas' => $pinjam->petugas_pinjam->nama ?? '-',
                     'aksi' => '
-                        <form action="' . $url . '" method="POST" class="d-inline form-kembalikan">
-                            ' . csrf_field() . '
+                        <form action="'.$url.'" method="POST" class="d-inline form-kembalikan">
+                            '.csrf_field().'
                             <input type="hidden" name="_method" value="PUT">
                             <button type="submit" class="btn btn-sm btn-primary shadow-sm font-weight-bold px-3 py-1" style="border-radius: 6px;" data-toggle="tooltip" title="Kembalikan Buku">
                                 <i class="fas fa-undo-alt mr-1"></i> Kembalikan
@@ -95,13 +101,22 @@ class PinjamController extends Controller
 
         DB::transaction(function () use ($request) {
             $id_booking = $request->input('id_booking');
-            $booking = Booking::where('id_booking', $id_booking)->firstOrFail();
+            $booking = Booking::where('id_booking', $id_booking)->lockForUpdate()->firstOrFail();
             $id_user = $booking->id_user;
 
             $todayDate = Carbon::now()->format('ymd');
-            $countToday = Pinjam::whereDate('created_at', Carbon::today())->count();
-            $nextPinjamNumber = str_pad($countToday + 1, 3, '0', STR_PAD_LEFT);
-            $no_pinjam = 'P' . $todayDate . $nextPinjamNumber;
+            $prefix = 'P'.$todayDate;
+            $existing = Pinjam::where('no_pinjam', 'like', $prefix.'%')
+                ->lockForUpdate()
+                ->pluck('no_pinjam');
+            $maxSeq = 0;
+            foreach ($existing as $np) {
+                $seq = intval(substr($np, strlen($prefix)));
+                if ($seq > $maxSeq) {
+                    $maxSeq = $seq;
+                }
+            }
+            $no_pinjam = $prefix.str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
 
             $tgl_pinjam = Carbon::now();
             $status = 'Pinjam';
@@ -117,13 +132,11 @@ class PinjamController extends Controller
 
             $bookingDetails = BookingDetail::where('id_booking', $id_booking)->get();
 
-            foreach ($request->input('denda') as $index => $denda) {
-                if (!isset($bookingDetails[$index])) {
-                    continue;
-                }
-                $id_buku = $bookingDetails[$index]->id_buku;
-                $lama_pinjam = $request->input('lama')[$index];
-                $tgl_kembali = Carbon::parse($tgl_pinjam)->addDays((int)$lama_pinjam);
+            foreach ($bookingDetails as $detail) {
+                $id_buku = $detail->id_buku;
+                $lama_pinjam = $request->input("lama.{$id_buku}") ?? $request->input('lama.0') ?? 7;
+                $denda = $request->input("denda.{$id_buku}") ?? $request->input('denda.0') ?? 1000;
+                $tgl_kembali = Carbon::parse($tgl_pinjam)->addDays((int) $lama_pinjam);
 
                 PinjamDetail::create([
                     'no_pinjam' => $no_pinjam,
@@ -135,16 +148,10 @@ class PinjamController extends Controller
                     'status' => $status,
                 ]);
 
-                // Update stok buku
-                $buku = Buku::find($id_buku);
-                if ($buku) {
-                    $buku->dibooking = max(0, $buku->dibooking - 1);
-                    $buku->dipinjam = $buku->dipinjam + 1;
-                    $buku->save();
-                }
+                DB::table('buku')->where('id', $id_buku)->where('dibooking', '>', 0)->decrement('dibooking');
+                DB::table('buku')->where('id', $id_buku)->increment('dipinjam');
             }
 
-            // Hapus data dari tabel booking dan booking_detail
             BookingDetail::where('id_booking', $id_booking)->delete();
             Booking::where('id_booking', $id_booking)->delete();
         });
@@ -154,45 +161,44 @@ class PinjamController extends Controller
 
     public function kembalikanBuku($no_pinjam, $id_buku)
     {
-        $pinjamDetail = PinjamDetail::where('no_pinjam', $no_pinjam)
-            ->where('id_buku', $id_buku)
-            ->where('status', 'Pinjam')
-            ->first();
+        return DB::transaction(function () use ($no_pinjam, $id_buku) {
+            $pinjamDetail = PinjamDetail::where('no_pinjam', $no_pinjam)
+                ->where('id_buku', $id_buku)
+                ->where('status', 'Pinjam')
+                ->lockForUpdate()
+                ->first();
 
-        if ($pinjamDetail) {
-            $now = Carbon::now();
-            $tgl_kembali = Carbon::parse($pinjamDetail->tgl_kembali);
+            if ($pinjamDetail) {
+                $now = Carbon::now();
+                $today = Carbon::today();
+                $tgl_kembali = Carbon::parse($pinjamDetail->tgl_kembali)->startOfDay();
 
-            // Hitung denda keterlambatan jika ada
-            $terlambat = max(0, $now->diffInDays($tgl_kembali, false) * -1);
-            $totalDenda = $terlambat * $pinjamDetail->denda;
+                // Hitung denda keterlambatan jika tanggal pengembalian melewati tanggal jatuh tempo
+                $terlambat = $today->greaterThan($tgl_kembali) ? (int) $tgl_kembali->diffInDays($today) : 0;
+                $totalDenda = $terlambat * $pinjamDetail->denda;
 
-            $pinjamDetail->tgl_pengembalian = $now;
-            $pinjamDetail->status = 'Kembali';
-            $pinjamDetail->id_petugas_kembali = Auth::id();
-            $pinjamDetail->save();
+                $pinjamDetail->tgl_pengembalian = $now;
+                $pinjamDetail->status = 'Kembali';
+                $pinjamDetail->id_petugas_kembali = Auth::id();
+                $pinjamDetail->total_denda = $totalDenda;
+                $pinjamDetail->save();
 
-            // Update status buku
-            $buku = Buku::find($id_buku);
-            if ($buku) {
-                $buku->dipinjam = max(0, $buku->dipinjam - 1);
-                $buku->stok += 1;
-                $buku->save();
+                // Update stok buku: decrement dipinjam, increment stok
+                DB::table('buku')->where('id', $id_buku)->where('dipinjam', '>', 0)->decrement('dipinjam');
+                DB::table('buku')->where('id', $id_buku)->increment('stok');
+
+                // Update total denda di tabel pinjam
+                if ($totalDenda > 0) {
+                    DB::table('pinjam')->where('no_pinjam', $no_pinjam)->increment('total_denda', $totalDenda);
+                }
+
+                return response()->json([
+                    'success' => 'Buku berhasil dikembalikan.'.($totalDenda > 0 ? ' Denda keterlambatan: Rp '.number_format($totalDenda, 0, ',', '.') : ''),
+                ]);
             }
 
-            // Update total denda di tabel pinjam
-            $pinjam = Pinjam::where('no_pinjam', $no_pinjam)->first();
-            if ($pinjam && $totalDenda > 0) {
-                $pinjam->total_denda += $totalDenda;
-                $pinjam->save();
-            }
-
-            return response()->json([
-                'success' => 'Buku berhasil dikembalikan.' . ($totalDenda > 0 ? " Denda keterlambatan: Rp " . number_format($totalDenda, 0, ',', '.') : '')
-            ]);
-        }
-
-        return response()->json(['error' => 'Detail pinjaman tidak ditemukan atau sudah dikembalikan.'], 404);
+            return response()->json(['error' => 'Detail pinjaman tidak ditemukan atau sudah dikembalikan.'], 404);
+        });
     }
 
     public function pengembalian_index()
@@ -211,8 +217,13 @@ class PinjamController extends Controller
 
     public function exportPdfPinjam(Request $request)
     {
-        $startDate = $request->start_date ? Carbon::parse($request->start_date)->startOfDay() : null;
-        $endDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : null;
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
+        $startDate = $request->filled('start_date') ? Carbon::parse($request->start_date)->startOfDay() : null;
+        $endDate = $request->filled('end_date') ? Carbon::parse($request->end_date)->endOfDay() : null;
 
         $query = Pinjam::with(['pinjam_detail.buku', 'pinjam_detail.petugas_kembali', 'petugas_pinjam', 'anggota'])
             ->whereHas('pinjam_detail', function ($q) {
@@ -226,11 +237,17 @@ class PinjamController extends Controller
         $data_pinjam = $query->orderBy('no_pinjam', 'DESC')->get();
 
         $pdf = Pdf::loadView('admin.pinjam.pinjam_pdf', compact('data_pinjam'));
+
         return $pdf->download('transaksi_pinjam.pdf');
     }
 
     public function exportExcelPinjam(Request $request)
     {
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 

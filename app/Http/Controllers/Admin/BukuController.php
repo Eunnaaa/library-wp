@@ -13,12 +13,14 @@ class BukuController extends Controller
     public function index()
     {
         $buku = Buku::with('kategori')->latest()->paginate(10);
+
         return view('admin.buku.index', compact('buku'));
     }
 
     public function create()
     {
         $kategori = Kategori::all();
+
         return view('admin.buku.create', compact('kategori'));
     }
 
@@ -69,12 +71,14 @@ class BukuController extends Controller
     public function show(Buku $buku)
     {
         $buku->load('kategori');
+
         return view('admin.buku.show', compact('buku'));
     }
 
     public function edit(Buku $buku)
     {
         $kategori = Kategori::all();
+
         return view('admin.buku.edit', compact('buku', 'kategori'));
     }
 
@@ -87,8 +91,10 @@ class BukuController extends Controller
             'penerbit' => 'required|string|max:64',
             'tahun_terbit' => 'required|digits:4',
             'isbn' => 'required|string|max:64',
-            'stok' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,jpg,png|max:1024',
+        ], [
+            'stok.min' => 'Stok tidak boleh kurang dari 0.',
         ]);
 
         $data = [
@@ -102,7 +108,7 @@ class BukuController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            if ($buku->image && !str_contains($buku->image, 'book-default')) {
+            if ($buku->image && ! str_contains($buku->image, 'book-default')) {
                 Storage::disk('public')->delete($buku->image);
             }
             $data['image'] = $request->file('image')->store('cover-buku', 'public');
@@ -115,7 +121,11 @@ class BukuController extends Controller
 
     public function destroy(Buku $buku)
     {
-        if ($buku->image && !str_contains($buku->image, 'book-default')) {
+        if ($buku->dibooking > 0 || $buku->dipinjam > 0) {
+            return redirect()->route('admin.master.buku.index')->with('error', 'Buku tidak dapat dihapus karena masih sedang dipinjam atau dibooking.');
+        }
+
+        if ($buku->image && ! str_contains($buku->image, 'book-default')) {
             Storage::disk('public')->delete($buku->image);
         }
 

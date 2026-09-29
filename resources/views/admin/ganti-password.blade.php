@@ -18,6 +18,7 @@
 
                 <form action="{{ route('admin.ganti-password') }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="card-body px-4 pt-3">
                         <div class="alert alert-warning border-0 rounded-lg shadow-sm mb-4 small" style="background-color: #fefce8; color: #854d0e; border-left: 4px solid #f59e0b !important;">
                             <i class="fas fa-info-circle mr-1"></i>

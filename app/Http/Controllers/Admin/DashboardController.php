@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Buku;
 use App\Models\Booking;
+use App\Models\Buku;
 use App\Models\Kategori;
 use App\Models\Pinjam;
 use App\Models\User;
@@ -43,6 +43,7 @@ class DashboardController extends Controller
     public function profil()
     {
         $user = Auth::user();
+
         return view('admin.profil', compact('user'));
     }
 
@@ -100,7 +101,7 @@ class DashboardController extends Controller
 
         $user = User::findOrFail(Auth::id());
 
-        if (!Hash::check($request->password_sekarang, $user->password)) {
+        if (! Hash::check($request->password_sekarang, $user->password)) {
             return redirect()->back()->with('error', 'Password saat ini salah!');
         }
 
@@ -109,7 +110,7 @@ class DashboardController extends Controller
         }
 
         $user->update([
-            'password' => Hash::make($request->password_baru),
+            'password' => $request->password_baru,
         ]);
 
         return redirect()->back()->with('success', 'Password berhasil diubah!');

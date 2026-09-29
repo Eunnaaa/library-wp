@@ -23,7 +23,7 @@
                 @auth
                     @if(Auth::user()->role_id == 2)
                         <li class="nav-item {{ request()->is('member/data-booking*') ? 'active' : '' }}">
-                            <a class="nav-link text-light font-weight-500 px-3 {{ request()->is('member/data-booking*') ? 'text-primary font-weight-bold' : 'opacity-80' }}" href="{{ route('member.dataBooking', Auth::id()) }}">
+                            <a class="nav-link text-light font-weight-500 px-3 {{ request()->is('member/data-booking*') ? 'text-primary font-weight-bold' : 'opacity-80' }}" href="{{ route('member.dataBooking') }}">
                                 <i class="fas fa-receipt mr-1 text-warning"></i> Bukti Booking
                             </a>
                         </li>
@@ -38,7 +38,7 @@
                             $cartCount = \App\Models\Temp::where('id_user', Auth::id())->count();
                         @endphp
                         <li class="nav-item mr-lg-3 mb-2 mb-lg-0 w-100 w-lg-auto">
-                            <a class="btn btn-sm d-flex align-items-center justify-content-center" href="{{ route('member.dataKeranjang', Auth::id()) }}"
+                            <a class="btn btn-sm d-flex align-items-center justify-content-center" href="{{ route('member.dataKeranjang') }}"
                                 style="background: rgba(255, 255, 255, 0.08); color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 0.4rem 1rem;">
                                 <i class="fas fa-shopping-basket mr-2 text-info"></i>
                                 <span>Keranjang</span>

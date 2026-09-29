@@ -15,7 +15,7 @@
                         <small class="text-muted">Tunjukkan tanda bukti ini kepada staf sirkulasi perpustakaan UNM.</small>
                     </div>
                     @if(isset($data_booking[0]))
-                        <a href="{{ route('member.bookingPdf', $data_booking[0]->id_user) }}" target="_blank" class="btn btn-danger btn-sm font-weight-bold px-3 py-2 shadow-sm" style="border-radius: 8px;">
+                        <a href="{{ route('member.bookingPdf') }}" target="_blank" class="btn btn-danger btn-sm font-weight-bold px-3 py-2 shadow-sm" style="border-radius: 8px;">
                             <i class="fas fa-file-pdf mr-1"></i> Unduh Bukti Booking (PDF)
                         </a>
                     @endif

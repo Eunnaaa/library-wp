@@ -24,9 +24,9 @@ class MemberController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('judul_buku', 'like', '%' . $request->keyword . '%')
-                  ->orWhere('pengarang', 'like', '%' . $request->keyword . '%')
-                  ->orWhere('penerbit', 'like', '%' . $request->keyword . '%');
+                $q->where('judul_buku', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('pengarang', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('penerbit', 'like', '%'.$request->keyword.'%');
             });
         }
 
@@ -44,12 +44,14 @@ class MemberController extends Controller
     public function detailBuku(Buku $buku)
     {
         $detailBuku = Buku::with('kategori')->find($buku->id);
+
         return response()->json($detailBuku);
     }
 
     public function tampilProfil()
     {
         $user = Auth::user();
+
         return view('member.profil', compact('user'));
     }
 
@@ -106,7 +108,7 @@ class MemberController extends Controller
 
         $user = User::findOrFail(Auth::id());
 
-        if (!Hash::check($request->password_sekarang, $user->password)) {
+        if (! Hash::check($request->password_sekarang, $user->password)) {
             return redirect()->back()->with('error', 'Password saat ini salah!');
         }
 
@@ -115,7 +117,7 @@ class MemberController extends Controller
         }
 
         $user->update([
-            'password' => Hash::make($request->password_baru),
+            'password' => $request->password_baru,
         ]);
 
         return redirect()->back()->with('success', 'Password Anda berhasil diubah!');

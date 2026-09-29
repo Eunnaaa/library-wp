@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
+use App\Models\Pinjam;
+use App\Models\PinjamDetail;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -12,6 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()->paginate(10);
+
         return view('admin.user.index', compact('users'));
     }
 
@@ -49,7 +52,7 @@ class UserController extends Controller
             'nama' => $request->nama,
             'email' => $request->email,
             'alamat' => $request->alamat,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'role_id' => $request->role_id,
             'is_active' => $request->is_active,
             'image' => $imagePath,
@@ -72,13 +75,22 @@ class UserController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:128',
-            'email' => 'required|string|email|max:128|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:128|unique:users,email,'.$user->id,
             'alamat' => 'required|string',
             'role_id' => 'required|in:1,2',
             'is_active' => 'required|in:0,1',
             'image' => 'nullable|image|mimes:jpeg,jpg,png|max:1024',
             'password' => 'nullable|string|min:6',
         ]);
+
+        if ($user->id === auth()->id()) {
+            if ((int) $request->role_id !== 1) {
+                return redirect()->back()->withInput()->with('error', 'Anda tidak dapat mengubah role akun administrator Anda sendiri.');
+            }
+            if ((int) $request->is_active !== 1) {
+                return redirect()->back()->withInput()->with('error', 'Anda tidak dapat menonaktifkan akun Anda sendiri.');
+            }
+        }
 
         $data = [
             'nama' => $request->nama,
@@ -89,7 +101,7 @@ class UserController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $data['password'] = $request->password;
         }
 
         if ($request->hasFile('image')) {
@@ -106,6 +118,24 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.master.user.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        if ($user->role_id == 1 && User::where('role_id', 1)->count() <= 1) {
+            return redirect()->route('admin.master.user.index')->with('error', 'Tidak dapat menghapus administrator terakhir dalam sistem.');
+        }
+
+        $hasActiveBookings = Booking::where('id_user', $user->id)->count() > 0;
+        $hasActiveLoans = PinjamDetail::whereIn(
+            'no_pinjam',
+            Pinjam::where('id_user', $user->id)->pluck('no_pinjam')
+        )->where('status', 'Pinjam')->count() > 0;
+
+        if ($hasActiveBookings || $hasActiveLoans) {
+            return redirect()->route('admin.master.user.index')->with('error', 'User tidak dapat dihapus karena masih memiliki booking atau pinjaman aktif.');
+        }
+
         if ($user->image && $user->image !== 'profil-pic/default.jpg') {
             Storage::disk('public')->delete($user->image);
         }

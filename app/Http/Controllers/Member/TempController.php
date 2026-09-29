@@ -18,6 +18,11 @@ class TempController extends Controller
     {
         $userId = Auth::id();
 
+        // Validasi input buku ID
+        $request->validate([
+            'id' => 'required|integer|exists:buku,id',
+        ]);
+
         // Cek apakah buku yang diklik booking dengan user yang sedang login sudah ada di tabel temp
         $cek_keranjang = Temp::where(['id_buku' => $request->id, 'id_user' => $userId])->count();
         $cek_pinjam = DB::table('pinjam as a')
@@ -66,29 +71,33 @@ class TempController extends Controller
         return redirect()->route('member.index')->with('success', 'Buku berhasil ditambahkan ke keranjang!');
     }
 
-    public function dataKeranjang(User $user)
+    public function dataKeranjang(?User $user = null)
     {
-        if (Auth::id() !== $user->id && Auth::user()->role_id !== 1) {
-            abort(403, 'Akses ditolak! Anda tidak dapat melihat keranjang pengguna lain.');
+        if ($user && $user->id !== Auth::id()) {
+            abort(403, 'Akses ditolak.');
         }
 
+        $user = Auth::user();
         $temp = Temp::with('buku.kategori')->where('id_user', $user->id)->get();
+
         return view('member.keranjang', compact('temp', 'user'));
     }
 
-    public function hapusKeranjang($buku, $user)
+    public function hapusKeranjang($buku, ?User $user = null)
     {
-        if (Auth::id() != $user && Auth::user()->role_id !== 1) {
-            abort(403, 'Akses ditolak! Anda tidak dapat menghapus keranjang pengguna lain.');
+        if ($user && $user->id !== Auth::id()) {
+            abort(403, 'Akses ditolak.');
         }
 
-        Temp::where(['id_buku' => $buku, 'id_user' => $user])->delete();
+        $userId = Auth::id();
+        $bookId = $buku instanceof Buku ? $buku->id : $buku;
+        Temp::where(['id_buku' => $bookId, 'id_user' => $userId])->delete();
+
         return redirect()->back()->with('success', 'Buku berhasil dihapus dari keranjang!');
     }
 
     public function simpanBooking(Request $request)
     {
-        // Selalu gunakan ID user yang sedang terotentikasi untuk keamanan
         $userId = Auth::id();
         $cek_stok = Temp::with('buku')->where('id_user', $userId)->get();
 
@@ -96,44 +105,58 @@ class TempController extends Controller
             return redirect()->back()->with('error', 'Keranjang buku Anda masih kosong.');
         }
 
-        // Loop melalui setiap buku untuk memeriksa stok
-        foreach ($cek_stok as $item) {
-            if ($item->buku->stok <= 0) {
-                return redirect()->back()->with('error', 'Ada buku yang stoknya kosong, silakan hapus terlebih dahulu.');
-            }
+        if ($cek_stok->count() > 3) {
+            return redirect()->back()->with('error', 'Jumlah buku yang dibooking melebihi batas maksimal (3 buku).');
         }
 
-        // Generate id_booking
-        $today = Carbon::today()->format('ymd');
-
-        // Mendapatkan id_booking terbaru dari tabel booking
-        $latestBooking = DB::table('booking')
-            ->whereDate('tgl_booking', Carbon::today())
-            ->orderBy('id', 'desc')
-            ->first();
-
-        $latestBookingId = $latestBooking ? intval(substr($latestBooking->id_booking, -3)) : 0;
-
-        // Mendapatkan id_booking terbaru dari tabel pinjam
-        $latestPinjam = DB::table('pinjam')
-            ->whereDate('tgl_pinjam', Carbon::today())
-            ->orderBy('id', 'desc')
-            ->first();
-
-        $latestPinjamId = $latestPinjam ? intval(substr($latestPinjam->id_booking, -3)) : 0;
-
-        // Bandingkan id_booking dari kedua tabel
-        $latestIdBooking = max($latestBookingId, $latestPinjamId);
-
-        // Membuat id_booking baru format B<ymd><001>
-        $newIdBooking = 'B' . $today . str_pad($latestIdBooking + 1, 3, '0', STR_PAD_LEFT);
-
-        // Tanggal booking dan batas ambil (1 hari)
-        $tgl_booking = Carbon::now();
-        $batas_ambil = $tgl_booking->copy()->addDay();
+        $bookIds = $cek_stok->pluck('id_buku')->toArray();
 
         DB::beginTransaction();
         try {
+            $books = Buku::whereIn('id', $bookIds)->lockForUpdate()->get()->keyBy('id');
+
+            foreach ($cek_stok as $item) {
+                $book = $books->get($item->id_buku);
+                if (! $book || $book->stok <= 0) {
+                    DB::rollBack();
+
+                    return redirect()->back()->with('error', 'Ada buku yang stoknya kosong, silakan hapus terlebih dahulu.');
+                }
+            }
+
+            $today = Carbon::today()->format('ymd');
+            $prefix = 'B'.$today;
+            $maxSeq = 0;
+
+            $existingBookings = DB::table('booking')
+                ->where('id_booking', 'like', $prefix.'%')
+                ->lockForUpdate()
+                ->pluck('id_booking');
+
+            foreach ($existingBookings as $ib) {
+                $seq = intval(substr($ib, strlen($prefix)));
+                if ($seq > $maxSeq) {
+                    $maxSeq = $seq;
+                }
+            }
+
+            $existingPinjams = DB::table('pinjam')
+                ->where('id_booking', 'like', $prefix.'%')
+                ->lockForUpdate()
+                ->pluck('id_booking');
+
+            foreach ($existingPinjams as $ib) {
+                $seq = intval(substr($ib, strlen($prefix)));
+                if ($seq > $maxSeq) {
+                    $maxSeq = $seq;
+                }
+            }
+
+            $newIdBooking = $prefix.str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
+
+            $tgl_booking = Carbon::now();
+            $batas_ambil = $tgl_booking->copy()->addDay();
+
             DB::table('booking')->insert([
                 'id_booking' => $newIdBooking,
                 'tgl_booking' => $tgl_booking,
@@ -151,14 +174,20 @@ class TempController extends Controller
                     'updated_at' => now(),
                 ]);
 
-                // Update stok buku dan kolom dibooking
-                DB::table('buku')->where('id', $item->id_buku)->update([
-                    'stok' => DB::raw('stok - 1'),
-                    'dibooking' => DB::raw('dibooking + 1'),
-                ]);
+                $affected = DB::table('buku')
+                    ->where('id', $item->id_buku)
+                    ->where('stok', '>', 0)
+                    ->decrement('stok');
+
+                if (! $affected) {
+                    DB::rollBack();
+
+                    return redirect()->back()->with('error', 'Stok buku tidak mencukupi untuk booking.');
+                }
+
+                DB::table('buku')->where('id', $item->id_buku)->increment('dibooking');
             }
 
-            // Hapus data dari tabel temp
             Temp::where('id_user', $userId)->delete();
 
             DB::commit();
@@ -166,7 +195,8 @@ class TempController extends Controller
             return redirect()->route('member.dataBooking', $userId)->with('success', 'Booking berhasil disimpan!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan booking: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan booking.');
         }
     }
 }

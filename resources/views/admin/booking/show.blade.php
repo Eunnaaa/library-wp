@@ -108,13 +108,13 @@
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text bg-light font-weight-semibold">Rp</span>
                                                             </div>
-                                                            <input type="number" class="form-control" name="denda[]" value="1000" min="0" step="500" required>
+                                                            <input type="number" class="form-control" name="denda[{{ $detail->id_buku }}]" value="1000" min="0" step="500" required>
                                                         </div>
                                                         <small class="text-muted">Per hari keterlambatan</small>
                                                     </td>
                                                     <td class="align-middle">
                                                         <div class="input-group input-group-sm">
-                                                            <input type="number" class="form-control text-center font-weight-bold" name="lama[]" value="7" min="1" max="30" required>
+                                                            <input type="number" class="form-control text-center font-weight-bold" name="lama[{{ $detail->id_buku }}]" value="7" min="1" max="30" required>
                                                             <div class="input-group-append">
                                                                 <span class="input-group-text bg-light">Hari</span>
                                                             </div>

@@ -73,7 +73,7 @@
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <form action="{{ route('member.hapusKeranjang', ['buku' => $item->id_buku, 'user' => auth()->user()->id]) }}" method="POST"
+                                                <form action="{{ route('member.hapusKeranjang', ['buku' => $item->id_buku]) }}" method="POST"
                                                     onsubmit="return confirm('Hapus buku ini dari keranjang?');">
                                                     @csrf
                                                     @method('DELETE')

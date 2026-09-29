@@ -6,7 +6,6 @@ use App\Models\Buku;
 use App\Models\Kategori;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'nama' => 'Administrator E-Library',
             'email' => 'admin@gmail.com',
             'alamat' => 'Jl. Kramat Raya No. 98, Senen, Jakarta Pusat',
-            'password' => Hash::make('admin123'),
+            'password' => 'admin123',
             'role_id' => 1,
             'is_active' => 1,
             'image' => 'profil-pic/default.jpg',
@@ -31,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'nama' => 'Gary Hardyansyah',
             'email' => 'gary@gmail.com',
             'alamat' => 'Jl. Dago Asri No. 12, Bandung',
-            'password' => Hash::make('12345678'),
+            'password' => '12345678',
             'role_id' => 2,
             'is_active' => 1,
             'image' => 'profil-pic/default.jpg',

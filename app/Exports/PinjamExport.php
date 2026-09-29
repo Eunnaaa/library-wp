@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class PinjamExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $startDate;
+
     protected $endDate;
 
     public function __construct($startDate = null, $endDate = null)
@@ -46,6 +47,7 @@ class PinjamExport implements FromCollection, WithHeadings, WithMapping
                 $row->petugas_pinjam->nama ?? 'Tidak Ada Petugas',
             ];
         }
+
         return $mappedRows;
     }
 

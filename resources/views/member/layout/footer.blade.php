@@ -22,8 +22,8 @@
                     <li><a href="{{ url('/') }}" class="text-muted text-decoration-none hover-white"><i class="fas fa-chevron-right mr-1 text-primary" style="font-size: 0.65rem;"></i> Katalog Buku Lengkap</a></li>
                     @auth
                         @if(Auth::user()->role_id == 2)
-                            <li><a href="{{ route('member.dataBooking', Auth::id()) }}" class="text-muted text-decoration-none"><i class="fas fa-chevron-right mr-1 text-primary" style="font-size: 0.65rem;"></i> Riwayat Booking Aktif</a></li>
-                            <li><a href="{{ route('member.dataKeranjang', Auth::id()) }}" class="text-muted text-decoration-none"><i class="fas fa-chevron-right mr-1 text-primary" style="font-size: 0.65rem;"></i> Keranjang Peminjaman</a></li>
+                            <li><a href="{{ route('member.dataBooking') }}" class="text-muted text-decoration-none"><i class="fas fa-chevron-right mr-1 text-primary" style="font-size: 0.65rem;"></i> Riwayat Booking Aktif</a></li>
+                            <li><a href="{{ route('member.dataKeranjang') }}" class="text-muted text-decoration-none"><i class="fas fa-chevron-right mr-1 text-primary" style="font-size: 0.65rem;"></i> Keranjang Peminjaman</a></li>
                         @endif
                     @else
                         <li><a href="{{ route('login') }}" class="text-muted text-decoration-none"><i class="fas fa-chevron-right mr-1 text-primary" style="font-size: 0.65rem;"></i> Masuk Akun Anggota</a></li>

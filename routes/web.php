@@ -1,23 +1,23 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\BukuController as AdminBukuController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\KategoriController as AdminKategoriController;
-use App\Http\Controllers\Admin\BukuController as AdminBukuController;
-use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Member\BookingController as MemberBookingController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Member\TempController;
-use App\Http\Controllers\Member\BookingController as MemberBookingController;
 use App\Http\Controllers\PinjamController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 // Public & Catalog
 Route::get('/', [MemberController::class, 'index'])->name('member.index')->middleware('isMember');
 Route::get('detail-buku/{buku}', [MemberController::class, 'detailBuku'])->name('member.detailBuku')->middleware('isMember');
 
 // Guest Authentication Routes
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'throttle:5,1'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
@@ -26,8 +26,7 @@ Route::middleware('guest')->group(function () {
 
 // Authenticated Logout
 Route::middleware('auth')->group(function () {
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // Member Routes
@@ -40,11 +39,11 @@ Route::middleware(['auth', 'isMember'])->group(function () {
 
         // Keranjang & Booking
         Route::post('tambah-ke-keranjang', [TempController::class, 'tambahKeranjang'])->name('tambahKeranjang');
-        Route::get('data-keranjang/{user}', [TempController::class, 'dataKeranjang'])->name('dataKeranjang');
-        Route::delete('hapus-keranjang/{buku}/{user}', [TempController::class, 'hapusKeranjang'])->name('hapusKeranjang');
+        Route::get('data-keranjang/{user?}', [TempController::class, 'dataKeranjang'])->name('dataKeranjang');
+        Route::delete('hapus-keranjang/{buku}/{user?}', [TempController::class, 'hapusKeranjang'])->name('hapusKeranjang');
         Route::post('simpan-booking', [TempController::class, 'simpanBooking'])->name('simpanBooking');
-        Route::get('data-booking/{user}', [MemberBookingController::class, 'dataBooking'])->name('dataBooking');
-        Route::get('booking-pdf/{user}', [MemberBookingController::class, 'bookingPdf'])->name('bookingPdf');
+        Route::get('data-booking/{user?}', [MemberBookingController::class, 'dataBooking'])->name('dataBooking');
+        Route::get('booking-pdf/{user?}', [MemberBookingController::class, 'bookingPdf'])->name('bookingPdf');
     });
 });
 
@@ -55,7 +54,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
         Route::get('/profil', [AdminDashboardController::class, 'profil'])->name('profil');
         Route::put('/profil', [AdminDashboardController::class, 'updateProfil']);
         Route::get('/ganti-password', [AdminDashboardController::class, 'tampilGantiPassword'])->name('ganti-password');
-        Route::post('/ganti-password', [AdminDashboardController::class, 'updateGantiPassword']);
+        Route::put('/ganti-password', [AdminDashboardController::class, 'updateGantiPassword']);
 
         // Data Master
         Route::prefix('master')->name('master.')->group(function () {
