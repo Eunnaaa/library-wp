@@ -80,7 +80,11 @@
                                 </a>
                             @endif
                             <div class="dropdown-divider my-2"></div>
-                            <a class="dropdown-item rounded py-2 text-danger" href="{{ route('logout') }}">
+                            <form id="member-logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                            <a class="dropdown-item rounded py-2 text-danger" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('member-logout-form').submit();">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Keluar
                             </a>
                         </div>

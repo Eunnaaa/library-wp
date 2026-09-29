@@ -28,7 +28,13 @@
             <a class="dropdown-item rounded py-2 small" href="{{ route('admin.profil') }}"><i class="fas fa-user-circle mr-2 text-primary"></i> Profil Saya</a>
             <a class="dropdown-item rounded py-2 small" href="{{ route('admin.ganti-password') }}"><i class="fas fa-key mr-2 text-warning"></i> Ganti Password</a>
             <div class="dropdown-divider my-1"></div>
-            <a class="dropdown-item rounded py-2 small text-danger" href="{{ route('logout') }}"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+            <form id="admin-logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+            <a class="dropdown-item rounded py-2 small text-danger" href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </a>
         </div>
     </li>
 </ul>

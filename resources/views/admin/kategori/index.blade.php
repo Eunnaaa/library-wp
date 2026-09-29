@@ -72,23 +72,29 @@
 
 <!-- Modal Tambah -->
 <div class="modal fade" id="modalTambah" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px; overflow: hidden;">
             <form action="{{ route('admin.master.kategori.store') }}" method="POST">
                 @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-plus-circle mr-1"></i> Tambah Kategori Buku</h5>
+                <div class="modal-header bg-white py-3 border-bottom">
+                    <h5 class="modal-title font-weight-bold text-dark"><i class="fas fa-plus-circle text-primary mr-2"></i> Tambah Kategori Buku</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="nama_kategori">Nama Kategori <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" placeholder="Contoh: Pemrograman Web" required>
+                <div class="modal-body p-4 bg-white">
+                    <div class="form-group mb-0">
+                        <label for="nama_kategori" class="font-weight-bold text-muted small text-uppercase">Nama Kategori <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-white"><i class="fas fa-tag text-muted"></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" placeholder="Contoh: Pemrograman Web" required>
+                        </div>
+                        <small class="text-muted mt-1 d-block">Masukkan nama klasifikasi buku perpustakaan.</small>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
+                <div class="modal-footer bg-light border-top py-3 px-4 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary px-4 font-weight-bold shadow-sm"><i class="fas fa-save mr-1"></i> Simpan Kategori</button>
                 </div>
             </form>
         </div>
@@ -97,24 +103,29 @@
 
 <!-- Modal Edit -->
 <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px; overflow: hidden;">
             <form id="formEdit" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-edit mr-1"></i> Edit Kategori Buku</h5>
+                <div class="modal-header bg-white py-3 border-bottom">
+                    <h5 class="modal-title font-weight-bold text-dark"><i class="fas fa-edit text-warning mr-2"></i> Edit Kategori Buku</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="edit_nama_kategori">Nama Kategori <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="edit_nama_kategori" name="nama_kategori" required>
+                <div class="modal-body p-4 bg-white">
+                    <div class="form-group mb-0">
+                        <label for="edit_nama_kategori" class="font-weight-bold text-muted small text-uppercase">Nama Kategori <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-white"><i class="fas fa-tag text-muted"></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="edit_nama_kategori" name="nama_kategori" required>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-warning"><i class="fas fa-save mr-1"></i> Perbarui</button>
+                <div class="modal-footer bg-light border-top py-3 px-4 d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary font-weight-bold" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning px-4 font-weight-bold shadow-sm" style="color: #78350f;"><i class="fas fa-save mr-1"></i> Perbarui</button>
                 </div>
             </form>
         </div>

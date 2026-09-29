@@ -87,14 +87,12 @@
                                             </td>
                                             <td class="align-middle">
                                                 @php
-                                                    $tglKembali = \Carbon\Carbon::parse($detail->tgl_kembali);
-                                                    $tglPengembalian = $detail->tgl_pengembalian ? \Carbon\Carbon::parse($detail->tgl_pengembalian) : now();
-                                                    $terlambat = max(0, $tglPengembalian->diffInDays($tglKembali, false) * -1);
-                                                    $totalDenda = $terlambat * $detail->denda;
+                                                    $totalDenda = (int) ($detail->total_denda ?? 0);
+                                                    $terlambat = ($detail->denda > 0 && $totalDenda > 0) ? (int) ceil($totalDenda / $detail->denda) : 0;
                                                 @endphp
 
                                                 @if($totalDenda > 0)
-                                                    <div class="p-2 rounded bg-light border border-danger-light">
+                                                    <div class="p-2 rounded bg-light border border-danger">
                                                         <span class="badge badge-danger px-2 py-1 mb-1">
                                                             <i class="fas fa-exclamation-circle mr-1"></i>Terlambat {{ $terlambat }} Hari
                                                         </span>

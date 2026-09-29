@@ -26,7 +26,7 @@ Route::middleware(['guest', 'throttle:5,1'])->group(function () {
 
 // Authenticated Logout
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // Member Routes

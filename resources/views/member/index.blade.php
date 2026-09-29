@@ -73,7 +73,12 @@
                 <span class="text-secondary">
                     Menampilkan hasil pencarian untuk:
                     @if(request('keyword')) <strong>"{{ request('keyword') }}"</strong> @endif
-                    @if(request('kategori')) <span class="badge badge-info ml-1">Kategori ID: {{ request('kategori') }}</span> @endif
+                    @if(request('kategori'))
+                        @php
+                            $selectedKat = $kategori->firstWhere('id', request('kategori'));
+                        @endphp
+                        <span class="badge badge-info ml-1">Kategori: {{ $selectedKat ? $selectedKat->nama_kategori : request('kategori') }}</span>
+                    @endif
                 </span>
             </div>
             <a href="{{ route('member.index') }}" class="btn btn-sm btn-outline-secondary font-weight-bold">
@@ -270,13 +275,14 @@
                 $('#penerbit').html(data.penerbit);
                 $('#tahun_terbit').html(data.tahun_terbit);
                 $('#isbn').html(data.isbn);
-                $('#stok').html('<span class="badge badge-success">' + data.stok + ' Eksemplar</span>');
 
                 $('#modalBookId').val(data.id);
 
                 if (data.stok > 0) {
+                    $('#stok').html('<span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Tersedia ' + data.stok + ' Eksemplar</span>');
                     $('#btnTambahKeranjangModal').removeClass('d-none');
                 } else {
+                    $('#stok').html('<span class="badge badge-danger px-2 py-1"><i class="fas fa-times-circle mr-1"></i> Stok Habis</span>');
                     $('#btnTambahKeranjangModal').addClass('d-none');
                 }
 
