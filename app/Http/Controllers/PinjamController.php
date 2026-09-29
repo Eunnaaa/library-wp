@@ -63,16 +63,16 @@ class PinjamController extends Controller
                     'tgl_kembali' => Carbon::parse($detail->tgl_kembali)->format('d-m-Y'),
                     'lama_pinjam' => $detail->lama_pinjam . ' hari',
                     'judul_buku' => $detail->buku->judul_buku ?? 'Buku Tidak Ditemukan',
-                    'status' => '<span class="badge badge-info">' . $detail->status . '</span>',
-                    'gambar' => '<img src="' . $coverUrl . '" class="img-thumbnail" width="50" alt="Cover">',
+                    'status' => '<span class="badge badge-info px-2 py-1 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px;">' . $detail->status . '</span>',
+                    'gambar' => '<div class="rounded border p-1 bg-light shadow-sm d-inline-block" style="width: 44px; height: 58px; overflow: hidden;"><img src="' . $coverUrl . '" class="w-100 h-100" style="object-fit: cover; border-radius: 3px;" alt="Cover"></div>',
                     'anggota' => $pinjam->anggota->nama ?? '-',
                     'petugas' => $pinjam->petugas_pinjam->nama ?? '-',
                     'aksi' => '
                         <form action="' . $url . '" method="POST" class="d-inline form-kembalikan">
                             ' . csrf_field() . '
                             <input type="hidden" name="_method" value="PUT">
-                            <button type="submit" class="btn btn-sm btn-primary kembalikan-buku" data-toggle="tooltip" title="Kembalikan Buku">
-                                <i class="fas fa-angle-double-left"></i> Kembalikan
+                            <button type="submit" class="btn btn-sm btn-primary shadow-sm font-weight-bold px-3 py-1" style="border-radius: 6px;" data-toggle="tooltip" title="Kembalikan Buku">
+                                <i class="fas fa-undo-alt mr-1"></i> Kembalikan
                             </button>
                         </form>',
                 ];

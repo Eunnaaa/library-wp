@@ -143,4 +143,22 @@ class LibraryTest extends TestCase
         $exportPdf->assertStatus(200);
         $this->assertEquals('application/pdf', $exportPdf->headers->get('content-type'));
     }
+
+    public function test_member_cannot_access_other_member_cart_or_booking(): void
+    {
+        $memberA = User::factory()->create(['role_id' => 2]);
+        $memberB = User::factory()->create(['role_id' => 2]);
+
+        // Member A should not be able to view Member B's cart
+        $responseCart = $this->actingAs($memberA)->get('/member/data-keranjang/' . $memberB->id);
+        $responseCart->assertStatus(403);
+
+        // Member A should not be able to view Member B's booking data
+        $responseBooking = $this->actingAs($memberA)->get('/member/data-booking/' . $memberB->id);
+        $responseBooking->assertStatus(403);
+
+        // Member A should not be able to download Member B's booking PDF
+        $responsePdf = $this->actingAs($memberA)->get('/member/booking-pdf/' . $memberB->id);
+        $responsePdf->assertStatus(403);
+    }
 }

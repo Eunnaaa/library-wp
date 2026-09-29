@@ -7,11 +7,16 @@ use App\Models\Booking;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
     public function dataBooking(User $user)
     {
+        if (Auth::id() !== $user->id && Auth::user()->role_id !== 1) {
+            abort(403, 'Akses ditolak! Anda tidak dapat melihat data booking pengguna lain.');
+        }
+
         $data_booking = Booking::with(['booking_detail.buku.kategori', 'anggota'])
             ->where('id_user', $user->id)
             ->get();
@@ -25,6 +30,10 @@ class BookingController extends Controller
 
     public function bookingPdf(User $user)
     {
+        if (Auth::id() !== $user->id && Auth::user()->role_id !== 1) {
+            abort(403, 'Akses ditolak! Anda tidak dapat mengunduh bukti booking pengguna lain.');
+        }
+
         $data_booking = Booking::with(['booking_detail.buku.kategori', 'anggota'])
             ->where('id_user', $user->id)
             ->get();

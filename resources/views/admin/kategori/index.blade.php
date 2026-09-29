@@ -6,47 +6,59 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card card-outline card-primary shadow-sm">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-list mr-1"></i> Data Master Kategori Buku</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalTambah">
-                            <i class="fas fa-plus mr-1"></i> Tambah Kategori
+            <div class="card border-0 shadow-sm" style="border-radius: 14px;">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center w-100">
+                    <h5 class="font-weight-bold mb-0 text-dark">
+                        <i class="fas fa-tags mr-2 text-primary"></i> Data Master Kategori Buku
+                    </h5>
+                    <div class="ml-auto">
+                        <button type="button" class="btn btn-primary btn-sm font-weight-bold shadow-sm px-3 py-2" data-toggle="modal" data-target="#modalTambah" style="border-radius: 8px;">
+                            <i class="fas fa-plus mr-1"></i> Tambah Kategori Baru
                         </button>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover">
+                        <table class="table table-hover mb-0">
                             <thead>
-                                <tr class="text-center">
-                                    <th style="width: 50px;">#</th>
-                                    <th>Nama Kategori</th>
-                                    <th style="width: 150px;">Jumlah Buku</th>
-                                    <th style="width: 150px;">Aksi</th>
+                                <tr class="bg-light text-center">
+                                    <th style="width: 60px;">#</th>
+                                    <th class="text-left">Nama Kategori</th>
+                                    <th style="width: 180px;">Jumlah Koleksi Buku</th>
+                                    <th style="width: 160px;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($kategori as $k)
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td><strong>{{ $k->nama_kategori }}</strong></td>
-                                    <td class="text-center"><span class="badge badge-info">{{ $k->buku_count ?? 0 }} Buku</span></td>
+                                    <td class="text-center font-weight-bold text-muted">{{ $loop->iteration }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 bg-light text-primary" style="width: 32px; height: 32px;">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                            <strong class="text-dark">{{ $k->nama_kategori }}</strong>
+                                        </div>
+                                    </td>
+                                    <td class="text-center"><span class="badge badge-info font-weight-bold">{{ $k->buku_count ?? 0 }} Judul Buku</span></td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-xs btn-warning btn-edit"
-                                            data-id="{{ $k->id }}" data-nama="{{ $k->nama_kategori }}">
+                                        <button type="button" class="btn btn-sm btn-outline-warning btn-edit p-1 px-2"
+                                            data-id="{{ $k->id }}" data-nama="{{ $k->nama_kategori }}" title="Edit">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
                                         <form action="{{ route('admin.master.kategori.destroy', $k->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kategori ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i> Hapus</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger p-1 px-2" title="Hapus"><i class="fas fa-trash"></i> Hapus</button>
                                         </form>
                                     </td>
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-3">Belum ada data kategori.</td>
+                                    <td colspan="4" class="text-center text-muted py-5">
+                                        <i class="fas fa-tags fa-3x text-muted mb-2 d-block"></i>
+                                        Belum ada data kategori buku.
+                                    </td>
                                 </tr>
                                 @endforelse
                             </tbody>

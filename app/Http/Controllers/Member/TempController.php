@@ -68,19 +68,28 @@ class TempController extends Controller
 
     public function dataKeranjang(User $user)
     {
+        if (Auth::id() !== $user->id && Auth::user()->role_id !== 1) {
+            abort(403, 'Akses ditolak! Anda tidak dapat melihat keranjang pengguna lain.');
+        }
+
         $temp = Temp::with('buku.kategori')->where('id_user', $user->id)->get();
         return view('member.keranjang', compact('temp', 'user'));
     }
 
     public function hapusKeranjang($buku, $user)
     {
+        if (Auth::id() != $user && Auth::user()->role_id !== 1) {
+            abort(403, 'Akses ditolak! Anda tidak dapat menghapus keranjang pengguna lain.');
+        }
+
         Temp::where(['id_buku' => $buku, 'id_user' => $user])->delete();
         return redirect()->back()->with('success', 'Buku berhasil dihapus dari keranjang!');
     }
 
     public function simpanBooking(Request $request)
     {
-        $userId = $request->id ?? Auth::id();
+        // Selalu gunakan ID user yang sedang terotentikasi untuk keamanan
+        $userId = Auth::id();
         $cek_stok = Temp::with('buku')->where('id_user', $userId)->get();
 
         if ($cek_stok->isEmpty()) {

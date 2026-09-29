@@ -6,6 +6,11 @@
     <title>E-Library UNM | Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
@@ -14,77 +19,133 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        .brand-badge {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #2563eb, #38bdf8);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+        .form-control {
+            border-radius: 10px;
+            height: 48px;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e1;
+        }
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .input-group-text {
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #64748b;
+        }
+        .btn-primary {
+            background-color: #2563eb;
+            border-color: #2563eb;
+            height: 46px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+    </style>
 </head>
 
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="{{ url('/') }}"><b>E-Library</b> UNM</a>
+<body>
+    <div class="login-card p-4 p-sm-5">
+        <div class="text-center mb-4">
+            <div class="brand-badge">
+                <i class="fas fa-book-reader text-white fa-2x"></i>
+            </div>
+            <h4 class="font-weight-bold text-dark mb-1">E-Library UNM</h4>
+            <p class="text-muted small mb-0">Portal Perpustakaan Universitas Nusa Mandiri</p>
         </div>
-        <!-- /.login-logo -->
-        <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Silakan login untuk memulai sesi Anda</p>
 
-                <form method="POST" action="{{ route('login') }}">
-                    @csrf
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control @error('email') is-invalid @enderror"
-                            placeholder="Email" id="email" name="email" value="{{ old('email') }}" required autofocus>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                        @error('email')
-                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                        @enderror
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="form-group mb-3">
+                <label for="email" class="small font-weight-bold text-muted text-uppercase">Email</label>
+                <div class="input-group">
+                    <input type="email" class="form-control border-right-0 @error('email') is-invalid @enderror"
+                        placeholder="nama@email.com" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                    <div class="input-group-append">
+                        <span class="input-group-text border-left-0"><i class="fas fa-envelope"></i></span>
                     </div>
+                </div>
+                @error('email')
+                    <small class="text-danger font-weight-bold mt-1 d-block">{{ $message }}</small>
+                @enderror
+            </div>
 
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control @error('password') is-invalid @enderror"
-                            placeholder="Password" id="password" name="password" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                        @error('password')
-                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                        @enderror
+            <div class="form-group mb-3">
+                <label for="password" class="small font-weight-bold text-muted text-uppercase">Password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control border-right-0 @error('password') is-invalid @enderror"
+                        placeholder="••••••••" id="password" name="password" required>
+                    <div class="input-group-append">
+                        <span class="input-group-text border-left-0"><i class="fas fa-lock"></i></span>
                     </div>
+                </div>
+                @error('password')
+                    <small class="text-danger font-weight-bold mt-1 d-block">{{ $message }}</small>
+                @enderror
+            </div>
 
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember" name="remember">
-                                <label for="remember">
-                                    Ingat Saya
-                                </label>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Login</button>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                </form>
-
-                <div class="social-auth-links text-center mb-3">
-                    <p>- ATAU -</p>
-                    <a href="{{ route('register') }}" class="btn btn-block btn-outline-success">
-                        <i class="fas fa-user-plus mr-2"></i> Daftar Sebagai Anggota Baru
-                    </a>
-                    <a href="{{ url('/') }}" class="btn btn-block btn-outline-secondary">
-                        <i class="fas fa-book-open mr-2"></i> Kembali ke Katalog Buku
-                    </a>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember" class="small text-muted font-weight-normal mb-0">
+                        Ingat sesi saya
+                    </label>
                 </div>
             </div>
-            <!-- /.login-card-body -->
+
+            <button type="submit" class="btn btn-primary btn-block mb-3">
+                <i class="fas fa-sign-in-alt mr-1"></i> Masuk ke Akun
+            </button>
+        </form>
+
+        <div class="text-center pt-3 border-top">
+            <p class="small text-muted mb-2">Belum memiliki akun anggota perpustakaan?</p>
+            <a href="{{ route('register') }}" class="btn btn-outline-primary btn-sm btn-block font-weight-bold py-2" style="border-radius: 10px;">
+                <i class="fas fa-user-plus mr-1"></i> Daftar Anggota Baru
+            </a>
+            <a href="{{ url('/') }}" class="small text-secondary font-weight-bold d-inline-block mt-3">
+                <i class="fas fa-arrow-left mr-1"></i> Kembali ke Katalog Buku
+            </a>
         </div>
     </div>
-    <!-- /.login-box -->
 
     <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
