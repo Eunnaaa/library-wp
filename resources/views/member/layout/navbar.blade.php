@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm" style="background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); z-index: 1030;">
-    <div class="container">
+    <div class="container-fluid px-3 px-md-4">
         <a class="navbar-brand d-flex align-items-center font-weight-bold" href="{{ url('/') }}" style="letter-spacing: -0.02em;">
             <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #38bdf8);">
                 <i class="fas fa-book-reader text-white" style="font-size: 1.1rem;"></i>

@@ -129,6 +129,11 @@
             box-shadow: var(--shadow-hover);
             border-color: #cbd5e1;
         }
+        .book-card .card-title {
+            float: none !important;
+            display: block;
+            width: 100%;
+        }
 
         .card-img-book-wrapper {
             position: relative;

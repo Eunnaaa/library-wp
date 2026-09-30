@@ -1,5 +1,5 @@
 <footer class="footer mt-auto" style="background: #0f172a; color: #94a3b8; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-    <div class="container py-5">
+    <div class="container-fluid px-3 px-md-4 py-5">
         <div class="row">
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <div class="d-flex align-items-center mb-3">
@@ -53,7 +53,7 @@
     </div>
 
     <div class="py-3 text-center small border-top" style="border-color: rgba(255, 255, 255, 0.06) !important; background: #090e17;">
-        <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center">
+        <div class="container-fluid px-3 px-md-4 d-flex flex-column flex-sm-row justify-content-between align-items-center">
             <span class="text-muted mb-2 mb-sm-0">
                 &copy; {{ date('Y') }} <strong>E-Library UNM</strong>. All Rights Reserved. Fakultas Teknologi Informasi.
             </span>

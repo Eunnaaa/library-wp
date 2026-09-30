@@ -8,7 +8,7 @@
     <div class="position-absolute" style="top: -100px; right: -100px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
     <div class="position-absolute" style="bottom: -120px; left: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
 
-    <div class="container position-relative text-center py-2">
+    <div class="container-fluid px-3 px-md-4 position-relative text-center py-2">
         <div class="d-inline-flex align-items-center mb-3 px-3 py-1 rounded-pill" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2);">
             <i class="fas fa-university text-warning mr-2"></i>
             <span class="small font-weight-bold letter-spacing-1 text-uppercase text-white-50">Perpustakaan Digital Universitas Nusa Mandiri</span>
@@ -65,7 +65,7 @@
     </div>
 </div>
 
-<main role="main" class="container">
+<main role="main" class="container-fluid px-3 px-md-4">
     @if(request('keyword') || request('kategori'))
         <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4 py-2 px-3 shadow-sm rounded-lg">
             <div class="d-flex align-items-center">
