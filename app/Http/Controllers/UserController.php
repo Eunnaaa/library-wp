@@ -11,9 +11,28 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('nama', 'like', '%'.$keyword.'%')
+                    ->orWhere('email', 'like', '%'.$keyword.'%')
+                    ->orWhere('alamat', 'like', '%'.$keyword.'%');
+            });
+        }
+
+        if ($request->filled('role') || $request->filled('role_id')) {
+            $query->where('role_id', $request->input('role', $request->input('role_id')));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status);
+        }
+
+        $users = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.user.index', compact('users'));
     }

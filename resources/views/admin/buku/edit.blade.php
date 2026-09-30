@@ -126,13 +126,14 @@
                             <!-- Right Column: Cover Preview & Upload -->
                             <div class="col-md-4">
                                 <label class="font-weight-semibold text-dark d-block">Cover Buku Saat Ini</label>
-                                <div class="text-center p-3 bg-light rounded-xl border mb-3">
-                                    <img id="coverPreview"
-                                        src="{{ asset('storage/' . ($buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                        alt="Cover {{ $buku->judul_buku }}"
-                                        class="img-fluid rounded shadow-sm"
-                                        style="max-height: 190px; width: auto; object-fit: cover;">
-                                    <div class="small text-muted mt-2" id="previewLabel">
+                                <div class="book-showcase-stage mb-3 flex-column" style="min-height: 230px; padding: 18px 15px;">
+                                    <div class="book-cover-3d mb-2" style="max-height: 190px;">
+                                        <img id="coverPreview"
+                                            src="{{ asset('storage/' . ($buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                            alt="Cover {{ $buku->judul_buku }}"
+                                            onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
+                                    </div>
+                                    <div class="small text-muted font-weight-semibold" id="previewLabel">
                                         <i class="fas fa-image mr-1"></i>Cover saat ini
                                     </div>
                                 </div>
@@ -143,18 +144,18 @@
                                         <input type="file" class="custom-file-input @error('image') is-invalid @enderror" id="image" name="image" accept="image/*" onchange="previewBookCover(this)">
                                         <label class="custom-file-label text-truncate" for="image">Pilih gambar baru...</label>
                                     </div>
-                                    <small class="form-text text-muted">Kosongkan jika cover tidak diubah. Maks. 2MB (JPG/PNG).</small>
+                                    <small class="form-text text-muted">Kosongkan jika cover tidak diubah. Maks. 1MB (JPG/PNG).</small>
                                     @error('image') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-footer bg-light px-4 py-3 border-0 d-flex justify-content-between align-items-center">
-                        <a href="{{ route('admin.master.buku.index') }}" class="btn btn-outline-secondary font-weight-semibold">
-                            <i class="fas fa-arrow-left mr-1"></i> Kembali
+                    <div class="card-footer bg-light px-4 py-3 border-top d-flex justify-content-between align-items-center">
+                        <a href="{{ route('admin.master.buku.index') }}" class="btn btn-outline-secondary font-weight-semibold" style="border-radius: 8px;">
+                            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
                         </a>
-                        <button type="submit" class="btn btn-warning px-4 font-weight-bold text-dark shadow-sm">
+                        <button type="submit" class="btn btn-warning px-4 font-weight-bold text-dark shadow-sm" style="border-radius: 8px;">
                             <i class="fas fa-save mr-1"></i> Simpan Perubahan
                         </button>
                     </div>
@@ -163,7 +164,9 @@
         </div>
     </div>
 </div>
+@endsection
 
+@push('scripts')
 <script>
 function previewBookCover(input) {
     if (input.files && input.files[0]) {
@@ -171,9 +174,9 @@ function previewBookCover(input) {
         reader.onload = function(e) {
             document.getElementById('coverPreview').src = e.target.result;
             document.getElementById('previewLabel').innerHTML = '<span class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i>Cover Baru Dipilih</span>';
-        }
+        };
         reader.readAsDataURL(input.files[0]);
     }
 }
 </script>
-@endsection
+@endpush

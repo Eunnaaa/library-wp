@@ -70,7 +70,7 @@ class PinjamController extends Controller
                     'lama_pinjam' => $detail->lama_pinjam.' hari',
                     'judul_buku' => $detail->buku->judul_buku ?? 'Buku Tidak Ditemukan',
                     'status' => '<span class="badge badge-info px-2 py-1 font-weight-bold" style="font-size: 0.78rem; border-radius: 6px;">'.$detail->status.'</span>',
-                    'gambar' => '<div class="rounded border p-1 bg-light shadow-sm d-inline-block" style="width: 44px; height: 58px; overflow: hidden;"><img src="'.$coverUrl.'" class="w-100 h-100" style="object-fit: cover; border-radius: 3px;" alt="Cover"></div>',
+                    'gambar' => '<div class="book-cover-thumb book-cover-thumb-sm"><img src="'.$coverUrl.'" alt="Cover" onerror="this.onerror=null;this.src=\''.asset('storage/cover-buku/book-default-cover.jpg').'\';"></div>',
                     'anggota' => $pinjam->anggota->nama ?? '-',
                     'petugas' => $pinjam->petugas_pinjam->nama ?? '-',
                     'aksi' => '

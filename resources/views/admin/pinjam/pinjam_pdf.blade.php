@@ -1,75 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Laporan Transaksi Peminjaman</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Laporan Transaksi Peminjaman - E-Library UNM</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            color: #333;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-        }
-        .header h2 {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 9.5pt;
+            color: #1e293b;
             margin: 0;
-            font-size: 16pt;
+            padding: 15px 25px;
+            line-height: 1.4;
         }
-        .header p {
+
+        .header-kop {
+            text-align: center;
+            border-bottom: 3px double #1e293b;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .header-kop h2 {
+            margin: 0;
+            font-size: 15pt;
+            color: #0f172a;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-kop h4 {
+            margin: 3px 0 0 0;
+            font-size: 11pt;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .header-kop p {
             margin: 4px 0 0 0;
-            font-size: 10pt;
-            color: #666;
+            font-size: 8.5pt;
+            color: #64748b;
         }
-        table {
+
+        .report-meta {
+            margin-bottom: 15px;
+            font-size: 8.5pt;
+            color: #475569;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+        }
+
+        .report-meta table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
         }
-        table, th, td {
-            border: 1px solid #777;
+
+        .report-meta td {
+            padding: 2px 4px;
         }
-        th {
-            background-color: #f2f2f2;
-            padding: 8px;
-            font-size: 10pt;
-            text-align: center;
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
-        td {
+
+        table.data-table th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 8.5pt;
+            padding: 7px 8px;
+            text-align: left;
+            border: 1px solid #1e3a8a;
+        }
+
+        table.data-table td {
             padding: 6px 8px;
-            font-size: 9.5pt;
+            font-size: 8pt;
+            border: 1px solid #e2e8f0;
         }
+
+        table.data-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
         .text-center {
             text-align: center;
         }
+
         .footer {
             margin-top: 30px;
-            text-align: right;
+            float: right;
+            text-align: center;
+            width: 220px;
             font-size: 9pt;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>PERPUSTAKAAN E-LIBRARY UNM</h2>
-        <p>Laporan Data Transaksi Peminjaman Buku</p>
-        <p><small>Dicetak pada: {{ date('d-m-Y H:i:s') }}</small></p>
+    <div class="header-kop">
+        <h2>UNIVERSITAS NUSA MANDIRI</h2>
+        <h4>UNIT PELAKSANA TEKNIS (UPT) PERPUSTAKAAN DIGITAL</h4>
+        <p>Jl. Margonda Raya No. 545, Depok, Jawa Barat | Website: unm.ac.id | Email: perpustakaan@nusamandiri.ac.id</p>
     </div>
 
-    <table>
+    <div class="report-meta">
+        <table>
+            <tr>
+                <td style="width: 50%;">
+                    <strong>Dokumen:</strong> Rekapitulasi Sirkulasi Peminjaman Buku
+                </td>
+                <td style="width: 50%; text-align: right;">
+                    <strong>Dicetak Pada:</strong> {{ date('d F Y, H:i') }} WIB
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Dicetak Oleh:</strong> {{ Auth::user()->nama ?? 'Administrator' }} ({{ Auth::user()->email ?? '-' }})
+                </td>
+                <td style="text-align: right;">
+                    <strong>Status Dokumen:</strong> Arsip Resmi Sirkulasi
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="data-table">
         <thead>
             <tr>
-                <th style="width: 25px;">#</th>
-                <th style="width: 80px;">No. Pinjam</th>
-                <th style="width: 75px;">Tgl Pinjam</th>
-                <th style="width: 75px;">Tgl Kembali</th>
-                <th>Judul Buku</th>
-                <th style="width: 60px;">Status</th>
-                <th>Anggota Peminjam</th>
-                <th>Petugas</th>
+                <th class="text-center" style="width: 25px;">#</th>
+                <th style="width: 95px;">No. Pinjam</th>
+                <th class="text-center" style="width: 70px;">Tgl Pinjam</th>
+                <th class="text-center" style="width: 70px;">Batas Kembali</th>
+                <th>Judul Buku & Kategori</th>
+                <th class="text-center" style="width: 60px;">Status</th>
+                <th style="width: 120px;">Anggota</th>
+                <th style="width: 100px;">Petugas</th>
             </tr>
         </thead>
         <tbody>
@@ -78,27 +145,36 @@
                 @foreach ($pinjam->pinjam_detail as $detail)
                     <tr>
                         <td class="text-center">{{ $no++ }}</td>
-                        <td class="text-center"><strong>{{ $pinjam->no_pinjam }}</strong></td>
-                        <td class="text-center">{{ date('d-m-Y', strtotime($pinjam->tgl_pinjam)) }}</td>
-                        <td class="text-center">{{ date('d-m-Y', strtotime($detail->tgl_kembali)) }}</td>
-                        <td>{{ $detail->buku->judul_buku ?? '-' }}</td>
-                        <td class="text-center">{{ $detail->status }}</td>
+                        <td><strong>{{ $pinjam->no_pinjam }}</strong></td>
+                        <td class="text-center">{{ date('d/m/Y', strtotime($pinjam->tgl_pinjam)) }}</td>
+                        <td class="text-center">{{ date('d/m/Y', strtotime($detail->tgl_kembali)) }}</td>
+                        <td>
+                            <strong>{{ $detail->buku->judul_buku ?? 'Buku Dihapus' }}</strong>
+                            <div style="color: #64748b; font-size: 7.5pt;">ISBN: {{ $detail->buku->isbn ?? '-' }}</div>
+                        </td>
+                        <td class="text-center">
+                            <strong>{{ $detail->status }}</strong>
+                        </td>
                         <td>{{ $pinjam->anggota->nama ?? '-' }}</td>
                         <td>{{ $pinjam->petugas_pinjam->nama ?? '-' }}</td>
                     </tr>
                 @endforeach
             @empty
                 <tr>
-                    <td colspan="8" class="text-center">Tidak ada data peminjaman yang ditemukan.</td>
+                    <td colspan="8" class="text-center" style="padding: 20px; color: #64748b;">
+                        Tidak ada riwayat transaksi peminjaman pada periode ini.
+                    </td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 
     <div class="footer">
-        <p>Petugas Perpustakaan,</p>
-        <br><br><br>
-        <p><strong>( {{ Auth::user()->nama ?? 'Administrator' }} )</strong></p>
+        <p style="margin: 0; color: #64748b;">Kepala / Petugas Sirkulasi,</p>
+        <div style="height: 55px;"></div>
+        <p style="margin: 0; font-weight: bold; border-top: 1px dotted #cbd5e1; display: inline-block; padding-top: 4px; min-width: 170px;">
+            ( {{ Auth::user()->nama ?? 'Administrator' }} )
+        </p>
     </div>
 </body>
 </html>

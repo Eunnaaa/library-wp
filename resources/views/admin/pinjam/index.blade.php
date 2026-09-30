@@ -119,7 +119,7 @@
                     name: 'no_pinjam',
                     className: 'font-weight-bold text-primary',
                     render: function(data) {
-                        return '<code>' + data + '</code>';
+                        return '<code>' + $('<div>').text(data || '').html() + '</code>';
                     }
                 },
                 { data: 'tgl_pinjam', name: 'tgl_pinjam', className: 'text-center' },
@@ -128,7 +128,7 @@
                     data: 'judul_buku', 
                     name: 'judul_buku',
                     render: function(data) {
-                        return '<strong class="text-dark">' + data + '</strong>';
+                        return '<strong class="text-dark">' + $('<div>').text(data || '').html() + '</strong>';
                     }
                 },
                 { data: 'status', name: 'status', className: 'text-center' },
@@ -137,10 +137,17 @@
                     data: 'anggota', 
                     name: 'anggota',
                     render: function(data) {
-                        return '<span class="font-weight-bold text-dark">' + data + '</span>';
+                        return '<span class="font-weight-bold text-dark">' + $('<div>').text(data || '').html() + '</span>';
                     }
                 },
-                { data: 'petugas', name: 'petugas', className: 'text-muted small' },
+                { 
+                    data: 'petugas', 
+                    name: 'petugas', 
+                    className: 'text-muted small',
+                    render: function(data) {
+                        return $('<div>').text(data || '-').html();
+                    }
+                },
                 { data: 'aksi', name: 'aksi', orderable: false, searchable: false, className: 'text-center' }
             ],
             drawCallback: function() {

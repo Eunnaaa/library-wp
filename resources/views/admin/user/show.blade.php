@@ -19,7 +19,8 @@
                         <img class="rounded-circle shadow-sm border"
                             src="{{ asset('storage/' . ($user->image ?? 'profil-pic/default.jpg')) }}"
                             alt="Foto {{ $user->nama }}"
-                            style="width: 120px; height: 120px; object-fit: cover; border-width: 4px !important; border-color: #f1f5f9 !important;">
+                            style="width: 120px; height: 120px; object-fit: cover; border-width: 4px !important; border-color: #f1f5f9 !important;"
+                            onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                     </div>
 
                     <h4 class="font-weight-bold text-dark mb-1">{{ $user->nama }}</h4>

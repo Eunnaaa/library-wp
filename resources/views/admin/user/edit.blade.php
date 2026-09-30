@@ -99,8 +99,13 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-light border-right-0"><i class="fas fa-lock text-muted"></i></span>
                                         </div>
-                                        <input type="password" class="form-control border-left-0 @error('password') is-invalid @enderror" id="password" name="password"
+                                        <input type="password" class="form-control border-left-0 border-right-0 @error('password') is-invalid @enderror" id="password" name="password"
                                             placeholder="Kosongkan bila tidak ingin mengubah password">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleUserPassword('password', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     @error('password') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                                 </div>
@@ -109,12 +114,13 @@
                             <!-- Right Column: Avatar Preview & Upload -->
                             <div class="col-md-4">
                                 <label class="font-weight-semibold text-dark d-block text-center">Foto Profil</label>
-                                <div class="text-center p-3 bg-light rounded-xl border mb-3">
+                                <div class="text-center p-3 bg-light rounded-xl border mb-3" style="border-radius: 12px;">
                                     <img id="avatarPreview"
                                         src="{{ asset('storage/' . ($user->image ?? 'profil-pic/default.jpg')) }}"
                                         alt="Foto {{ $user->nama }}"
                                         class="rounded-circle shadow-sm border border-white"
-                                        style="width: 120px; height: 120px; object-fit: cover; border-width: 4px !important;">
+                                        style="width: 120px; height: 120px; object-fit: cover; border-width: 4px !important;"
+                                        onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                                     <div class="small text-muted mt-2" id="avatarLabel">
                                         <i class="fas fa-user-circle mr-1"></i>Foto saat ini
                                     </div>
@@ -133,11 +139,11 @@
                         </div>
                     </div>
 
-                    <div class="card-footer bg-light px-4 py-3 border-0 d-flex justify-content-between align-items-center">
-                        <a href="{{ route('admin.master.user.index') }}" class="btn btn-outline-secondary font-weight-semibold">
-                            <i class="fas fa-arrow-left mr-1"></i> Kembali
+                    <div class="card-footer bg-light px-4 py-3 border-top d-flex justify-content-between align-items-center">
+                        <a href="{{ route('admin.master.user.index') }}" class="btn btn-outline-secondary font-weight-semibold" style="border-radius: 8px;">
+                            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
                         </a>
-                        <button type="submit" class="btn btn-warning px-4 font-weight-bold text-dark shadow-sm">
+                        <button type="submit" class="btn btn-warning px-4 font-weight-bold text-dark shadow-sm" style="border-radius: 8px;">
                             <i class="fas fa-save mr-1"></i> Simpan Perubahan
                         </button>
                     </div>
@@ -146,7 +152,9 @@
         </div>
     </div>
 </div>
+@endsection
 
+@push('scripts')
 <script>
 function previewUserAvatar(input) {
     if (input.files && input.files[0]) {
@@ -154,9 +162,23 @@ function previewUserAvatar(input) {
         reader.onload = function(e) {
             document.getElementById('avatarPreview').src = e.target.result;
             document.getElementById('avatarLabel').innerHTML = '<span class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i>Foto Baru Dipilih</span>';
-        }
+        };
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+function toggleUserPassword(inputId, btn) {
+    var input = document.getElementById(inputId);
+    var icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
 </script>
-@endsection
+@endpush

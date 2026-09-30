@@ -140,9 +140,11 @@
                         <label for="password" class="small font-weight-bold text-muted text-uppercase">Password</label>
                         <div class="input-group">
                             <input type="password" class="form-control border-right-0 @error('password') is-invalid @enderror"
-                                placeholder="Min 6 karakter" name="password" required>
+                                placeholder="Min 6 karakter" id="password" name="password" required>
                             <div class="input-group-append">
-                                <span class="input-group-text border-left-0"><i class="fas fa-lock"></i></span>
+                                <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="togglePassword('password', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1 !important;">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
                         </div>
                         @error('password')
@@ -155,16 +157,18 @@
                         <label for="password_confirmation" class="small font-weight-bold text-muted text-uppercase">Ulangi</label>
                         <div class="input-group">
                             <input type="password" class="form-control border-right-0"
-                                placeholder="Ulangi password" name="password_confirmation" required>
+                                placeholder="Ulangi password" id="password_confirmation" name="password_confirmation" required>
                             <div class="input-group-append">
-                                <span class="input-group-text border-left-0"><i class="fas fa-lock"></i></span>
+                                <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="togglePassword('password_confirmation', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1 !important;">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block mb-3 font-weight-bold">
+            <button type="submit" class="btn btn-primary btn-block mb-3 font-weight-bold shadow-sm" style="border-radius: 10px;">
                 <i class="fas fa-user-plus mr-1"></i> Daftar Sebagai Anggota
             </button>
         </form>
@@ -190,6 +194,20 @@
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
+        function togglePassword(inputId, btn) {
+            var input = document.getElementById(inputId);
+            var icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
         toastr.options = {
             "closeButton": true,
             "progressBar": true,

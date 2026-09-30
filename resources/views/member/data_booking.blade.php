@@ -14,11 +14,16 @@
                         </h4>
                         <small class="text-muted">Tunjukkan tanda bukti ini kepada staf sirkulasi perpustakaan UNM.</small>
                     </div>
-                    @if(isset($data_booking[0]))
-                        <a href="{{ route('member.bookingPdf') }}" target="_blank" class="btn btn-danger btn-sm font-weight-bold px-3 py-2 shadow-sm" style="border-radius: 8px;">
-                            <i class="fas fa-file-pdf mr-1"></i> Unduh Bukti Booking (PDF)
-                        </a>
-                    @endif
+                    <div class="d-flex align-items-center">
+                        <button type="button" onclick="window.print()" class="btn btn-outline-secondary btn-sm font-weight-bold px-3 py-2 mr-2 shadow-sm d-none d-sm-inline-block" style="border-radius: 8px;">
+                            <i class="fas fa-print mr-1"></i> Cetak Bukti
+                        </button>
+                        @if(isset($data_booking[0]))
+                            <a href="{{ route('member.bookingPdf') }}" target="_blank" class="btn btn-danger btn-sm font-weight-bold px-3 py-2 shadow-sm" style="border-radius: 8px;">
+                                <i class="fas fa-file-pdf mr-1"></i> Unduh PDF
+                            </a>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="card-body p-4">
@@ -27,32 +32,38 @@
                         <div class="alert border-0 shadow-sm mb-4 d-flex align-items-center" style="background: #fffbeb; border-left: 5px solid #f59e0b !important; border-radius: 12px; color: #92400e;">
                             <i class="fas fa-clock fa-2x mr-3 text-warning"></i>
                             <div>
-                                <h6 class="font-weight-bold mb-1">Perhatian Masa Berlaku Booking (1x24 Jam)</h6>
+                                <h6 class="font-weight-bold mb-1">Masa Berlaku Pengambilan Buku (1 x 24 Jam)</h6>
                                 <p class="small mb-0">
-                                    Batas waktu pengambilan buku fisik di perpustakaan adalah paling lambat <strong>{{ date('d F Y, H:i', strtotime($booking->batas_ambil)) }} WIB</strong>. Lewat dari batas waktu, pesanan akan dibatalkan otomatis dan stok dikembalikan.
+                                    Batas waktu pengambilan fisik di perpustakaan adalah <strong>{{ date('d F Y, H:i', strtotime($booking->batas_ambil)) }} WIB</strong>. Lewat dari batas waktu, reservasi buku akan dibatalkan otomatis dan stok dikembalikan.
                                 </p>
                             </div>
                         </div>
 
                         <!-- Ticket Details Card -->
-                        <div class="card border mb-4 shadow-sm" style="border-radius: 14px; background: #fafafa;">
+                        <div class="card border mb-4 shadow-sm" style="border-radius: 14px; background: #fafafa; border-left: 5px solid #2563eb !important;">
                             <div class="card-body p-4">
-                                <div class="row">
+                                <div class="row align-items-center">
                                     <div class="col-md-3 col-6 mb-3 mb-md-0 border-right">
-                                        <span class="text-muted d-block small font-weight-bold text-uppercase">Nomor Booking</span>
+                                        <span class="text-muted d-block small font-weight-bold text-uppercase">Nomor Reservasi</span>
                                         <span class="font-weight-bold h5 text-primary" style="letter-spacing: 0.05em;">{{ $booking->id_booking }}</span>
+                                        <div class="small text-muted font-monospace" style="letter-spacing: 2px;">|||| | ||||| || |</div>
                                     </div>
                                     <div class="col-md-3 col-6 mb-3 mb-md-0 border-right">
-                                        <span class="text-muted d-block small font-weight-bold text-uppercase">Waktu Reservasi</span>
+                                        <span class="text-muted d-block small font-weight-bold text-uppercase">Waktu Booking</span>
                                         <strong class="text-dark">{{ date('d M Y, H:i', strtotime($booking->tgl_booking)) }} WIB</strong>
+                                        <small class="text-muted d-block mt-1">Status: Terkunci</small>
                                     </div>
                                     <div class="col-md-3 col-6 mb-3 mb-md-0 border-right">
                                         <span class="text-muted d-block small font-weight-bold text-uppercase">Batas Akhir Ambil</span>
-                                        <span class="badge badge-warning px-2 py-1 font-weight-bold">{{ date('d M Y, H:i', strtotime($booking->batas_ambil)) }}</span>
+                                        <span class="badge badge-warning px-2 py-1 font-weight-bold d-inline-block">{{ date('d M Y, H:i', strtotime($booking->batas_ambil)) }}</span>
+                                        <div class="small text-danger font-weight-bold mt-1" id="countdown-timer" data-expire="{{ $booking->batas_ambil }}">
+                                            <i class="fas fa-stopwatch mr-1"></i> <span id="countdown-text">Menghitung...</span>
+                                        </div>
                                     </div>
                                     <div class="col-md-3 col-6">
                                         <span class="text-muted d-block small font-weight-bold text-uppercase">Nama Anggota</span>
                                         <strong class="text-dark">{{ $booking->anggota->nama ?? '-' }}</strong>
+                                        <small class="text-muted d-block mt-1">{{ $booking->anggota->email ?? '' }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -77,9 +88,10 @@
                                         <tr>
                                             <td class="text-center font-weight-bold text-muted">{{ $loop->iteration }}</td>
                                             <td>
-                                                <div class="rounded border p-1 bg-light shadow-sm" style="width: 55px; height: 75px; overflow: hidden;">
+                                                <div class="book-cover-thumb book-cover-thumb-sm">
                                                     <img src="{{ asset('storage/' . ($detail->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                                        class="w-100 h-100" style="object-fit: cover;" alt="Cover Buku">
+                                                        alt="Cover Buku"
+                                                        onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
                                                 </div>
                                             </td>
                                             <td>
@@ -117,4 +129,35 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        var $timer = $('#countdown-timer');
+        if ($timer.length) {
+            var expireStr = $timer.data('expire');
+            var expireDate = new Date(expireStr).getTime();
+
+            function updateCountdown() {
+                var now = new Date().getTime();
+                var distance = expireDate - now;
+
+                if (distance < 0) {
+                    $('#countdown-text').html('<span class="text-danger font-weight-bold">Waktu Habis!</span>');
+                    return;
+                }
+
+                var hours = Math.floor(distance / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                $('#countdown-text').text(hours + 'j ' + minutes + 'm ' + seconds + 'd');
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+    });
+</script>
+@endpush
 

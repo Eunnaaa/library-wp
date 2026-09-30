@@ -52,8 +52,11 @@
                                                 </small>
                                             </td>
                                             <td class="align-middle text-center">
-                                                <img src="{{ asset('storage/' . ($detail->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                                    class="rounded shadow-sm" width="46" height="62" style="object-fit: cover;" alt="Cover">
+                                                <div class="book-cover-thumb book-cover-thumb-sm">
+                                                    <img src="{{ asset('storage/' . ($detail->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                                        alt="Cover {{ $detail->buku->judul_buku ?? 'Buku' }}"
+                                                        onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
+                                                </div>
                                             </td>
                                             <td class="align-middle">
                                                 <strong class="text-dark d-block mb-1">{{ $detail->buku->judul_buku ?? 'Buku Tidak Ada' }}</strong>

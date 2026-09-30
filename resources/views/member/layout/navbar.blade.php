@@ -55,7 +55,8 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded" href="#" id="navbarDropdownMenuLink"
                             role="button" data-toggle="dropdown" aria-expanded="false" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);">
                             <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
-                                class="rounded-circle border mr-2" height="30" width="30" style="object-fit: cover; border-color: rgba(255,255,255,0.3) !important;" alt="Avatar">
+                                class="rounded-circle border mr-2" height="30" width="30" style="object-fit: cover; border-color: rgba(255,255,255,0.3) !important;" alt="Avatar"
+                                onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                             <div class="text-left mr-1 d-none d-sm-inline-block" style="line-height: 1.2;">
                                 <span class="d-block text-white font-weight-bold" style="font-size: 0.85rem;">{{ Str::limit(Auth::user()->nama, 18) }}</span>
                                 <small class="text-muted text-capitalize" style="font-size: 0.7rem;">{{ Auth::user()->role_id == 1 ? 'Administrator' : 'Anggota' }}</small>

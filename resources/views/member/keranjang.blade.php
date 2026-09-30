@@ -32,11 +32,17 @@
             <!-- Left: Table of books -->
             <div class="col-lg-8 mb-4">
                 <div class="card border-0 shadow-sm" style="border-radius: 14px;">
-                    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                        <span class="font-weight-bold text-dark">Daftar Buku Dipesan ({{ $temp->count() }} item)</span>
-                        <a href="{{ route('member.index') }}" class="btn btn-outline-primary btn-sm font-weight-bold">
-                            <i class="fas fa-plus mr-1"></i> Tambah Buku Lain
-                        </a>
+                    <div class="card-header bg-white py-3 px-3 px-md-4 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                        <div class="mb-2 mb-sm-0">
+                            <span class="font-weight-bold text-dark" style="font-size: 1.05rem;">
+                                <i class="fas fa-book-open text-primary mr-2"></i>Daftar Buku Dipesan ({{ $temp->count() }} item)
+                            </span>
+                        </div>
+                        <div>
+                            <a href="{{ route('member.index') }}" class="btn btn-outline-primary btn-sm font-weight-bold shadow-sm px-3 py-2 text-nowrap" style="border-radius: 8px;">
+                                <i class="fas fa-plus mr-1"></i> Tambah Buku Lain
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -46,7 +52,7 @@
                                         <th class="text-center" style="width: 50px;">#</th>
                                         <th style="width: 90px;">Cover</th>
                                         <th>Detail Buku</th>
-                                        <th class="text-center" style="width: 100px;">Aksi</th>
+                                        <th class="text-center" style="width: 150px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,9 +60,10 @@
                                         <tr>
                                             <td class="text-center font-weight-bold text-muted">{{ $loop->iteration }}</td>
                                             <td>
-                                                <div class="rounded border p-1 bg-light shadow-sm" style="width: 70px; height: 95px; overflow: hidden;">
+                                                <div class="book-cover-thumb book-cover-thumb-md">
                                                     <img src="{{ asset('storage/' . ($item->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                                        class="w-100 h-100" style="object-fit: cover;" alt="Cover Buku">
+                                                        alt="Cover Buku"
+                                                        onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
                                                 </div>
                                             </td>
                                             <td>
@@ -98,9 +105,17 @@
                         <h6 class="font-weight-bold mb-0"><i class="fas fa-receipt text-warning mr-2"></i> Ringkasan Reservasi</h6>
                     </div>
                     <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-                            <span class="text-muted">Total Buku Dipesan:</span>
-                            <span class="font-weight-bold h5 mb-0 text-primary">{{ $temp->count() }} / 3 Buku</span>
+                        <div class="mb-3 pb-2 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted">Kuota Reservasi:</span>
+                                <span class="font-weight-bold text-primary">{{ $temp->count() }} / 3 Buku</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 4px; background: #e2e8f0;">
+                                <div class="progress-bar {{ $temp->count() >= 3 ? 'bg-danger' : 'bg-primary' }}" style="width: {{ ($temp->count() / 3) * 100 }}%"></div>
+                            </div>
+                            @if($temp->count() >= 3)
+                                <small class="text-danger font-weight-bold mt-1 d-block"><i class="fas fa-exclamation-triangle mr-1"></i> Batas maksimal 3 buku tercapai</small>
+                            @endif
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                             <span class="text-muted">Batas Pengambilan:</span>
@@ -111,15 +126,22 @@
                             <span class="badge badge-success px-2 py-1 font-weight-bold">Gratis (Civitas UNM)</span>
                         </div>
 
-                        <div class="alert alert-warning border-0 small mt-3 mb-4 p-3" style="background: #fffbeb; color: #92400e; border-radius: 10px;">
+                        <div class="alert alert-warning border-0 small mt-3 mb-3 p-3" style="background: #fffbeb; color: #92400e; border-radius: 10px;">
                             <i class="fas fa-info-circle mr-1"></i>
                             Setelah tombol <strong>Konfirmasi Booking</strong> ditekan, sistem akan mengunci stok buku dan menerbitkan <strong>Bukti Reservasi (PDF)</strong> untuk dibawa ke perpustakaan kampus.
                         </div>
 
-                        <form action="{{ route('member.simpanBooking') }}" method="POST">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="check-syarat" checked required>
+                            <label class="custom-control-label small text-muted" for="check-syarat">
+                                Saya bersedia mengambil buku di perpustakaan UNM dalam batas 1x24 jam.
+                            </label>
+                        </div>
+
+                        <form action="{{ route('member.simpanBooking') }}" method="POST" id="form-booking">
                             @csrf
                             <input type="hidden" name="id" value="{{ auth()->user()->id }}">
-                            <button type="submit" class="btn btn-success btn-block py-2 font-weight-bold shadow-sm" style="border-radius: 10px; font-size: 1rem;">
+                            <button type="submit" class="btn btn-success btn-block py-2 font-weight-bold shadow-sm" id="btn-booking" style="border-radius: 10px; font-size: 1rem;">
                                 <i class="fas fa-check-circle mr-2"></i> Konfirmasi Booking Sekarang
                             </button>
                         </form>
@@ -150,4 +172,12 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $('#form-booking').on('submit', function() {
+        $('#btn-booking').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i> Memproses Reservasi...');
+    });
+</script>
+@endpush
 

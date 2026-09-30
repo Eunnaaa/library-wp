@@ -31,8 +31,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white"><i class="fas fa-key text-muted"></i></span>
                                 </div>
-                                <input type="password" class="form-control @error('password_sekarang') is-invalid @enderror"
+                                <input type="password" class="form-control border-right-0 @error('password_sekarang') is-invalid @enderror"
                                     id="password_sekarang" name="password_sekarang" placeholder="Masukkan password lama Anda" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('password_sekarang', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                                 @error('password_sekarang') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -43,8 +48,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white"><i class="fas fa-lock text-primary"></i></span>
                                 </div>
-                                <input type="password" class="form-control @error('password_baru') is-invalid @enderror"
+                                <input type="password" class="form-control border-right-0 @error('password_baru') is-invalid @enderror"
                                     id="password_baru" name="password_baru" placeholder="Minimal 6 karakter" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('password_baru', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                                 @error('password_baru') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -55,8 +65,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white"><i class="fas fa-check-double text-success"></i></span>
                                 </div>
-                                <input type="password" class="form-control @error('konfirmasi_password') is-invalid @enderror"
+                                <input type="password" class="form-control border-right-0 @error('konfirmasi_password') is-invalid @enderror"
                                     id="konfirmasi_password" name="konfirmasi_password" placeholder="Ulangi password baru yang sama" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('konfirmasi_password', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                                 @error('konfirmasi_password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
@@ -76,4 +91,22 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function togglePassword(inputId, btn) {
+        var input = document.getElementById(inputId);
+        var icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+@endpush
 

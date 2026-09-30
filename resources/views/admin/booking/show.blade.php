@@ -88,8 +88,11 @@
                                                 <tr>
                                                     <td class="text-center align-middle font-weight-bold text-muted">{{ $loop->iteration }}</td>
                                                     <td class="align-middle">
-                                                        <img src="{{ asset('storage/' . ($detail->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                                            class="rounded shadow-sm" width="54" height="74" style="object-fit: cover;" alt="Cover Buku">
+                                                        <div class="book-cover-thumb book-cover-thumb-sm">
+                                                            <img src="{{ asset('storage/' . ($detail->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                                                alt="Cover Buku"
+                                                                onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
+                                                        </div>
                                                     </td>
                                                     <td class="align-middle">
                                                         <h6 class="font-weight-bold text-dark mb-1">{{ $detail->buku->judul_buku ?? 'Buku Dihapus' }}</h6>

@@ -13,7 +13,8 @@
                         class="rounded-circle shadow-sm border border-white"
                         src="{{ asset('storage/' . ($user->image ?? 'profil-pic/default.jpg')) }}"
                         alt="Foto Profil {{ $user->nama }}"
-                        style="width: 130px; height: 130px; object-fit: cover; border-width: 4px !important;">
+                        style="width: 130px; height: 130px; object-fit: cover; border-width: 4px !important;"
+                        onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                     <span class="badge badge-success position-absolute" style="bottom: 5px; right: 5px; border-radius: 50%; padding: 6px; border: 2px solid white;">
                         <i class="fas fa-check" style="font-size: 10px;"></i>
                     </span>
@@ -123,15 +124,18 @@
     </div>
 </div>
 
+@endsection
+
+@push('scripts')
 <script>
 function previewAdminAvatar(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById('adminAvatarPreview').src = e.target.result;
-        }
+        };
         reader.readAsDataURL(input.files[0]);
     }
 }
 </script>
-@endsection
+@endpush

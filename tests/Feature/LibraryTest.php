@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Buku;
 use App\Models\Pinjam;
 use App\Models\PinjamDetail;
+use App\Models\Temp;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -14,6 +15,14 @@ class LibraryTest extends TestCase
     public function test_catalog_page_is_accessible(): void
     {
         $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Katalog E-Library UNM');
+    }
+
+    public function test_admin_can_access_catalog_page(): void
+    {
+        $admin = User::where('role_id', 1)->first();
+        $response = $this->actingAs($admin)->get('/');
         $response->assertStatus(200);
         $response->assertSee('Katalog E-Library UNM');
     }
@@ -65,6 +74,7 @@ class LibraryTest extends TestCase
     public function test_member_can_add_to_cart_and_view_cart(): void
     {
         $member = User::where('role_id', 2)->first();
+        Temp::where('id_user', $member->id)->delete();
         $buku = Buku::where('stok', '>', 0)->first();
 
         $response = $this->actingAs($member)->post('/member/tambah-ke-keranjang', [
@@ -75,6 +85,8 @@ class LibraryTest extends TestCase
         $response = $this->actingAs($member)->get('/member/data-keranjang/'.$member->id);
         $response->assertStatus(200);
         $response->assertSee('Keranjang Peminjaman Buku');
+
+        Temp::where('id_user', $member->id)->delete();
     }
 
     public function test_detail_buku_json_endpoint(): void
@@ -89,6 +101,8 @@ class LibraryTest extends TestCase
     {
         $member = User::where('role_id', 2)->first();
         $admin = User::where('role_id', 1)->first();
+        Temp::where('id_user', $member->id)->delete();
+        Booking::where('id_user', $member->id)->delete();
         $buku = Buku::where('stok', '>', 0)->first();
         $initialStock = $buku->stok;
 
@@ -229,5 +243,37 @@ class LibraryTest extends TestCase
             'password' => 'absolutelywrongpass',
         ]);
         $response2->assertSessionHas('error', 'Email atau password yang Anda masukkan salah!');
+    }
+
+    public function test_admin_buku_search_and_filter(): void
+    {
+        $admin = User::where('role_id', 1)->first();
+        $buku = Buku::first();
+
+        // Search by title keyword
+        $response = $this->actingAs($admin)->get('/admin/master/buku?keyword='.urlencode(substr($buku->judul_buku, 0, 4)));
+        $response->assertStatus(200);
+        $response->assertSee($buku->judul_buku);
+
+        // Filter by category
+        $responseCategory = $this->actingAs($admin)->get('/admin/master/buku?id_kategori='.$buku->id_kategori);
+        $responseCategory->assertStatus(200);
+        $responseCategory->assertSee($buku->judul_buku);
+    }
+
+    public function test_admin_user_search_and_filter(): void
+    {
+        $admin = User::where('role_id', 1)->first();
+        $member = User::where('role_id', 2)->latest()->first();
+
+        // Search by member email
+        $response = $this->actingAs($admin)->get('/admin/master/user?keyword='.urlencode($member->email));
+        $response->assertStatus(200);
+        $response->assertSee($member->nama);
+
+        // Filter by role
+        $responseRole = $this->actingAs($admin)->get('/admin/master/user?role_id=2');
+        $responseRole->assertStatus(200);
+        $responseRole->assertSee($member->nama);
     }
 }

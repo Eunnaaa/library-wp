@@ -410,6 +410,170 @@
             height: 200px;
             object-fit: cover;
         }
+
+        /* 3D Realistic Physical Book & Thumbnail System */
+        .book-stage {
+            position: relative;
+            background: radial-gradient(circle at 50% 30%, #ffffff 0%, #f8fafc 55%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 20px;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .book-cover-3d {
+            position: relative;
+            display: inline-block;
+            aspect-ratio: 1 / 1.45;
+            border-radius: 2px 7px 7px 2px;
+            overflow: hidden;
+            background-color: #cbd5e1;
+            box-shadow:
+                -3px 0 5px rgba(0, 0, 0, 0.18),
+                0 10px 20px -4px rgba(15, 23, 42, 0.28),
+                0 4px 6px -2px rgba(15, 23, 42, 0.12),
+                inset 1px 0 2px rgba(255, 255, 255, 0.4);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+            transform-origin: center bottom;
+            z-index: 1;
+        }
+
+        .book-cover-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.24) 0%,
+                rgba(255, 255, 255, 0.28) 3%,
+                rgba(0, 0, 0, 0.16) 6%,
+                rgba(0, 0, 0, 0.05) 8%,
+                transparent 14%
+            );
+        }
+
+        .book-cover-3d::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 3px;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.12), transparent);
+        }
+
+        .book-cover-3d img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .book-showcase-stage {
+            position: relative;
+            background: radial-gradient(circle at 50% 35%, #ffffff 0%, #f8fafc 55%, #e2e8f0 100%);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 24px 20px 28px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 290px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .book-showcase-stage::after {
+            content: '';
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 12px;
+            background: radial-gradient(ellipse at center, rgba(15, 23, 42, 0.24) 0%, rgba(15, 23, 42, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .book-showcase-stage .book-cover-3d {
+            max-height: 250px;
+            box-shadow:
+                -4px 0 6px rgba(0, 0, 0, 0.2),
+                0 14px 25px -5px rgba(15, 23, 42, 0.3),
+                0 6px 10px -2px rgba(15, 23, 42, 0.12),
+                inset 1px 0 2px rgba(255, 255, 255, 0.4);
+        }
+
+        .book-showcase-stage .book-cover-3d:hover {
+            transform: translateY(-6px) scale(1.02) rotate(-0.5deg);
+        }
+
+        .book-cover-thumb {
+            position: relative;
+            display: inline-block;
+            aspect-ratio: 1 / 1.45;
+            border-radius: 2px 4px 4px 2px;
+            overflow: hidden;
+            background-color: #cbd5e1;
+            box-shadow:
+                -1px 0 3px rgba(0, 0, 0, 0.18),
+                0 4px 8px -2px rgba(15, 23, 42, 0.2);
+            vertical-align: middle;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .book-cover-thumb::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.2) 0%,
+                rgba(255, 255, 255, 0.28) 4%,
+                rgba(0, 0, 0, 0.12) 8%,
+                transparent 16%
+            );
+        }
+
+        .book-cover-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .book-cover-thumb:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow:
+                -2px 0 4px rgba(0, 0, 0, 0.22),
+                0 8px 14px -3px rgba(15, 23, 42, 0.28);
+        }
+
+        .book-cover-thumb-sm {
+            width: 44px;
+            height: 64px;
+        }
+
+        .book-cover-thumb-md {
+            width: 58px;
+            height: 84px;
+        }
     </style>
     @stack('styles')
 </head>

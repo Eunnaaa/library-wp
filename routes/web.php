@@ -13,8 +13,8 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public & Catalog
-Route::get('/', [MemberController::class, 'index'])->name('member.index')->middleware('isMember');
-Route::get('detail-buku/{buku}', [MemberController::class, 'detailBuku'])->name('member.detailBuku')->middleware('isMember');
+Route::get('/', [MemberController::class, 'index'])->name('member.index');
+Route::get('detail-buku/{buku}', [MemberController::class, 'detailBuku'])->name('member.detailBuku');
 
 // Guest Authentication Routes
 Route::middleware(['guest', 'throttle:5,1'])->group(function () {

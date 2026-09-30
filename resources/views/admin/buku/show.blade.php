@@ -23,11 +23,12 @@
                     <div class="row">
                         <!-- Book Cover & Category -->
                         <div class="col-md-4 text-center mb-4 mb-md-0">
-                            <div class="p-3 bg-light rounded-xl border mb-3">
-                                <img src="{{ asset('storage/' . ($buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                    class="img-fluid rounded shadow-sm"
-                                    style="max-height: 280px; width: auto; object-fit: cover;"
-                                    alt="Cover {{ $buku->judul_buku }}">
+                            <div class="book-showcase-stage mb-3">
+                                <div class="book-cover-3d">
+                                    <img src="{{ asset('storage/' . ($buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                        alt="Cover {{ $buku->judul_buku }}"
+                                        onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
+                                </div>
                             </div>
                             <span class="badge badge-primary px-3 py-2 font-weight-bold" style="border-radius: 6px; font-size: 0.85rem;">
                                 <i class="fas fa-folder mr-1"></i>{{ $buku->kategori->nama_kategori ?? 'Umum' }}

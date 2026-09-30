@@ -4,22 +4,60 @@
 
 @section('content')
 <div class="container-fluid">
+    <!-- KPI Summary Row -->
+    <div class="row mb-3">
+        <div class="col-sm-6 col-lg-3 mb-2">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #2563eb !important;">
+                <div class="card-body p-3 d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 44px; height: 44px; background: #eff6ff; color: #2563eb;">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted font-weight-bold text-uppercase d-block" style="font-size: 0.7rem;">Total Kategori</small>
+                        <h4 class="font-weight-bold text-dark mb-0">{{ $kategori->count() }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3 mb-2">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #10b981 !important;">
+                <div class="card-body p-3 d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 44px; height: 44px; background: #d1fae5; color: #059669;">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted font-weight-bold text-uppercase d-block" style="font-size: 0.7rem;">Koleksi Terkategori</small>
+                        <h4 class="font-weight-bold text-dark mb-0">{{ $kategori->sum('buku_count') }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card border-0 shadow-sm" style="border-radius: 14px;">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center w-100">
-                    <h5 class="font-weight-bold mb-0 text-dark">
-                        <i class="fas fa-tags mr-2 text-primary"></i> Data Master Kategori Buku
-                    </h5>
-                    <div class="ml-auto">
-                        <button type="button" class="btn btn-primary btn-sm font-weight-bold shadow-sm px-3 py-2" data-toggle="modal" data-target="#modalTambah" style="border-radius: 8px;">
-                            <i class="fas fa-plus mr-1"></i> Tambah Kategori Baru
+                <div class="card-header bg-white py-3 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center w-100">
+                    <div class="mb-2 mb-sm-0">
+                        <h5 class="font-weight-bold mb-0 text-dark">
+                            <i class="fas fa-tags mr-2 text-primary"></i> Data Master Kategori Buku
+                        </h5>
+                    </div>
+                    <div class="d-flex align-items-center ml-sm-auto">
+                        <div class="input-group input-group-sm mr-2" style="max-width: 220px;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light border-right-0"><i class="fas fa-search text-muted"></i></span>
+                            </div>
+                            <input type="text" id="filter-kategori" class="form-control border-left-0" placeholder="Cari kategori...">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm font-weight-bold shadow-sm px-3 py-2 flex-shrink-0" data-toggle="modal" data-target="#modalTambah" style="border-radius: 8px;">
+                            <i class="fas fa-plus mr-1"></i> Tambah Kategori
                         </button>
                     </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table class="table table-hover mb-0" id="tabel-kategori">
                             <thead>
                                 <tr class="bg-light text-center">
                                     <th style="width: 60px;">#</th>
@@ -141,6 +179,13 @@
         $('#edit_nama_kategori').val(nama);
         $('#formEdit').attr('action', '{{ url("admin/master/kategori") }}/' + id);
         $('#modalEdit').modal('show');
+    });
+
+    $('#filter-kategori').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#tabel-kategori tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
     });
 </script>
 @endpush

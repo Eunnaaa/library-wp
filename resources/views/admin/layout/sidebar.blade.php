@@ -112,7 +112,8 @@
         <div class="d-flex align-items-center" style="overflow: hidden; min-width: 0;">
             <div class="image mr-2 position-relative flex-shrink-0">
                 <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
-                    class="img-circle elevation-1 border" style="width: 36px; height: 36px; object-fit: cover; border-color: rgba(255,255,255,0.2) !important;" alt="User Image">
+                    class="img-circle elevation-1 border" style="width: 36px; height: 36px; object-fit: cover; border-color: rgba(255,255,255,0.2) !important;" alt="User Image"
+                    onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                 <span class="badge badge-success position-absolute" style="bottom: 0px; right: 0px; width: 9px; height: 9px; padding: 0; border-radius: 50%; border: 2px solid #090e17;"></span>
             </div>
             <div class="info" style="overflow: hidden; line-height: 1.25; min-width: 0;">

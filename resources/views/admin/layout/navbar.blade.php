@@ -14,10 +14,11 @@
 <ul class="navbar-nav ml-auto align-items-center">
     <!-- Profile Dropdown Menu -->
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded" href="#"
-            id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+        <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded shadow-none" href="#"
+            id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px !important;">
             <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
-                class="rounded-circle mr-2 border" height="30" width="30" alt="Avatar" loading="lazy" style="object-fit: cover;" />
+                class="rounded-circle mr-2 border" height="30" width="30" alt="Avatar" loading="lazy" style="object-fit: cover;"
+                onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';" />
             <span class="font-weight-bold text-dark small mr-1">{{ Auth::user()->nama }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right shadow border-0 mt-2 p-2" style="border-radius: 12px; min-width: 200px;">

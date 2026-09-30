@@ -22,7 +22,7 @@ class PinjamExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = Pinjam::with(['pinjam_detail.buku', 'pinjam_detail.petugas_kembali', 'petugas_pinjam', 'anggota'])
+        $query = Pinjam::with(['pinjam_detail.buku', 'petugas_pinjam', 'anggota'])
             ->whereHas('pinjam_detail', function ($q) {
                 $q->where('status', 'Pinjam');
             });

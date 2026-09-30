@@ -19,10 +19,15 @@ class DashboardController extends Controller
     {
         $total_anggota = User::where('role_id', 2)->count();
         $total_buku = Buku::sum('stok');
+        $total_dipinjam = Buku::sum('dipinjam');
+        $total_dibooking = Buku::sum('dibooking');
         $total_judul = Buku::count();
         $total_kategori = Kategori::count();
         $total_booking = Booking::count();
         $total_pinjam = Pinjam::count();
+
+        // Top categories with book counts
+        $kategori_stats = Kategori::withCount('buku')->orderBy('buku_count', 'desc')->take(5)->get();
 
         // Recent bookings and books
         $recent_bookings = Booking::with('anggota')->latest()->take(5)->get();
@@ -31,10 +36,13 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'total_anggota',
             'total_buku',
+            'total_dipinjam',
+            'total_dibooking',
             'total_judul',
             'total_kategori',
             'total_booking',
             'total_pinjam',
+            'kategori_stats',
             'recent_bookings',
             'recent_buku'
         ));

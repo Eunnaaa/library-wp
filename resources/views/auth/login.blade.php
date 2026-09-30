@@ -92,6 +92,23 @@
             <p class="text-muted small mb-0">Portal Perpustakaan Universitas Nusa Mandiri</p>
         </div>
 
+        <!-- 1-Click Demo Login Shortcut -->
+        <div class="p-2 mb-3 rounded-lg" style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px;">
+            <div class="d-flex justify-content-between align-items-center mb-1 px-1">
+                <small class="font-weight-bold text-muted text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.05em;">
+                    <i class="fas fa-bolt text-warning mr-1"></i> Demo Login Cepat (1-Klik):
+                </small>
+            </div>
+            <div class="d-flex">
+                <button type="button" class="btn btn-xs btn-outline-primary font-weight-bold mr-1 flex-fill py-1" onclick="fillLogin('admin@gmail.com', 'admin123')">
+                    <i class="fas fa-shield-alt mr-1"></i> Admin
+                </button>
+                <button type="button" class="btn btn-xs btn-outline-info font-weight-bold flex-fill py-1" onclick="fillLogin('gary@gmail.com', '12345678')">
+                    <i class="fas fa-user-graduate mr-1"></i> Anggota (Gary)
+                </button>
+            </div>
+        </div>
+
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="form-group mb-3">
@@ -114,7 +131,9 @@
                     <input type="password" class="form-control border-right-0 @error('password') is-invalid @enderror"
                         placeholder="••••••••" id="password" name="password" required>
                     <div class="input-group-append">
-                        <span class="input-group-text border-left-0"><i class="fas fa-lock"></i></span>
+                        <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-3" type="button" onclick="togglePassword('password', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1 !important;">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
                 @error('password')
@@ -131,7 +150,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block mb-3">
+            <button type="submit" class="btn btn-primary btn-block mb-3 font-weight-bold shadow-sm" style="border-radius: 10px;">
                 <i class="fas fa-sign-in-alt mr-1"></i> Masuk ke Akun
             </button>
         </form>
@@ -157,6 +176,26 @@
     <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
+        function togglePassword(inputId, btn) {
+            var input = document.getElementById(inputId);
+            var icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function fillLogin(email, password) {
+            $('#email').val(email);
+            $('#password').val(password);
+            toastr.info('Kredensial ' + email + ' dimasukkan!');
+        }
+
         toastr.options = {
             "closeButton": true,
             "progressBar": true,

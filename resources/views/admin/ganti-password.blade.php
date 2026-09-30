@@ -31,8 +31,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-light border-right-0"><i class="fas fa-key text-muted"></i></span>
                                 </div>
-                                <input type="password" class="form-control border-left-0 @error('password_sekarang') is-invalid @enderror"
+                                <input type="password" class="form-control border-left-0 border-right-0 @error('password_sekarang') is-invalid @enderror"
                                     id="password_sekarang" name="password_sekarang" placeholder="Masukkan password yang saat ini aktif" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('password_sekarang', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                             @error('password_sekarang')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -45,8 +50,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-light border-right-0"><i class="fas fa-lock text-muted"></i></span>
                                 </div>
-                                <input type="password" class="form-control border-left-0 @error('password_baru') is-invalid @enderror"
+                                <input type="password" class="form-control border-left-0 border-right-0 @error('password_baru') is-invalid @enderror"
                                     id="password_baru" name="password_baru" placeholder="Minimal 6 karakter" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('password_baru', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                             @error('password_baru')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -59,8 +69,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-light border-right-0"><i class="fas fa-lock-open text-muted"></i></span>
                                 </div>
-                                <input type="password" class="form-control border-left-0 @error('konfirmasi_password') is-invalid @enderror"
+                                <input type="password" class="form-control border-left-0 border-right-0 @error('konfirmasi_password') is-invalid @enderror"
                                     id="konfirmasi_password" name="konfirmasi_password" placeholder="Ketik ulang password baru Anda" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('konfirmasi_password', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                             @error('konfirmasi_password')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -68,8 +83,8 @@
                         </div>
                     </div>
 
-                    <div class="card-footer bg-light px-4 py-3 border-0 d-flex justify-content-between align-items-center">
-                        <a href="{{ route('admin.profil') }}" class="btn btn-outline-secondary font-weight-semibold">
+                    <div class="card-footer bg-light px-4 py-3 border-top d-flex justify-content-between align-items-center">
+                        <a href="{{ route('admin.profil') }}" class="btn btn-outline-secondary font-weight-semibold" style="border-radius: 8px;">
                             <i class="fas fa-arrow-left mr-1"></i> Batal
                         </a>
                         <button type="submit" class="btn btn-warning px-4 py-2 font-weight-bold text-dark shadow-sm" style="border-radius: 8px;">
@@ -82,3 +97,21 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function toggleAdminPassword(inputId, btn) {
+        var input = document.getElementById(inputId);
+        var icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+@endpush

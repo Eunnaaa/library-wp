@@ -139,6 +139,95 @@
         </div>
     </div>
 
+    <!-- Analytics & Capacity Section -->
+    <div class="row mb-4">
+        <!-- Physical Stock Availability Breakdown -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px;">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h6 class="font-weight-bold mb-0 text-dark">
+                        <i class="fas fa-boxes text-info mr-2"></i> Analisis Ketersediaan Fisik Buku
+                    </h6>
+                    <span class="badge badge-light border font-weight-bold text-muted">
+                        Total {{ $total_buku + $total_dipinjam + $total_dibooking }} Eksemplar
+                    </span>
+                </div>
+                <div class="card-body p-4">
+                    @php
+                        $grandTotal = max(1, $total_buku + $total_dipinjam + $total_dibooking);
+                        $persenTersedia = round(($total_buku / $grandTotal) * 100);
+                        $persenDipinjam = round(($total_dipinjam / $grandTotal) * 100);
+                        $persenDibooking = round(($total_dibooking / $grandTotal) * 100);
+                    @endphp
+
+                    <!-- Segmented Progress Bar -->
+                    <div class="progress mb-4" style="height: 14px; border-radius: 10px; background: #e2e8f0; overflow: hidden;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $persenTersedia }}%" title="Tersedia: {{ $total_buku }}"></div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $persenDipinjam }}%" title="Dipinjam: {{ $total_dipinjam }}"></div>
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $persenDibooking }}%" title="Dibooking: {{ $total_dibooking }}"></div>
+                    </div>
+
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block small text-muted font-weight-bold text-uppercase" style="font-size: 0.68rem;">Tersedia di Rak</span>
+                                <h5 class="font-weight-bold text-success mb-0">{{ $total_buku }}</h5>
+                                <small class="text-muted font-weight-bold">{{ $persenTersedia }}%</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block small text-muted font-weight-bold text-uppercase" style="font-size: 0.68rem;">Sedang Dipinjam</span>
+                                <h5 class="font-weight-bold text-warning mb-0">{{ $total_dipinjam }}</h5>
+                                <small class="text-muted font-weight-bold">{{ $persenDipinjam }}%</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 rounded bg-light border">
+                                <span class="d-block small text-muted font-weight-bold text-uppercase" style="font-size: 0.68rem;">Antrean Booking</span>
+                                <h5 class="font-weight-bold text-primary mb-0">{{ $total_dibooking }}</h5>
+                                <small class="text-muted font-weight-bold">{{ $persenDibooking }}%</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Categories Breakdown -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px;">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h6 class="font-weight-bold mb-0 text-dark">
+                        <i class="fas fa-chart-bar text-primary mr-2"></i> Top Klasifikasi Kategori Buku
+                    </h6>
+                    <a href="{{ route('admin.master.kategori.index') }}" class="small font-weight-bold text-primary">
+                        Lihat Semua <i class="fas fa-chevron-right ml-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    @forelse($kategori_stats as $ks)
+                        @php
+                            $maxJudul = max(1, $total_judul);
+                            $pctKat = round(($ks->buku_count / $maxJudul) * 100);
+                        @endphp
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1 small">
+                                <strong class="text-dark">{{ $ks->nama_kategori }}</strong>
+                                <span class="font-weight-bold text-muted">{{ $ks->buku_count }} Judul ({{ $pctKat }}%)</span>
+                            </div>
+                            <div class="progress" style="height: 8px; border-radius: 6px; background: #f1f5f9;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $pctKat }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-muted small text-center my-3">Belum ada data kategori buku.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Tables -->
     <div class="row">
         <!-- Recent Bookings Table -->
