@@ -853,9 +853,6 @@
     </div>
     <!-- ./wrapper -->
 
-    <!-- Modal Scanner QR Code Pengambilan -->
-    @include('admin.layout.modal_scanner')
-
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
@@ -923,7 +920,11 @@
             }
         });
 
-        const APP_URL = {!! json_encode(url('/')) !!};
+        window.APP_URL = {!! json_encode(url('/')) !!};
+        const APP_URL = window.APP_URL;
     </script>
+
+    <!-- Modal Scanner QR Code Pengambilan & Script -->
+    @include('admin.layout.modal_scanner')
 </body>
 </html>

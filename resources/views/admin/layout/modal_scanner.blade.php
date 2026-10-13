@@ -9,9 +9,9 @@
                     </div>
                     <div>
                         <h5 class="modal-title font-weight-bold mb-0 text-white" id="modalScannerQrLabel" style="letter-spacing: -0.01em;">
-                            Pemindai Kamera QR Code Loket Peminjaman
+                            Pemindai QR Code Loket Peminjaman
                         </h5>
-                        <small style="color: #e5dacd;">Arahkan kamera ke QR Code bukti booking atau masukkan kode secara manual</small>
+                        <small style="color: #e5dacd;">Arahkan kamera ke QR Code bukti booking, unggah gambar QR, atau masukkan kode</small>
                     </div>
                 </div>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.85;">
@@ -28,7 +28,7 @@
                                 <span class="badge badge-pill badge-primary mr-2 px-3 py-1 font-weight-bold" id="scanner-status-badge">
                                     <i class="fas fa-video mr-1"></i> Kamera Siap
                                 </span>
-                                <small class="text-muted d-none d-md-inline" id="camera-hint-text">Pilih kamera jika perangkat memiliki lebih dari 1 kamera.</small>
+                                <small class="text-muted d-none d-md-inline" id="camera-hint-text">Mempersiapkan perangkat webcam...</small>
                             </div>
                             <div class="d-flex align-items-center">
                                 <select id="qr-camera-select" class="custom-select custom-select-sm mr-2" style="max-width: 200px; border-radius: 8px;">
@@ -49,18 +49,34 @@
                                 <div class="rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px; background: rgba(255, 255, 255, 0.1); border: 2px dashed #e9c46a;">
                                     <i class="fas fa-qrcode fa-2x text-warning"></i>
                                 </div>
-                                <h6 class="font-weight-bold mb-1">Kamera Sedang Memuat...</h6>
-                                <p class="small text-muted mb-3" style="max-width: 380px;">Izinkan akses webcam pada peramban Anda untuk mulai memindai QR Code.</p>
+                                <h6 class="font-weight-bold mb-1" id="scanner-placeholder-title">Kamera Sedang Memuat...</h6>
+                                <p class="small text-muted mb-3" id="scanner-placeholder-desc" style="max-width: 400px;">
+                                    Izinkan akses webcam pada peramban Anda saat diminta untuk mulai memindai QR Code.
+                                </p>
                                 <button type="button" id="btn-start-scanner" class="btn btn-warning btn-sm font-weight-bold px-4 shadow-sm" style="border-radius: 8px;">
                                     <i class="fas fa-play mr-1"></i> Aktifkan Kamera
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Alternative Manual Code Input -->
+                        <!-- Alternative 1: Upload File / Screenshot QR Code -->
                         <div class="mt-3 pt-3 border-top" style="border-color: #efe8dc !important;">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <label class="small font-weight-bold text-muted text-uppercase mb-0">
+                                    <i class="fas fa-file-image mr-1 text-primary"></i> Pindai Dari File Gambar / Screenshot:
+                                </label>
+                                <span class="badge badge-light text-muted">PNG / JPG / WEBP</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="qr-file-input" accept="image/*">
+                                <label class="custom-file-label text-truncate" for="qr-file-input" id="qr-file-label" style="border-radius: 8px;">Pilih atau drag file foto QR Code...</label>
+                            </div>
+                        </div>
+
+                        <!-- Alternative 2: Manual Code Input -->
+                        <div class="mt-3 pt-2">
                             <label class="small font-weight-bold text-muted text-uppercase mb-1">
-                                <i class="fas fa-keyboard mr-1"></i> Input Manual Kode Booking:
+                                <i class="fas fa-keyboard mr-1 text-secondary"></i> Atau Input Manual Kode Booking:
                             </label>
                             <div class="input-group">
                                 <input type="text" id="manual-code-input" class="form-control form-control-sm font-weight-bold" placeholder="Contoh: B261013001" style="border-radius: 8px 0 0 8px; letter-spacing: 0.05em; text-transform: uppercase;">
@@ -97,7 +113,9 @@
 
         function playScanBeep() {
             try {
-                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return;
+                var audioCtx = new AudioContextClass();
                 var osc = audioCtx.createOscillator();
                 var gain = audioCtx.createGain();
                 osc.type = "sine";
@@ -113,53 +131,167 @@
             } catch(e) {}
         }
 
-        function initCameras() {
+        function requestCameraPermissionAndStart() {
             if (typeof Html5Qrcode === 'undefined') {
-                $('#camera-hint-text').html('<span class="text-danger">Library scanner belum termuat.</span>');
+                showCameraError('Library scanner QR Code belum siap. Pastikan koneksi internet/file aset termuat dengan benar.', 'Library Belum Siap');
                 return;
             }
 
-            Html5Qrcode.getCameras().then(function(devices) {
-                camerasList = devices;
-                var $select = $('#qr-camera-select');
-                $select.empty();
+            // Check Secure Context
+            var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            var isHttps = window.location.protocol === 'https:';
+            if (!isLocalhost && !isHttps) {
+                showCameraError(
+                    'Browser membatasi webcam jika dibuka via IP jaringan tanpa HTTPS.<br>' +
+                    'Silakan akses melalui <code>http://127.0.0.1:8000</code> atau <code>http://localhost:8000</code>, ' +
+                    'atau gunakan opsi <b>Unggah File Gambar QR</b> / <b>Input Manual</b>.',
+                    'Koneksi Non-Aman Terdeteksi'
+                );
+                return;
+            }
 
-                if (devices && devices.length) {
-                    devices.forEach(function(camera, i) {
-                        var label = camera.label || ('Kamera ' + (i + 1));
-                        $select.append('<option value="' + camera.id + '">' + label + '</option>');
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showCameraError(
+                    'Peramban ini tidak mendukung akses webcam langsung.<br>' +
+                    'Silakan gunakan opsi <b>Unggah File Gambar QR</b> atau <b>Input Manual Kode Booking</b> di bawah.',
+                    'Peramban Tidak Mendukung'
+                );
+                return;
+            }
+
+            // Update UI state
+            $('#scanner-placeholder').removeClass('d-none');
+            $('#scanner-status-badge').removeClass('badge-secondary badge-success badge-danger')
+                .addClass('badge-warning')
+                .html('<i class="fas fa-spinner fa-spin mr-1"></i> Meminta Izin Kamera...');
+            $('#camera-hint-text').text('Menghubungkan ke webcam...');
+            $('#scanner-placeholder-title').text('Menghubungkan ke Webcam...');
+            $('#scanner-placeholder-desc').html('Jika muncul pop-up izin peramban, klik tombol <b>Izinkan (Allow)</b>.');
+            $('#btn-start-scanner').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Menghubungkan...');
+
+            // Directly call getUserMedia to trigger browser native permission dialog
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    // Release the temporary stream tracks immediately
+                    stream.getTracks().forEach(function(track) {
+                        try { track.stop(); } catch(e) {}
                     });
-                    currentCameraId = devices[0].id;
-                    startScanner(currentCameraId);
-                } else {
-                    $select.append('<option value="">Tidak ada kamera terdeteksi</option>');
-                    $('#camera-hint-text').text('Gunakan input manual kode booking di bawah.');
-                }
-            }).catch(function(err) {
-                $('#qr-camera-select').empty().append('<option value="">Akses kamera ditolak/gagal</option>');
-                $('#camera-hint-text').html('<span class="text-warning">Gunakan input manual jika webcam tidak aktif.</span>');
-            });
+
+                    // Now permission is granted, query available cameras
+                    return Html5Qrcode.getCameras();
+                })
+                .then(function(devices) {
+                    camerasList = devices || [];
+                    var $select = $('#qr-camera-select');
+                    $select.empty();
+
+                    if (camerasList.length > 0) {
+                        camerasList.forEach(function(cam, i) {
+                            var label = cam.label || ('Kamera ' + (i + 1));
+                            $select.append('<option value="' + cam.id + '">' + label + '</option>');
+                        });
+                        currentCameraId = camerasList[0].id;
+                        $select.val(currentCameraId);
+                        startScanner(currentCameraId);
+                    } else {
+                        // Fallback: try starting with environment/user facing mode
+                        startScanner({ facingMode: "environment" });
+                    }
+                })
+                .catch(function(err) {
+                    console.warn('Camera access error:', err);
+                    handleCameraError(err);
+                });
         }
 
-        function startScanner(cameraId) {
-            if (!cameraId || isScanning) return;
+        function handleCameraError(err) {
+            isScanning = false;
+            var errName = err ? (err.name || err.toString()) : '';
+            var title = 'Kendala Akses Kamera';
+            var message = '';
+
+            if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
+                title = 'Izin Akses Kamera Ditolak';
+                message = 'Akses kamera diblokir oleh pengaturan browser Anda.<br>' +
+                          '<div class="text-left mt-2 p-2 bg-dark rounded small">' +
+                          '<b>Cara mengaktifkan izin:</b><br>' +
+                          '1. Klik ikon <b>Gembok (🔒)</b> atau <b>Kamera</b> di sebelah kiri kolom URL peramban (' + window.location.hostname + ')<br>' +
+                          '2. Ubah izin <b>Camera</b> menjadi <b>Allow (Izinkan)</b><br>' +
+                          '3. Klik tombol <b>Coba Aktifkan Lagi</b> di bawah.' +
+                          '</div>';
+            } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
+                title = 'Kamera Tidak Ditemukan';
+                message = 'Tidak ada perangkat kamera/webcam yang terdeteksi pada perangkat ini.<br>' +
+                          'Gunakan opsi <b>Unggah File Gambar QR</b> atau <b>Input Manual</b>.';
+            } else if (errName === 'NotReadableError' || errName === 'TrackStartError') {
+                title = 'Kamera Sedang Digunakan';
+                message = 'Kamera mungkin sedang digunakan oleh aplikasi lain (Zoom, Teams, Google Meet, dll.).<br>' +
+                          'Silakan tutup aplikasi tersebut lalu klik tombol di bawah.';
+            } else {
+                title = 'Gagal Mengakses Kamera';
+                message = 'Terjadi kesalahan saat memuat webcam (' + (err.message || errName || 'Unknown') + ').<br>' +
+                          'Gunakan opsi <b>Unggah File Gambar QR</b> atau <b>Input Manual</b>.';
+            }
+
+            showCameraError(message, title);
+        }
+
+        function showCameraError(msg, title) {
+            $('#scanner-status-badge').removeClass('badge-secondary badge-success badge-warning')
+                .addClass('badge-danger')
+                .html('<i class="fas fa-exclamation-triangle mr-1"></i> Kamera Tidak Tersedia');
+            $('#camera-hint-text').html('<span class="text-danger">Kamera gagal diakses. Gunakan upload gambar atau input manual.</span>');
+
+            $('#scanner-placeholder').removeClass('d-none').html(
+                '<div class="p-3 text-center">' +
+                '<div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 58px; height: 58px; background: rgba(239, 68, 68, 0.2); border: 2px solid #ef4444;">' +
+                '<i class="fas fa-video-slash fa-2x text-danger"></i>' +
+                '</div>' +
+                '<h6 class="font-weight-bold text-white mb-2">' + (title || 'Akses Kamera Terkendala') + '</h6>' +
+                '<div class="small text-white-50 mb-3 mx-auto" style="max-width: 440px; line-height: 1.5;">' + msg + '</div>' +
+                '<div class="d-flex justify-content-center flex-wrap">' +
+                '<button type="button" class="btn btn-warning btn-sm font-weight-bold px-3 mr-2 mb-2 btn-retry-camera" style="border-radius: 8px;">' +
+                '<i class="fas fa-redo mr-1"></i> Coba Aktifkan Lagi' +
+                '</button>' +
+                '<button type="button" class="btn btn-outline-light btn-sm font-weight-bold px-3 mb-2 btn-focus-manual" style="border-radius: 8px;">' +
+                '<i class="fas fa-keyboard mr-1"></i> Input Kode Manual' +
+                '</button>' +
+                '</div>' +
+                '</div>'
+            );
+        }
+
+        function startScanner(cameraConfig) {
+            if (!cameraConfig) return;
+            if (isScanning) {
+                stopScanner();
+            }
 
             if (!html5QrCode) {
                 html5QrCode = new Html5Qrcode("qr-video-reader");
             }
 
             $('#scanner-placeholder').addClass('d-none');
-            $('#scanner-status-badge').removeClass('badge-secondary').addClass('badge-success').html('<i class="fas fa-spinner fa-spin mr-1"></i> Memindai...');
+            $('#scanner-status-badge').removeClass('badge-secondary badge-danger badge-warning')
+                .addClass('badge-success')
+                .html('<i class="fas fa-spinner fa-spin mr-1"></i> Membuka Stream...');
 
-            var config = {
-                fps: 10,
-                qrbox: { width: 220, height: 220 },
+            var scanConfig = {
+                fps: 15,
+                qrbox: function(viewfinderWidth, viewfinderHeight) {
+                    var minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                    var qrboxSize = Math.floor(minEdge * 0.7);
+                    return {
+                        width: Math.max(180, qrboxSize),
+                        height: Math.max(180, qrboxSize)
+                    };
+                },
                 aspectRatio: 1.333334
             };
 
             html5QrCode.start(
-                cameraId,
-                config,
+                cameraConfig,
+                scanConfig,
                 function(decodedText, decodedResult) {
                     playScanBeep();
                     stopScanner();
@@ -167,26 +299,56 @@
                     verifikasiCode(decodedText);
                 },
                 function(errorMessage) {
-                    // scanning in progress, quiet
+                    // Ongoing search, quiet
                 }
             ).then(function() {
                 isScanning = true;
-                $('#scanner-status-badge').removeClass('badge-primary badge-secondary').addClass('badge-success').html('<i class="fas fa-camera mr-1"></i> Kamera Aktif');
+                $('#scanner-placeholder').addClass('d-none');
+                $('#scanner-status-badge').removeClass('badge-primary badge-secondary badge-warning badge-danger')
+                    .addClass('badge-success')
+                    .html('<i class="fas fa-video mr-1"></i> Kamera Aktif & Memindai');
+                $('#camera-hint-text').text('Arahkan kamera ke QR Code bukti booking.');
             }).catch(function(err) {
+                console.warn('Failed to start scanner with config:', cameraConfig, err);
                 isScanning = false;
-                $('#scanner-placeholder').removeClass('d-none');
-                $('#scanner-status-badge').removeClass('badge-success').addClass('badge-warning').html('<i class="fas fa-exclamation-triangle mr-1"></i> Kamera Gagal');
+                // If failed with specific cameraId, try with facingMode: "user"
+                if (typeof cameraConfig === 'string') {
+                    html5QrCode.start({ facingMode: "user" }, scanConfig, function(decodedText) {
+                        playScanBeep();
+                        stopScanner();
+                        $('#manual-code-input').val(decodedText);
+                        verifikasiCode(decodedText);
+                    }, function() {}).then(function() {
+                        isScanning = true;
+                        $('#scanner-placeholder').addClass('d-none');
+                        $('#scanner-status-badge').removeClass('badge-secondary badge-danger badge-warning')
+                            .addClass('badge-success')
+                            .html('<i class="fas fa-video mr-1"></i> Kamera Aktif & Memindai');
+                    }).catch(function(retryErr) {
+                        handleCameraError(retryErr);
+                    });
+                } else {
+                    handleCameraError(err);
+                }
             });
         }
 
         function stopScanner() {
             if (html5QrCode && isScanning) {
-                html5QrCode.stop().then(function() {
+                try {
+                    html5QrCode.stop().then(function() {
+                        isScanning = false;
+                        $('#scanner-status-badge').removeClass('badge-success badge-warning badge-danger')
+                            .addClass('badge-secondary')
+                            .html('<i class="fas fa-video-slash mr-1"></i> Kamera Nonaktif');
+                    }).catch(function(err) {
+                        isScanning = false;
+                    });
+                } catch(e) {
                     isScanning = false;
-                    $('#scanner-status-badge').removeClass('badge-success').addClass('badge-secondary').html('<i class="fas fa-video-slash mr-1"></i> Kamera Diam');
-                }).catch(function(err) {
-                    isScanning = false;
-                });
+                }
+            } else {
+                isScanning = false;
             }
         }
 
@@ -208,8 +370,9 @@
             // Auto-scroll ke hasil
             $container[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
+            var baseUrl = window.APP_URL || '';
             $.ajax({
-                url: APP_URL + '/admin/transaksi/booking/verifikasi-qr',
+                url: baseUrl + '/admin/transaksi/booking/verifikasi-qr',
                 type: 'POST',
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),
@@ -230,6 +393,7 @@
             var isValid = res.status === 'valid';
             var isExpired = res.status === 'expired';
             var isAlready = res.status === 'already_processed';
+            var baseUrl = window.APP_URL || '';
 
             var badgeHtml = '';
             var bannerBg = '';
@@ -258,7 +422,7 @@
             if (isValid || isExpired) {
                 html += '    <div class="row mb-3 pb-3 border-bottom">';
                 html += '      <div class="col-sm-6 mb-2 mb-sm-0 d-flex align-items-center">';
-                html += '        <img src="' + res.anggota.image_url + '" class="rounded-circle mr-3 border shadow-sm" width="52" height="52" style="object-fit: cover;" onerror="this.src=\'' + APP_URL + '/assets/dist/img/default-150x150.png\';">';
+                html += '        <img src="' + res.anggota.image_url + '" class="rounded-circle mr-3 border shadow-sm" width="52" height="52" style="object-fit: cover;" onerror="this.src=\'' + baseUrl + '/assets/dist/img/default-150x150.png\';">';
                 html += '        <div>';
                 html += '          <span class="text-muted small font-weight-bold text-uppercase d-block">Anggota Pemesan</span>';
                 html += '          <h6 class="font-weight-bold text-dark mb-0">' + res.anggota.nama + '</h6>';
@@ -327,47 +491,72 @@
             $('#qr-result-container').html(html);
         }
 
-        // Event Handlers
+        // Event Listeners
         $('#modalScannerQr').on('shown.bs.modal', function() {
-            initCameras();
+            requestCameraPermissionAndStart();
         });
 
         $('#modalScannerQr').on('hidden.bs.modal', function() {
             stopScanner();
             $('#qr-result-container').addClass('d-none').empty();
             $('#manual-code-input').val('');
+            $('#qr-file-input').val('');
+            $('#qr-file-label').text('Pilih atau drag file foto QR Code...');
         });
 
-        $('#btn-start-scanner').on('click', function() {
-            if (currentCameraId) {
-                startScanner(currentCameraId);
-            } else {
-                initCameras();
-            }
+        $(document).on('click', '#btn-start-scanner, .btn-retry-camera', function() {
+            requestCameraPermissionAndStart();
+        });
+
+        $(document).on('click', '.btn-focus-manual', function() {
+            $('#manual-code-input').focus();
         });
 
         $('#btn-toggle-camera').on('click', function() {
             var selected = $('#qr-camera-select').val();
             if (selected) {
-                stopScanner();
-                setTimeout(function() {
-                    currentCameraId = selected;
-                    startScanner(selected);
-                }, 300);
+                currentCameraId = selected;
+                startScanner(selected);
             }
         });
 
         $('#qr-camera-select').on('change', function() {
             var selected = $(this).val();
             if (selected) {
-                stopScanner();
-                setTimeout(function() {
-                    currentCameraId = selected;
-                    startScanner(selected);
-                }, 300);
+                currentCameraId = selected;
+                startScanner(selected);
             }
         });
 
+        // Scan from Image File
+        $('#qr-file-input').on('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+
+            $('#qr-file-label').text(file.name);
+
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("qr-video-reader");
+            }
+
+            if (isScanning) {
+                stopScanner();
+            }
+
+            toastr.info('Menganalisis gambar QR Code...');
+            html5QrCode.scanFile(file, true)
+                .then(function(decodedText) {
+                    playScanBeep();
+                    $('#manual-code-input').val(decodedText);
+                    toastr.success('QR Code berhasil dibaca dari gambar!');
+                    verifikasiCode(decodedText);
+                })
+                .catch(function(err) {
+                    toastr.error('QR Code tidak dapat terbaca dari gambar ini. Pastikan gambar jelas dan memiliki QR Code bukti booking.');
+                });
+        });
+
+        // Manual Code Input
         $('#btn-submit-manual-code').on('click', function() {
             var val = $('#manual-code-input').val();
             verifikasiCode(val);
@@ -383,27 +572,20 @@
         $(document).on('click', '.btn-scan-lagi', function() {
             $('#qr-result-container').addClass('d-none').empty();
             $('#manual-code-input').val('');
+            $('#qr-file-input').val('');
+            $('#qr-file-label').text('Pilih atau drag file foto QR Code...');
             if (currentCameraId) {
                 startScanner(currentCameraId);
+            } else {
+                requestCameraPermissionAndStart();
             }
         });
 
+        // Process Borrow Loan Confirmation
         $(document).on('click', '.btn-proses-serah', function() {
             var $btn = $(this);
             var code = $btn.data('code');
             if (!code) return;
-
-            var lamaData = {};
-            $('.form-lama-pinjam').each(function() {
-                var name = $(this).attr('name');
-                lamaData[name] = $(this).val();
-            });
-
-            var dendaData = {};
-            $('.form-denda-pinjam').each(function() {
-                var name = $(this).attr('name');
-                dendaData[name] = $(this).val();
-            });
 
             var postData = {
                 _token: $('meta[name="csrf-token"]').attr('content'),
@@ -412,7 +594,7 @@
                 denda: $('.form-denda-pinjam').first().val() ? [$('.form-denda-pinjam').first().val()] : [1000]
             };
 
-            // Copy dynamic arrays
+            // Dynamic arrays
             $('.form-lama-pinjam').each(function() {
                 postData[$(this).attr('name')] = $(this).val();
             });
@@ -422,8 +604,9 @@
 
             $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Memproses Penyerahan...');
 
+            var baseUrl = window.APP_URL || '';
             $.ajax({
-                url: APP_URL + '/admin/transaksi/peminjaman',
+                url: baseUrl + '/admin/transaksi/peminjaman',
                 type: 'POST',
                 data: postData,
                 success: function(response) {
@@ -448,4 +631,3 @@
         });
     })();
 </script>
-
