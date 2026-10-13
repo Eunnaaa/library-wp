@@ -24,7 +24,7 @@
         .header-kop h2 {
             margin: 0;
             font-size: 15pt;
-            color: #0f172a;
+            color: #1b1008;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
@@ -32,20 +32,20 @@
         .header-kop h4 {
             margin: 3px 0 0 0;
             font-size: 11pt;
-            color: #2563eb;
+            color: #8b4513;
             font-weight: bold;
         }
 
         .header-kop p {
             margin: 4px 0 0 0;
             font-size: 8.5pt;
-            color: #64748b;
+            color: #746454;
         }
 
         .ticket-badge {
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-left: 5px solid #2563eb;
+            background-color: #fdfbf7;
+            border: 1px solid #dcd3c3;
+            border-left: 5px solid #8b4513;
             padding: 10px 14px;
             margin-bottom: 18px;
         }
@@ -53,11 +53,11 @@
         .ticket-title {
             font-size: 11pt;
             font-weight: bold;
-            color: #0f172a;
+            color: #1b1008;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e8e2d4;
             padding-bottom: 4px;
         }
 
@@ -91,23 +91,23 @@
         }
 
         .data-table th {
-            background-color: #1e3a8a;
+            background-color: #2c1a10;
             color: #ffffff;
             font-weight: bold;
             font-size: 9pt;
             padding: 8px 10px;
             text-align: left;
-            border: 1px solid #1e3a8a;
+            border: 1px solid #2c1a10;
         }
 
         .data-table td {
             padding: 7px 10px;
             font-size: 8.5pt;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e8e2d4;
         }
 
         .data-table tr:nth-child(even) {
-            background-color: #f8fafc;
+            background-color: #fcf9f2;
         }
 
         .center {
@@ -115,9 +115,9 @@
         }
 
         .notice-box {
-            background-color: #fffbeb;
-            border: 1px solid #fef3c7;
-            border-left: 4px solid #f59e0b;
+            background-color: #fdf8eb;
+            border: 1px solid #fae8a4;
+            border-left: 4px solid #c59b27;
             padding: 10px 14px;
             margin-top: 15px;
             font-size: 8.5pt;
@@ -164,7 +164,7 @@
         <table class="info-table">
             <tr>
                 <td class="label">Kode Reservasi:</td>
-                <td class="val"><strong style="color: #2563eb; font-size: 11pt;">{{ $data_booking[0]->id_booking }}</strong></td>
+                <td class="val"><strong style="color: #8b4513; font-size: 11pt;">{{ $data_booking[0]->id_booking }}</strong></td>
                 <td class="label">Nama Anggota:</td>
                 <td class="val"><strong>{{ $data_booking[0]->anggota->nama ?? '-' }}</strong></td>
             </tr>
@@ -184,7 +184,7 @@
         </table>
     </div>
 
-    <div style="font-size: 9.5pt; font-weight: bold; color: #0f172a; margin-bottom: 6px;">
+    <div style="font-size: 9.5pt; font-weight: bold; color: #1b1008; margin-bottom: 6px;">
         Daftar Buku Yang Direservasi:
     </div>
 
@@ -233,14 +233,14 @@
             <td style="width: 50%; text-align: center;">
                 <p style="margin: 0; color: #64748b;">Anggota Peminjam,</p>
                 <div style="height: 55px;"></div>
-                <p style="margin: 0; font-weight: bold; border-top: 1px dotted #cbd5e1; display: inline-block; padding-top: 4px; min-width: 160px;">
+                <p style="margin: 0; font-weight: bold; border-top: 1px dotted #c5bcac; display: inline-block; padding-top: 4px; min-width: 160px;">
                     ( {{ $data_booking[0]->anggota->nama ?? 'Mahasiswa / Anggota' }} )
                 </p>
             </td>
             <td style="width: 50%; text-align: center;">
                 <p style="margin: 0; color: #64748b;">Petugas Sirkulasi Perpustakaan,</p>
                 <div style="height: 55px;"></div>
-                <p style="margin: 0; font-weight: bold; border-top: 1px dotted #cbd5e1; display: inline-block; padding-top: 4px; min-width: 160px;">
+                <p style="margin: 0; font-weight: bold; border-top: 1px dotted #c5bcac; display: inline-block; padding-top: 4px; min-width: 160px;">
                     ( Staf Perpustakaan UNM )
                 </p>
             </td>

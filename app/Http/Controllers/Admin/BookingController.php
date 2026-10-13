@@ -33,7 +33,7 @@ class BookingController extends Controller
         try {
             foreach ($booking->booking_detail as $detail) {
                 DB::table('buku')->where('id', $detail->id_buku)->increment('stok');
-                DB::table('buku')->where('id', $detail->id_buku)->decrement('dibooking');
+                DB::table('buku')->where('id', $detail->id_buku)->where('dibooking', '>', 0)->decrement('dibooking');
             }
 
             $booking->booking_detail()->delete();

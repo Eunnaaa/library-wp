@@ -2,64 +2,315 @@
 
 @section('title', 'Katalog Buku Perpustakaan')
 
+@push('styles')
+<style>
+    /* Premium Catalog Search Bar System */
+    .catalog-search-form {
+        background: #ffffff;
+        border: 1px solid #e8e2d4 !important;
+        border-radius: 18px;
+        box-shadow: 0 16px 40px -8px rgba(27, 16, 8, 0.4), 0 4px 14px rgba(27, 16, 8, 0.1);
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .catalog-search-form:focus-within {
+        border-color: #c59b27 !important;
+        box-shadow: 0 18px 46px -6px rgba(139, 69, 19, 0.45), 0 0 0 3px rgba(197, 155, 39, 0.22);
+    }
+
+    .catalog-search-input-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-left: 12px;
+        padding-right: 8px;
+    }
+    .catalog-search-input-box .search-icon {
+        color: #8b4513;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+    .catalog-search-input-box input {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent;
+        font-size: 0.98rem;
+        color: #241a14;
+        font-weight: 500;
+        width: 100%;
+        padding: 10px 4px;
+        outline: none !important;
+    }
+    .catalog-search-input-box input::placeholder {
+        color: #9c8e80;
+        font-weight: 400;
+    }
+    .catalog-search-input-box input:focus {
+        outline: none !important;
+        background: transparent;
+    }
+    .catalog-kbd-hint {
+        background: #fbf9f4;
+        border: 1px solid #e8e2d4;
+        color: #8c7d6e;
+        font-size: 0.75rem;
+        font-family: inherit;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        margin-left: 6px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        cursor: default;
+    }
+
+    /* Vertical Divider between search and category */
+    .catalog-search-divider {
+        width: 1px;
+        height: 34px;
+        background: #ebd9c0;
+        margin: 0 8px;
+        flex-shrink: 0;
+    }
+
+    /* Polished Category Select Capsule */
+    .catalog-category-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: #fcf9f2;
+        border: 1px solid #ebd9c0;
+        border-radius: 12px;
+        height: 48px;
+        padding: 0 12px;
+        min-width: 215px;
+        max-width: 245px;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    .catalog-category-box:hover {
+        background-color: #fbf5e9;
+        border-color: #c59b27;
+    }
+    .catalog-category-box:focus-within {
+        background-color: #ffffff;
+        border-color: #8b4513;
+        box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.12);
+    }
+    .catalog-category-box .category-icon {
+        color: #8b4513;
+        font-size: 0.95rem;
+        margin-right: 8px;
+        flex-shrink: 0;
+        pointer-events: none;
+    }
+    .catalog-category-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #241a14;
+        cursor: pointer;
+        outline: none !important;
+        padding-right: 22px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .catalog-category-select:focus {
+        outline: none !important;
+    }
+    .catalog-category-select option {
+        background-color: #ffffff;
+        color: #241a14;
+        font-weight: 500;
+        padding: 8px 12px;
+    }
+    .catalog-category-box .chevron-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #8b4513;
+        font-size: 0.78rem;
+        pointer-events: none;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .catalog-category-box:focus-within .chevron-icon {
+        transform: translateY(-50%) rotate(180deg);
+        color: #c59b27;
+    }
+
+    /* Submit Button */
+    .catalog-search-btn {
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+        border: 1px solid #c59b27;
+        color: #ffffff !important;
+        border-radius: 12px;
+        padding: 0 24px;
+        height: 48px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        box-shadow: 0 4px 14px rgba(139, 69, 19, 0.35);
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        flex-shrink: 0;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    .catalog-search-btn:hover {
+        background: linear-gradient(135deg, #70360d 0%, #8b4513 100%);
+        border-color: #ffd700;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(139, 69, 19, 0.45);
+        color: #ffffff !important;
+    }
+    .catalog-search-btn:active {
+        transform: translateY(0);
+    }
+
+    /* Category Pill Badges */
+    .catalog-cat-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        text-decoration: none !important;
+        margin: 4px;
+        border: 1px solid rgba(197, 155, 39, 0.35);
+        background: rgba(255, 255, 255, 0.1);
+        color: #f7f4ec !important;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(4px);
+    }
+    .catalog-cat-pill:hover {
+        background: rgba(197, 155, 39, 0.25);
+        border-color: #ffd700;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+    }
+    .catalog-cat-pill.active {
+        background: #c59b27;
+        border-color: #ffd700;
+        color: #1b1008 !important;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(197, 155, 39, 0.4);
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 991.98px) {
+        .catalog-category-box {
+            min-width: 175px;
+            max-width: 195px;
+        }
+    }
+    @media (max-width: 767.98px) {
+        .catalog-search-form {
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+        }
+        .catalog-search-input-box {
+            width: 100%;
+            padding: 0 4px;
+        }
+        .catalog-search-divider {
+            display: none;
+        }
+        .catalog-category-box {
+            width: 100%;
+            max-width: 100%;
+            min-width: 100%;
+        }
+        .catalog-search-btn {
+            width: 100%;
+            margin-left: 0;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="position-relative text-white py-5 mb-5 shadow-sm" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%); overflow: hidden;">
-    <!-- Ambient glowing accents -->
-    <div class="position-absolute" style="top: -100px; right: -100px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
-    <div class="position-absolute" style="bottom: -120px; left: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
+<div class="position-relative text-white py-5 mb-5 shadow-sm" style="background: linear-gradient(135deg, #180e08 0%, #2a1810 50%, #3e2417 100%); border-bottom: 3px solid #c59b27; overflow: hidden;">
+    <!-- Ambient glowing accents: Warm Gold & Mahogany -->
+    <div class="position-absolute" style="top: -100px; right: -100px; width: 380px; height: 380px; background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
+    <div class="position-absolute" style="bottom: -120px; left: -80px; width: 320px; height: 320px; background: radial-gradient(circle, rgba(139, 69, 19, 0.25) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
 
     <div class="container-fluid px-3 px-md-4 position-relative text-center py-2">
-        <div class="d-inline-flex align-items-center mb-3 px-3 py-1 rounded-pill" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2);">
+        <div class="d-inline-flex align-items-center mb-3 px-3 py-1 rounded-pill" style="background: rgba(197, 155, 39, 0.18); backdrop-filter: blur(8px); border: 1px solid rgba(197, 155, 39, 0.4);">
             <i class="fas fa-university text-warning mr-2"></i>
-            <span class="small font-weight-bold letter-spacing-1 text-uppercase text-white-50">Perpustakaan Digital Universitas Nusa Mandiri</span>
+            <span class="small font-weight-bold letter-spacing-1 text-uppercase" style="color: #f5e4b3 !important;">Perpustakaan Digital Universitas Nusa Mandiri</span>
         </div>
 
-        <h1 class="display-4 font-weight-bold mb-3 text-white" style="letter-spacing: -0.03em;">
-            <i class="fas fa-book-reader text-primary mr-2"></i> Katalog E-Library UNM
+        <h1 class="display-4 font-weight-bold mb-3 text-white" style="letter-spacing: -0.02em;">
+            <i class="fas fa-book-reader mr-2" style="color: #d4af37;"></i> Katalog E-Library UNM
         </h1>
-        <p class="lead mb-4 mx-auto text-light opacity-90" style="max-width: 680px; font-size: 1.15rem; line-height: 1.6;">
+        <p class="lead mb-4 mx-auto text-light opacity-90" style="max-width: 680px; font-size: 1.15rem; line-height: 1.6; color: #ede6d8 !important;">
             Akses ribuan literatur akademik, buku teks informatika, dan referensi riset ilmiah secara praktis dengan reservasi peminjaman online 24 jam.
         </p>
 
         <!-- Search Bar with Floating Container -->
         <div class="row justify-content-center">
-            <div class="col-lg-9 col-md-11">
-                <form action="{{ route('member.index') }}" method="GET" class="card p-2 border-0 shadow-lg" style="border-radius: 16px; background: #ffffff;">
-                    <div class="input-group flex-column flex-sm-row">
-                        <div class="input-group-prepend d-none d-sm-flex align-items-center pl-3 pr-2 text-muted">
-                            <i class="fas fa-search text-primary"></i>
-                        </div>
-                        <input type="text" name="keyword" id="catalog-search-input" class="form-control form-control-lg border-0 shadow-none"
-                            placeholder="Cari judul buku, nama pengarang, atau penerbit..." value="{{ request('keyword') }}"
-                            style="font-size: 1rem; color: #1e293b;">
+            <div class="col-lg-10 col-xl-9">
+                <form action="{{ route('member.index') }}" method="GET" class="catalog-search-form">
+                    <!-- Left: Search Keyword Input -->
+                    <div class="catalog-search-input-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="keyword" id="catalog-search-input"
+                            placeholder="Cari judul buku, nama pengarang, atau penerbit..."
+                            value="{{ request('keyword') }}"
+                            autocomplete="off">
+                        <kbd class="catalog-kbd-hint d-none d-lg-inline-block" title="Tekan tombol '/' untuk langsung mencari">/</kbd>
+                    </div>
 
-                        <div class="d-none d-lg-flex align-items-center pr-2">
-                            <kbd class="px-2 py-1 text-muted bg-light border small rounded" style="font-size: 0.72rem; font-family: monospace;" title="Tekan tombol '/' untuk mencari">/</kbd>
-                        </div>
+                    <!-- Subtle Vertical Divider -->
+                    <div class="catalog-search-divider d-none d-md-block"></div>
 
-                        <select name="kategori" class="form-control form-control-lg border-0 border-sm-left shadow-none text-secondary" style="max-width: 220px; font-size: 0.95rem;">
+                    <!-- Center/Right: Category Dropdown Capsule -->
+                    <div class="catalog-category-box">
+                        <i class="fas fa-layer-group category-icon"></i>
+                        <select name="kategori" id="catalog-category-select" class="catalog-category-select" aria-label="Saring berdasarkan Kategori">
                             <option value="">Semua Kategori</option>
                             @foreach($kategori as $k)
-                                <option value="{{ $k->id }}" {{ request('kategori') == $k->id ? 'selected' : '' }}>{{ $k->nama_kategori }}</option>
+                                <option value="{{ $k->id }}" {{ request('kategori') == $k->id ? 'selected' : '' }}>
+                                    {{ $k->nama_kategori }}
+                                </option>
                             @endforeach
                         </select>
-
-                        <div class="input-group-append">
-                            <button class="btn btn-primary px-4 py-2 font-weight-bold d-flex align-items-center justify-content-center" type="submit" style="border-radius: 12px; margin: 2px;">
-                                <i class="fas fa-search mr-2"></i> <span>Temukan</span>
-                            </button>
-                        </div>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
                     </div>
+
+                    <!-- Right: Search Submit Button -->
+                    <button class="catalog-search-btn" type="submit">
+                        <i class="fas fa-search mr-2"></i>
+                        <span>Temukan</span>
+                    </button>
                 </form>
 
                 <!-- Quick Category Filter Pills -->
                 <div class="d-flex flex-wrap justify-content-center align-items-center mt-3 small">
-                    <span class="text-white-50 mr-2 mb-2 font-weight-bold">Kategori Populer:</span>
-                    <a href="{{ route('member.index') }}" class="badge badge-pill {{ !request('kategori') ? 'badge-light text-primary font-weight-bold shadow-sm' : 'badge-dark text-white' }} px-3 py-2 mr-2 mb-2" style="font-size: 0.82rem; text-decoration: none; transition: all 0.2s;">
+                    <span class="mr-2 mb-2 font-weight-bold" style="color: #e5d8c3;">
+                        <i class="fas fa-tags mr-1" style="color: #c59b27;"></i> Kategori Populer:
+                    </span>
+                    <a href="{{ route('member.index') }}" class="catalog-cat-pill {{ !request('kategori') ? 'active' : '' }}">
                         Semua
                     </a>
                     @foreach($kategori->take(6) as $k)
-                        <a href="{{ route('member.index', ['kategori' => $k->id]) }}" class="badge badge-pill {{ request('kategori') == $k->id ? 'badge-light text-primary font-weight-bold shadow-sm' : 'badge-dark text-white' }} px-3 py-2 mr-2 mb-2" style="font-size: 0.82rem; text-decoration: none; background: {{ request('kategori') == $k->id ? '#ffffff' : 'rgba(255, 255, 255, 0.15)' }}; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.2s;">
+                        <a href="{{ route('member.index', ['kategori' => $k->id]) }}" class="catalog-cat-pill {{ request('kategori') == $k->id ? 'active' : '' }}">
                             {{ $k->nama_kategori }}
                         </a>
                     @endforeach
@@ -71,9 +322,9 @@
 
 <main role="main" class="container-fluid px-3 px-md-4">
     @if(request('keyword') || request('kategori'))
-        <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4 py-2 px-3 shadow-sm rounded-lg">
+        <div class="alert alert-light border d-flex justify-content-between align-items-center mb-4 py-2 px-3 shadow-sm rounded-lg" style="background: #fbf9f4; border-color: #e8e2d4 !important;">
             <div class="d-flex align-items-center">
-                <i class="fas fa-filter text-primary mr-2"></i>
+                <i class="fas fa-filter mr-2" style="color: #8b4513;"></i>
                 <span class="text-secondary">
                     Menampilkan hasil pencarian untuk:
                     @if(request('keyword')) <strong>"{{ request('keyword') }}"</strong> @endif
@@ -91,12 +342,12 @@
         </div>
     @endif
 
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom" style="border-color: #e8e2d4 !important;">
         <div>
-            <h4 class="font-weight-bold text-dark mb-1">Koleksi Buku Terkini</h4>
+            <h4 class="font-weight-bold text-dark mb-1" style="color: #241a14 !important; letter-spacing: -0.02em;">Koleksi Buku Terkini</h4>
             <p class="text-muted small mb-0">Jelajahi dan lakukan pemesanan buku untuk dipinjam di perpustakaan</p>
         </div>
-        <span class="badge badge-primary px-3 py-2 font-weight-bold shadow-sm" style="font-size: 0.85rem;">
+        <span class="badge badge-primary px-3 py-2 font-weight-bold shadow-sm" style="font-size: 0.85rem; border: 1px solid rgba(212, 175, 55, 0.3);">
             <i class="fas fa-book mr-1"></i> Total: {{ $buku->total() }} Koleksi
         </span>
     </div>
@@ -113,33 +364,33 @@
                                     onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
                             </div>
                             <div class="position-absolute" style="top: 10px; right: 10px; z-index: 5;">
-                                <span class="badge badge-pill shadow-sm" style="background: rgba(15, 23, 42, 0.82); color: #38bdf8; font-size: 0.72rem; padding: 0.4em 0.8em; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.12);">
+                                <span class="badge badge-pill shadow-sm font-weight-bold" style="background: rgba(27, 16, 8, 0.88); color: #e9c46a; font-size: 0.72rem; padding: 0.4em 0.8em; backdrop-filter: blur(4px); border: 1px solid rgba(197, 155, 39, 0.4);">
                                     {{ $item->kategori->nama_kategori ?? 'Umum' }}
                                 </span>
                             </div>
                         </div>
 
                         <div class="card-body p-3 text-left">
-                            <h6 class="card-title font-weight-bold text-dark mb-1" style="font-size: 0.98rem; line-height: 1.4; min-height: 2.8rem;" title="{{ $item->judul_buku }}">
+                            <h6 class="card-title font-weight-bold mb-1" style="font-size: 0.98rem; line-height: 1.4; min-height: 2.8rem; color: #241a14;" title="{{ $item->judul_buku }}">
                                 {{ Str::limit($item->judul_buku, 45) }}
                             </h6>
                             <div class="text-muted small mb-1 d-flex align-items-center">
-                                <i class="fas fa-user-edit mr-2 text-primary opacity-75" style="font-size: 0.75rem;"></i>
+                                <i class="fas fa-feather-alt mr-2 opacity-75" style="color: #8b4513; font-size: 0.75rem;"></i>
                                 <span class="text-truncate">{{ $item->pengarang }}</span>
                             </div>
                             <div class="text-muted small mb-2 d-flex align-items-center">
-                                <i class="fas fa-building mr-2 text-secondary opacity-75" style="font-size: 0.75rem;"></i>
+                                <i class="fas fa-university mr-2 opacity-75" style="color: #746454; font-size: 0.75rem;"></i>
                                 <span class="text-truncate">{{ $item->penerbit }} &bull; {{ $item->tahun_terbit }}</span>
                             </div>
 
-                            <div class="mt-2 pt-2 border-top d-flex justify-content-between align-items-center">
+                            <div class="mt-2 pt-2 border-top d-flex justify-content-between align-items-center" style="border-color: #efe8dc !important;">
                                 <small class="text-muted font-weight-bold">Status:</small>
                                 @if($item->stok > 0)
-                                    <span class="badge badge-success px-2 py-1">
+                                    <span class="badge badge-success px-2 py-1 font-weight-bold">
                                         <i class="fas fa-check-circle mr-1"></i> Tersedia {{ $item->stok }} eks
                                     </span>
                                 @else
-                                    <span class="badge badge-danger px-2 py-1">
+                                    <span class="badge badge-danger px-2 py-1 font-weight-bold">
                                         <i class="fas fa-times-circle mr-1"></i> Habis
                                     </span>
                                 @endif
@@ -181,9 +432,9 @@
             </div>
         @empty
             <div class="col-12 text-center py-5 my-4">
-                <div class="card card-body border-0 shadow-sm py-5 px-4 mx-auto" style="max-width: 500px; border-radius: 16px;">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #eff6ff;">
-                        <i class="fas fa-book-open fa-2x text-primary"></i>
+                <div class="card card-body shadow-sm py-5 px-4 mx-auto" style="max-width: 500px; border-radius: 16px; border: 1px solid #e8e2d4 !important; background: #ffffff;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #fdf4eb; border: 1px solid rgba(139, 69, 19, 0.15);">
+                        <i class="fas fa-book-open fa-2x" style="color: #8b4513;"></i>
                     </div>
                     <h5 class="font-weight-bold text-dark">Tidak ada buku yang ditemukan</h5>
                     <p class="text-muted small mb-3">Silakan gunakan kata kunci pencarian yang lain atau jelajahi semua kategori buku.</p>
@@ -204,9 +455,9 @@
 <div class="modal fade" id="detailBukuModal" tabindex="-1" role="dialog" aria-labelledby="detailBukuModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
-            <div class="modal-header text-white" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-                <h5 class="modal-title font-weight-bold" id="detailBukuModalLabel">
-                    <i class="fas fa-book-open text-primary mr-2"></i> Informasi Detail Koleksi Buku
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #1b1008, #2c1a10); border-bottom: 2px solid #c59b27;">
+                <h5 class="modal-title font-weight-bold" id="detailBukuModalLabel" style="color: #fdfbf7; letter-spacing: -0.02em;">
+                    <i class="fas fa-book-open mr-2" style="color: #e9c46a;"></i> Informasi Detail Koleksi Buku
                 </h5>
                 <button type="button" class="close text-white opacity-90" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

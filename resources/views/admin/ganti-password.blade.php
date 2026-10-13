@@ -6,8 +6,8 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
-            <div class="card border-0 shadow-sm rounded-xl overflow-hidden mb-4">
-                <div class="card-header bg-white border-0 pt-4 pb-2 px-4 d-flex align-items-center justify-content-between">
+            <div class="card shadow-sm rounded-xl overflow-hidden mb-4" style="border: 1px solid #e8e2d4 !important;">
+                <div class="card-header bg-white pt-4 pb-3 px-4 d-flex align-items-center justify-content-between" style="border-bottom: 1px solid #e8e2d4 !important;">
                     <div>
                         <h4 class="font-weight-bold text-dark mb-1">
                             <i class="fas fa-shield-alt text-warning mr-2"></i>Ganti Password Administrator
@@ -20,7 +20,7 @@
                     @csrf
                     @method('PUT')
                     <div class="card-body px-4 pt-3">
-                        <div class="alert alert-warning border-0 rounded-lg shadow-sm mb-4 small" style="background-color: #fefce8; color: #854d0e; border-left: 4px solid #f59e0b !important;">
+                        <div class="alert alert-warning border-0 rounded-lg shadow-sm mb-4 small" style="background-color: #fdf8eb; color: #854d0e; border: 1px solid #fae8a4; border-left: 4px solid #c59b27 !important;">
                             <i class="fas fa-info-circle mr-1"></i>
                             Gunakan kombinasi password yang kuat dengan minimal 6 karakter, mengandung huruf besar, huruf kecil, dan angka.
                         </div>
@@ -29,12 +29,12 @@
                             <label for="password_sekarang" class="font-weight-semibold text-dark">Password Saat Ini <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-light border-right-0"><i class="fas fa-key text-muted"></i></span>
+                                    <span class="input-group-text bg-light border-right-0" style="border-color: #e8e2d4;"><i class="fas fa-key text-muted"></i></span>
                                 </div>
                                 <input type="password" class="form-control border-left-0 border-right-0 @error('password_sekarang') is-invalid @enderror"
-                                    id="password_sekarang" name="password_sekarang" placeholder="Masukkan password yang saat ini aktif" required>
+                                    id="password_sekarang" name="password_sekarang" placeholder="Masukkan password yang saat ini aktif" required style="border-color: #e8e2d4;">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('password_sekarang', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('password_sekarang', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -48,12 +48,12 @@
                             <label for="password_baru" class="font-weight-semibold text-dark">Password Baru <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-light border-right-0"><i class="fas fa-lock text-muted"></i></span>
+                                    <span class="input-group-text bg-light border-right-0" style="border-color: #e8e2d4;"><i class="fas fa-lock text-muted"></i></span>
                                 </div>
                                 <input type="password" class="form-control border-left-0 border-right-0 @error('password_baru') is-invalid @enderror"
-                                    id="password_baru" name="password_baru" placeholder="Minimal 6 karakter" required>
+                                    id="password_baru" name="password_baru" placeholder="Minimal 6 karakter" required style="border-color: #e8e2d4;">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('password_baru', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('password_baru', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -67,12 +67,12 @@
                             <label for="konfirmasi_password" class="font-weight-semibold text-dark">Konfirmasi Password Baru <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-light border-right-0"><i class="fas fa-lock-open text-muted"></i></span>
+                                    <span class="input-group-text bg-light border-right-0" style="border-color: #e8e2d4;"><i class="fas fa-lock-open text-muted"></i></span>
                                 </div>
                                 <input type="password" class="form-control border-left-0 border-right-0 @error('konfirmasi_password') is-invalid @enderror"
-                                    id="konfirmasi_password" name="konfirmasi_password" placeholder="Ketik ulang password baru Anda" required>
+                                    id="konfirmasi_password" name="konfirmasi_password" placeholder="Ketik ulang password baru Anda" required style="border-color: #e8e2d4;">
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('konfirmasi_password', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleAdminPassword('konfirmasi_password', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -83,11 +83,11 @@
                         </div>
                     </div>
 
-                    <div class="card-footer bg-light px-4 py-3 border-top d-flex justify-content-between align-items-center">
+                    <div class="card-footer px-4 py-3 border-top d-flex justify-content-between align-items-center" style="background: #fdfbf7; border-top: 1px solid #e8e2d4 !important;">
                         <a href="{{ route('admin.profil') }}" class="btn btn-outline-secondary font-weight-semibold" style="border-radius: 8px;">
                             <i class="fas fa-arrow-left mr-1"></i> Batal
                         </a>
-                        <button type="submit" class="btn btn-warning px-4 py-2 font-weight-bold text-dark shadow-sm" style="border-radius: 8px;">
+                        <button type="submit" class="btn btn-primary px-4 py-2 font-weight-bold shadow-sm" style="border-radius: 8px;">
                             <i class="fas fa-save mr-1"></i> Perbarui Password
                         </button>
                     </div>

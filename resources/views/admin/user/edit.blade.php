@@ -102,7 +102,7 @@
                                         <input type="password" class="form-control border-left-0 border-right-0 @error('password') is-invalid @enderror" id="password" name="password"
                                             placeholder="Kosongkan bila tidak ingin mengubah password">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleUserPassword('password', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                            <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="toggleUserPassword('password', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                         </div>

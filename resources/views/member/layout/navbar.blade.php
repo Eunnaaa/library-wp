@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm" style="background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); z-index: 1030;">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm" style="background: #1b1008; border-bottom: 2px solid #c59b27; box-shadow: 0 4px 20px rgba(27, 16, 8, 0.45); z-index: 1030;">
     <div class="container-fluid px-3 px-md-4">
-        <a class="navbar-brand d-flex align-items-center font-weight-bold" href="{{ url('/') }}" style="letter-spacing: -0.02em;">
-            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #38bdf8);">
-                <i class="fas fa-book-reader text-white" style="font-size: 1.1rem;"></i>
+        <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}" style="letter-spacing: -0.01em;">
+            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 36px; height: 36px; background: linear-gradient(135deg, #c59b27, #e9c46a); border: 1px solid #d4af37;">
+                <i class="fas fa-book-reader" style="color: #1b1008; font-size: 1.05rem;"></i>
             </div>
-            <span class="text-white" style="font-size: 1.15rem;">E-Library</span>
-            <span class="badge badge-primary ml-1 px-2 py-1" style="background: #2563eb; color: #ffffff; font-size: 0.72rem; letter-spacing: 0.06em;">UNM</span>
+            <span class="text-white font-weight-bold" style="font-size: 1.25rem; letter-spacing: -0.02em;">E-Library</span>
+            <span class="badge ml-2 px-2 py-1 font-weight-bold" style="background: rgba(197, 155, 39, 0.2); color: #e9c46a; border: 1px solid #c59b27; font-size: 0.72rem; letter-spacing: 0.08em;">UNM</span>
         </a>
 
         <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarsExample"
@@ -16,14 +16,14 @@
         <div class="collapse navbar-collapse" id="navbarsExample">
             <ul class="navbar-nav mr-auto pl-lg-3">
                 <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
-                    <a class="nav-link text-light font-weight-500 px-3 {{ request()->is('/') ? 'text-primary font-weight-bold' : 'opacity-80' }}" href="{{ url('/') }}">
-                        <i class="fas fa-compass mr-1 text-primary"></i> Jelajah Katalog
+                    <a class="nav-link px-3 {{ request()->is('/') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ url('/') }}">
+                        <i class="fas fa-compass mr-1" style="color: #c59b27;"></i> Jelajah Katalog
                     </a>
                 </li>
                 @auth
                     @if(Auth::user()->role_id == 2)
                         <li class="nav-item {{ request()->is('member/data-booking*') ? 'active' : '' }}">
-                            <a class="nav-link text-light font-weight-500 px-3 {{ request()->is('member/data-booking*') ? 'text-primary font-weight-bold' : 'opacity-80' }}" href="{{ route('member.dataBooking') }}">
+                            <a class="nav-link px-3 {{ request()->is('member/data-booking*') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ route('member.dataBooking') }}">
                                 <i class="fas fa-receipt mr-1 text-warning"></i> Bukti Booking
                             </a>
                         </li>
@@ -39,11 +39,11 @@
                         @endphp
                         <li class="nav-item mr-lg-3 mb-2 mb-lg-0 w-100 w-lg-auto">
                             <a class="btn btn-sm d-flex align-items-center justify-content-center" href="{{ route('member.dataKeranjang') }}"
-                                style="background: rgba(255, 255, 255, 0.08); color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 9999px; padding: 0.4rem 1rem;">
-                                <i class="fas fa-shopping-basket mr-2 text-info"></i>
-                                <span>Keranjang</span>
+                                style="background: rgba(197, 155, 39, 0.15); color: #f7f4ec; border: 1px solid rgba(197, 155, 39, 0.4); border-radius: 9999px; padding: 0.4rem 1.1rem;">
+                                <i class="fas fa-shopping-basket mr-2" style="color: #e9c46a;"></i>
+                                <span class="font-weight-semibold">Keranjang</span>
                                 @if($cartCount > 0)
-                                    <span class="badge badge-danger ml-2 px-2 py-1" style="border-radius: 9999px; font-size: 0.72rem; animation: pulse 2s infinite;">{{ $cartCount }}</span>
+                                    <span class="badge ml-2 px-2 py-1 font-weight-bold" style="background: #8b4513; color: #fff; border-radius: 9999px; font-size: 0.72rem;">{{ $cartCount }}</span>
                                 @else
                                     <span class="badge badge-secondary ml-2 px-2 py-1" style="border-radius: 9999px; font-size: 0.72rem;">0</span>
                                 @endif
@@ -53,28 +53,28 @@
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded" href="#" id="navbarDropdownMenuLink"
-                            role="button" data-toggle="dropdown" aria-expanded="false" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);">
+                            role="button" data-toggle="dropdown" aria-expanded="false" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(197, 155, 39, 0.3);">
                             <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
-                                class="rounded-circle border mr-2" height="30" width="30" style="object-fit: cover; border-color: rgba(255,255,255,0.3) !important;" alt="Avatar"
+                                class="rounded-circle border mr-2" height="30" width="30" style="object-fit: cover; border-color: #c59b27 !important;" alt="Avatar"
                                 onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                             <div class="text-left mr-1 d-none d-sm-inline-block" style="line-height: 1.2;">
                                 <span class="d-block text-white font-weight-bold" style="font-size: 0.85rem;">{{ Str::limit(Auth::user()->nama, 18) }}</span>
-                                <small class="text-muted text-capitalize" style="font-size: 0.7rem;">{{ Auth::user()->role_id == 1 ? 'Administrator' : 'Anggota' }}</small>
+                                <small class="text-capitalize" style="font-size: 0.7rem; color: #d4af37;">{{ Auth::user()->role_id == 1 ? 'Administrator' : 'Anggota' }}</small>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 mt-2 p-2" aria-labelledby="navbarDropdownMenuLink" style="border-radius: 12px; min-width: 210px; background: #ffffff;">
+                        <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 mt-2 p-2" aria-labelledby="navbarDropdownMenuLink" style="border-radius: 12px; min-width: 210px; background: #ffffff; border: 1px solid #e8e2d4 !important;">
                             <div class="px-3 py-2 border-bottom mb-2 bg-light rounded">
                                 <small class="text-muted d-block">Masuk sebagai:</small>
                                 <strong class="text-dark d-block text-truncate">{{ Auth::user()->nama }}</strong>
-                                <small class="text-primary font-weight-bold">{{ Auth::user()->email }}</small>
+                                <small class="font-weight-bold" style="color: #8b4513;">{{ Auth::user()->email }}</small>
                             </div>
                             @if(Auth::user()->role_id == 1)
                                 <a class="dropdown-item rounded py-2" href="{{ route('admin.dashboard') }}">
-                                    <i class="fas fa-tachometer-alt mr-2 text-primary"></i> Panel Admin
+                                    <i class="fas fa-tachometer-alt mr-2" style="color: #8b4513;"></i> Panel Admin
                                 </a>
                             @else
                                 <a class="dropdown-item rounded py-2" href="{{ route('member.profil') }}">
-                                    <i class="fas fa-user-circle mr-2 text-primary"></i> Profil Saya
+                                    <i class="fas fa-user-circle mr-2" style="color: #8b4513;"></i> Profil Saya
                                 </a>
                                 <a class="dropdown-item rounded py-2" href="{{ route('member.ganti-password') }}">
                                     <i class="fas fa-key mr-2 text-warning"></i> Ganti Password
@@ -92,12 +92,12 @@
                     </li>
                 @else
                     <li class="nav-item mr-2 mb-2 mb-lg-0">
-                        <a class="btn btn-sm btn-outline-light px-3" href="{{ route('login') }}" style="border-radius: 9999px;">
+                        <a class="btn btn-sm btn-outline-light px-3 font-weight-bold" href="{{ route('login') }}" style="border-radius: 9999px; border-color: rgba(212, 175, 55, 0.6); color: #f7f4ec;">
                             <i class="fas fa-sign-in-alt mr-1"></i> Masuk
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-sm btn-primary px-3 shadow-sm" href="{{ route('register') }}" style="border-radius: 9999px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none;">
+                        <a class="btn btn-sm px-3 shadow-sm font-weight-bold text-white" href="{{ route('register') }}" style="border-radius: 9999px; background: linear-gradient(135deg, #8b4513, #a0522d); border: 1px solid #c59b27;">
                             <i class="fas fa-user-plus mr-1"></i> Daftar Anggota
                         </a>
                     </li>

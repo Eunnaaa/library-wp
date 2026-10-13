@@ -23,7 +23,7 @@
         .header-kop h2 {
             margin: 0;
             font-size: 15pt;
-            color: #0f172a;
+            color: #1b1008;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
@@ -31,22 +31,22 @@
         .header-kop h4 {
             margin: 3px 0 0 0;
             font-size: 11pt;
-            color: #2563eb;
+            color: #8b4513;
             font-weight: bold;
         }
 
         .header-kop p {
             margin: 4px 0 0 0;
             font-size: 8.5pt;
-            color: #64748b;
+            color: #746454;
         }
 
         .report-meta {
             margin-bottom: 15px;
             font-size: 8.5pt;
             color: #475569;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background-color: #fdfbf7;
+            border: 1px solid #dcd3c3;
             padding: 8px 12px;
         }
 
@@ -66,23 +66,23 @@
         }
 
         table.data-table th {
-            background-color: #1e3a8a;
+            background-color: #2c1a10;
             color: #ffffff;
             font-weight: bold;
             font-size: 8.5pt;
             padding: 7px 8px;
             text-align: left;
-            border: 1px solid #1e3a8a;
+            border: 1px solid #2c1a10;
         }
 
         table.data-table td {
             padding: 6px 8px;
             font-size: 8pt;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e8e2d4;
         }
 
         table.data-table tr:nth-child(even) {
-            background-color: #f8fafc;
+            background-color: #fcf9f2;
         }
 
         .text-center {
@@ -172,7 +172,7 @@
     <div class="footer">
         <p style="margin: 0; color: #64748b;">Kepala / Petugas Sirkulasi,</p>
         <div style="height: 55px;"></div>
-        <p style="margin: 0; font-weight: bold; border-top: 1px dotted #cbd5e1; display: inline-block; padding-top: 4px; min-width: 170px;">
+        <p style="margin: 0; font-weight: bold; border-top: 1px dotted #c5bcac; display: inline-block; padding-top: 4px; min-width: 170px;">
             ( {{ Auth::user()->nama ?? 'Administrator' }} )
         </p>
     </div>

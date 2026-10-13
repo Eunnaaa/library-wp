@@ -99,64 +99,73 @@ class PinjamController extends Controller
             'denda' => 'required|array',
         ]);
 
-        DB::transaction(function () use ($request) {
-            $id_booking = $request->input('id_booking');
-            $booking = Booking::where('id_booking', $id_booking)->lockForUpdate()->firstOrFail();
-            $id_user = $booking->id_user;
+        try {
+            DB::transaction(function () use ($request) {
+                $id_booking = $request->input('id_booking');
+                $booking = Booking::where('id_booking', $id_booking)->lockForUpdate()->firstOrFail();
 
-            $todayDate = Carbon::now()->format('ymd');
-            $prefix = 'P'.$todayDate;
-            $existing = Pinjam::where('no_pinjam', 'like', $prefix.'%')
-                ->lockForUpdate()
-                ->pluck('no_pinjam');
-            $maxSeq = 0;
-            foreach ($existing as $np) {
-                $seq = intval(substr($np, strlen($prefix)));
-                if ($seq > $maxSeq) {
-                    $maxSeq = $seq;
+                if (Carbon::parse($booking->batas_ambil)->isPast()) {
+                    throw new \Exception('Booking ini telah melewati batas waktu pengambilan dan sudah kedaluwarsa.');
                 }
-            }
-            $no_pinjam = $prefix.str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
 
-            $tgl_pinjam = Carbon::now();
-            $status = 'Pinjam';
+                $id_user = $booking->id_user;
 
-            $pinjam = Pinjam::create([
-                'no_pinjam' => $no_pinjam,
-                'tgl_pinjam' => $tgl_pinjam,
-                'id_booking' => $id_booking,
-                'id_user' => $id_user,
-                'total_denda' => 0,
-                'id_petugas_pinjam' => Auth::id(),
-            ]);
+                $todayDate = Carbon::now()->format('ymd');
+                $prefix = 'P'.$todayDate;
+                $existing = Pinjam::where('no_pinjam', 'like', $prefix.'%')
+                    ->lockForUpdate()
+                    ->pluck('no_pinjam');
+                $maxSeq = 0;
+                foreach ($existing as $np) {
+                    $seq = intval(substr($np, strlen($prefix)));
+                    if ($seq > $maxSeq) {
+                        $maxSeq = $seq;
+                    }
+                }
+                $no_pinjam = $prefix.str_pad($maxSeq + 1, 3, '0', STR_PAD_LEFT);
 
-            $bookingDetails = BookingDetail::where('id_booking', $id_booking)->get();
+                $tgl_pinjam = Carbon::now();
+                $status = 'Pinjam';
 
-            foreach ($bookingDetails as $detail) {
-                $id_buku = $detail->id_buku;
-                $lama_pinjam = $request->input("lama.{$id_buku}") ?? $request->input('lama.0') ?? 7;
-                $denda = $request->input("denda.{$id_buku}") ?? $request->input('denda.0') ?? 1000;
-                $tgl_kembali = Carbon::parse($tgl_pinjam)->addDays((int) $lama_pinjam);
-
-                PinjamDetail::create([
+                $pinjam = Pinjam::create([
                     'no_pinjam' => $no_pinjam,
-                    'id_buku' => $id_buku,
-                    'tgl_kembali' => $tgl_kembali,
-                    'tgl_pengembalian' => null,
-                    'denda' => $denda,
-                    'lama_pinjam' => $lama_pinjam,
-                    'status' => $status,
+                    'tgl_pinjam' => $tgl_pinjam,
+                    'id_booking' => $id_booking,
+                    'id_user' => $id_user,
+                    'total_denda' => 0,
+                    'id_petugas_pinjam' => Auth::id(),
                 ]);
 
-                DB::table('buku')->where('id', $id_buku)->where('dibooking', '>', 0)->decrement('dibooking');
-                DB::table('buku')->where('id', $id_buku)->increment('dipinjam');
-            }
+                $bookingDetails = BookingDetail::where('id_booking', $id_booking)->get();
 
-            BookingDetail::where('id_booking', $id_booking)->delete();
-            Booking::where('id_booking', $id_booking)->delete();
-        });
+                foreach ($bookingDetails as $detail) {
+                    $id_buku = $detail->id_buku;
+                    $lama_pinjam = $request->input("lama.{$id_buku}") ?? $request->input('lama.0') ?? 7;
+                    $denda = $request->input("denda.{$id_buku}") ?? $request->input('denda.0') ?? 1000;
+                    $tgl_kembali = Carbon::parse($tgl_pinjam)->addDays((int) $lama_pinjam);
 
-        return redirect()->route('admin.transaksi.peminjaman.index')->with('success', 'Data pinjaman berhasil disimpan dan booking telah diproses.');
+                    PinjamDetail::create([
+                        'no_pinjam' => $no_pinjam,
+                        'id_buku' => $id_buku,
+                        'tgl_kembali' => $tgl_kembali,
+                        'tgl_pengembalian' => null,
+                        'denda' => $denda,
+                        'lama_pinjam' => $lama_pinjam,
+                        'status' => $status,
+                    ]);
+
+                    DB::table('buku')->where('id', $id_buku)->where('dibooking', '>', 0)->decrement('dibooking');
+                    DB::table('buku')->where('id', $id_buku)->increment('dipinjam');
+                }
+
+                BookingDetail::where('id_booking', $id_booking)->delete();
+                Booking::where('id_booking', $id_booking)->delete();
+            });
+
+            return redirect()->route('admin.transaksi.peminjaman.index')->with('success', 'Data pinjaman berhasil disimpan dan booking telah diproses.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function kembalikanBuku($no_pinjam, $id_buku)

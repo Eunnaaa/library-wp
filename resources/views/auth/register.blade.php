@@ -21,7 +21,8 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+            background: radial-gradient(circle at 50% 15%, rgba(197, 155, 39, 0.18) 0%, transparent 55%),
+                        linear-gradient(135deg, #1b1008 0%, #2c1a10 50%, #150d06 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -32,50 +33,63 @@
             width: 100%;
             max-width: 480px;
             border-radius: 20px;
-            background: #ffffff;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #fdfbf7;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(197, 155, 39, 0.12);
+            border: 1px solid rgba(197, 155, 39, 0.35);
             overflow: hidden;
         }
         .brand-badge {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #2563eb, #38bdf8);
-            border-radius: 14px;
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, #c59b27, #e9c46a);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 14px auto;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 16px rgba(197, 155, 39, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #1b1008;
         }
         .form-control {
             border-radius: 10px;
             height: 46px;
             font-size: 0.95rem;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #dcd3c3;
+            background-color: #ffffff;
+            color: #241a14;
         }
         .form-control:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            border-color: #8b4513;
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.15);
         }
         .input-group-text {
             border-radius: 10px;
-            border: 1px solid #cbd5e1;
-            background-color: #f8fafc;
-            color: #64748b;
+            border: 1px solid #dcd3c3;
+            background-color: #f7f3ea;
+            color: #746454;
         }
         .btn-primary {
-            background-color: #2563eb;
-            border-color: #2563eb;
+            background-color: #8b4513;
+            border-color: #8b4513;
             height: 46px;
             border-radius: 10px;
             font-weight: 600;
             font-size: 0.95rem;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
         }
         .btn-primary:hover {
-            background-color: #1d4ed8;
-            border-color: #1d4ed8;
+            background-color: #70360d;
+            border-color: #70360d;
+        }
+        .btn-outline-primary {
+            color: #8b4513;
+            border-color: #8b4513;
+        }
+        .btn-outline-primary:hover {
+            background-color: #8b4513;
+            border-color: #8b4513;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -84,10 +98,10 @@
     <div class="register-card p-4 p-sm-5">
         <div class="text-center mb-4">
             <div class="brand-badge">
-                <i class="fas fa-user-plus text-white fa-lg"></i>
+                <i class="fas fa-user-plus fa-lg"></i>
             </div>
-            <h4 class="font-weight-bold text-dark mb-1">Daftar Akun Anggota Baru</h4>
-            <p class="text-muted small mb-0">Perpustakaan Universitas Nusa Mandiri</p>
+            <h4 class="font-weight-bold text-dark mb-1" style="letter-spacing: -0.02em;">Daftar Akun Anggota Baru</h4>
+            <p class="text-muted small mb-0">Athenaeum Perpustakaan Universitas Nusa Mandiri</p>
         </div>
 
         <form method="POST" action="{{ route('register') }}">
@@ -142,7 +156,7 @@
                             <input type="password" class="form-control border-right-0 @error('password') is-invalid @enderror"
                                 placeholder="Min 6 karakter" id="password" name="password" required>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="togglePassword('password', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1 !important;">
+                                <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="togglePassword('password', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #e8e2d4 !important;">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
@@ -159,7 +173,7 @@
                             <input type="password" class="form-control border-right-0"
                                 placeholder="Ulangi password" id="password_confirmation" name="password_confirmation" required>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="togglePassword('password_confirmation', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1 !important;">
+                                <button class="btn btn-outline-secondary border border-left-0 bg-light text-muted px-2" type="button" onclick="togglePassword('password_confirmation', this)" title="Lihat password" style="border-radius: 0 10px 10px 0; border-color: #e8e2d4 !important;">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
@@ -178,7 +192,7 @@
             <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm btn-block font-weight-bold py-2" style="border-radius: 10px;">
                 <i class="fas fa-sign-in-alt mr-1"></i> Masuk ke Akun Saya
             </a>
-            <a href="{{ url('/') }}" class="small text-secondary font-weight-bold d-inline-block mt-3">
+            <a href="{{ url('/') }}" class="small font-weight-bold d-inline-block mt-3" style="color: #8b4513;">
                 <i class="fas fa-arrow-left mr-1"></i> Kembali ke Katalog Buku
             </a>
         </div>

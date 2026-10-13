@@ -7,23 +7,23 @@
     <!-- Welcome Header Banner -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-0 shadow-sm text-white" style="border-radius: 16px; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%); overflow: hidden;">
+            <div class="card border-0 shadow-sm text-white" style="border-radius: 16px; background: linear-gradient(135deg, #1b1008 0%, #2c1a10 50%, #3d2517 100%); border: 1px solid rgba(197, 155, 39, 0.3) !important; overflow: hidden; position: relative;">
                 <div class="card-body p-4 position-relative">
                     <div class="row align-items-center">
                         <div class="col-lg-8 mb-3 mb-lg-0">
-                            <span class="badge badge-pill px-3 py-1 font-weight-bold mb-2" style="background: rgba(255, 255, 255, 0.15); color: #93c5fd; border: 1px solid rgba(255, 255, 255, 0.2);">
-                                <i class="fas fa-shield-alt mr-1"></i> Panel Kontrol Perpustakaan
+                            <span class="badge badge-pill px-3 py-1 font-weight-bold mb-2" style="background: rgba(197, 155, 39, 0.18); color: #e9c46a; border: 1px solid rgba(197, 155, 39, 0.35);">
+                                <i class="fas fa-feather-alt mr-1"></i> Panel Kontrol Perpustakaan
                             </span>
-                            <h3 class="font-weight-bold text-white mb-1">Selamat Datang, {{ Auth::user()->nama }}!</h3>
-                            <p class="text-white-50 mb-0" style="font-size: 0.95rem;">
+                            <h3 class="font-weight-bold text-white mb-1" style="letter-spacing: -0.02em;">Selamat Datang, {{ Auth::user()->nama }}!</h3>
+                            <p class="mb-0" style="font-size: 0.95rem; color: #d6cbbf;">
                                 Hari ini adalah <strong>{{ date('l, d F Y') }}</strong>. Kelola sirkulasi buku, verifikasi pesanan booking, dan pantau anggota perpustakaan UNM dengan mudah.
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-right">
-                            <a href="{{ route('admin.master.buku.create') }}" class="btn btn-light btn-sm font-weight-bold mr-2 shadow-sm" style="border-radius: 8px;">
-                                <i class="fas fa-plus text-primary mr-1"></i> Tambah Buku
+                            <a href="{{ route('admin.master.buku.create') }}" class="btn btn-sm font-weight-bold mr-2 shadow-sm" style="border-radius: 8px; background: #fdfbf7; color: #2c1a10; border: 1px solid #e8e2d4;">
+                                <i class="fas fa-plus mr-1" style="color: #8b4513;"></i> Tambah Buku
                             </a>
-                            <a href="{{ route('admin.transaksi.booking.index') }}" class="btn btn-warning btn-sm font-weight-bold shadow-sm" style="border-radius: 8px; color: #78350f;">
+                            <a href="{{ route('admin.transaksi.booking.index') }}" class="btn btn-sm font-weight-bold shadow-sm" style="border-radius: 8px; background: linear-gradient(135deg, #c59b27, #d4af37); color: #1b1008; border: 1px solid rgba(0,0,0,0.1);">
                                 <i class="fas fa-receipt mr-1"></i> Verifikasi Booking
                             </a>
                         </div>
@@ -36,9 +36,9 @@
     <!-- 4 Main KPI Cards -->
     <div class="row">
         <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; border-left: 4px solid #0284c7 !important;">
+            <div class="card shadow-sm h-100" style="border-radius: 14px; border: 1px solid #e8e2d4; border-left: 4px solid #8b4513 !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #e0f2fe; color: #0284c7; flex-shrink: 0;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #fdf4eb; color: #8b4513; flex-shrink: 0; border: 1px solid rgba(139, 69, 19, 0.15);">
                         <i class="fas fa-users fa-lg"></i>
                     </div>
                     <div>
@@ -51,45 +51,45 @@
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; border-left: 4px solid #10b981 !important;">
+            <div class="card shadow-sm h-100" style="border-radius: 14px; border: 1px solid #e8e2d4; border-left: 4px solid #2d6a4f !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #d1fae5; color: #059669; flex-shrink: 0;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #eaf3ed; color: #2d6a4f; flex-shrink: 0; border: 1px solid rgba(45, 106, 79, 0.15);">
                         <i class="fas fa-book fa-lg"></i>
                     </div>
                     <div>
                         <small class="text-muted font-weight-bold text-uppercase d-block" style="font-size: 0.72rem; letter-spacing: 0.05em;">Judul Koleksi</small>
                         <h4 class="font-weight-bold text-dark mb-0">{{ $total_judul }}</h4>
-                        <small class="text-muted"><i class="fas fa-bookmark mr-1 text-primary"></i>Buku Berbeda</small>
+                        <small class="text-muted"><i class="fas fa-bookmark mr-1" style="color: #2d6a4f;"></i>Buku Berbeda</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; border-left: 4px solid #f59e0b !important;">
+            <div class="card shadow-sm h-100" style="border-radius: 14px; border: 1px solid #e8e2d4; border-left: 4px solid #c59b27 !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #fef3c7; color: #d97706; flex-shrink: 0;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #fdf8eb; color: #997300; flex-shrink: 0; border: 1px solid rgba(197, 155, 39, 0.2);">
                         <i class="fas fa-layer-group fa-lg"></i>
                     </div>
                     <div>
                         <small class="text-muted font-weight-bold text-uppercase d-block" style="font-size: 0.72rem; letter-spacing: 0.05em;">Total Eksemplar Fisik</small>
                         <h4 class="font-weight-bold text-dark mb-0">{{ $total_buku }}</h4>
-                        <small class="text-muted"><i class="fas fa-cubes mr-1 text-warning"></i>Total Stok Buku</small>
+                        <small class="text-muted"><i class="fas fa-cubes mr-1" style="color: #c59b27;"></i>Total Stok Buku</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3 mb-4">
-            <div class="card border-0 shadow-sm h-100" style="border-radius: 14px; border-left: 4px solid #ef4444 !important;">
+            <div class="card shadow-sm h-100" style="border-radius: 14px; border: 1px solid #e8e2d4; border-left: 4px solid #800020 !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #fee2e2; color: #dc2626; flex-shrink: 0;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm" style="width: 52px; height: 52px; background: #fbf0f2; color: #800020; flex-shrink: 0; border: 1px solid rgba(128, 0, 32, 0.15);">
                         <i class="fas fa-tags fa-lg"></i>
                     </div>
                     <div>
                         <small class="text-muted font-weight-bold text-uppercase d-block" style="font-size: 0.72rem; letter-spacing: 0.05em;">Kategori Buku</small>
                         <h4 class="font-weight-bold text-dark mb-0">{{ $total_kategori }}</h4>
-                        <small class="text-muted"><i class="fas fa-list-ul mr-1 text-danger"></i>Klasifikasi Ilmu</small>
+                        <small class="text-muted"><i class="fas fa-list-ul mr-1" style="color: #800020;"></i>Klasifikasi Ilmu</small>
                     </div>
                 </div>
             </div>
@@ -99,19 +99,19 @@
     <!-- 2 Transaction Overview Cards -->
     <div class="row mb-4">
         <div class="col-12 col-lg-6 mb-3 mb-lg-0">
-            <div class="card border-0 text-white shadow-sm" style="border-radius: 14px; background: linear-gradient(135deg, #1e40af, #3b82f6);">
+            <div class="card border-0 text-white shadow-sm" style="border-radius: 14px; background: linear-gradient(135deg, #2c1a10 0%, #4a2c1d 100%); border: 1px solid rgba(197, 155, 39, 0.35) !important;">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <span class="text-white-50 small font-weight-bold text-uppercase">Antrean Sirkulasi</span>
-                            <h3 class="font-weight-bold text-white mb-0">{{ $total_booking }} Transaksi Booking</h3>
+                            <span class="small font-weight-bold text-uppercase" style="color: #e9c46a;">Antrean Sirkulasi</span>
+                            <h3 class="font-weight-bold text-white mb-0" style="letter-spacing: -0.02em;">{{ $total_booking }} Transaksi Booking</h3>
                         </div>
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(255, 255, 255, 0.2);">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(197, 155, 39, 0.25); color: #e9c46a; border: 1px solid rgba(197, 155, 39, 0.3);">
                             <i class="fas fa-receipt fa-lg"></i>
                         </div>
                     </div>
-                    <p class="text-white-50 small mb-3">Pesanan buku dari anggota yang menunggu pengambilan atau konfirmasi staf.</p>
-                    <a href="{{ route('admin.transaksi.booking.index') }}" class="btn btn-sm btn-light font-weight-bold text-primary" style="border-radius: 8px;">
+                    <p class="small mb-3" style="color: #d6cbbf;">Pesanan buku dari anggota yang menunggu pengambilan atau konfirmasi staf.</p>
+                    <a href="{{ route('admin.transaksi.booking.index') }}" class="btn btn-sm font-weight-bold shadow-sm" style="border-radius: 8px; background: #e9c46a; color: #1b1008;">
                         <i class="fas fa-arrow-right mr-1"></i> Buka Antrean Booking
                     </a>
                 </div>
@@ -119,19 +119,19 @@
         </div>
 
         <div class="col-12 col-lg-6">
-            <div class="card border-0 text-white shadow-sm" style="border-radius: 14px; background: linear-gradient(135deg, #065f46, #10b981);">
+            <div class="card border-0 text-white shadow-sm" style="border-radius: 14px; background: linear-gradient(135deg, #1b382b 0%, #2d6a4f 100%); border: 1px solid rgba(76, 175, 80, 0.3) !important;">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <span class="text-white-50 small font-weight-bold text-uppercase">Sirkulasi Berjalan</span>
-                            <h3 class="font-weight-bold text-white mb-0">{{ $total_pinjam }} Transaksi Pinjam</h3>
+                            <span class="small font-weight-bold text-uppercase" style="color: #a3e635;">Sirkulasi Berjalan</span>
+                            <h3 class="font-weight-bold text-white mb-0" style="letter-spacing: -0.02em;">{{ $total_pinjam }} Transaksi Pinjam</h3>
                         </div>
-                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(255, 255, 255, 0.2);">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(255, 255, 255, 0.15); color: #ffffff;">
                             <i class="fas fa-handshake fa-lg"></i>
                         </div>
                     </div>
-                    <p class="text-white-50 small mb-3">Total buku yang telah diserahkan dan tercatat dalam sirkulasi peminjaman aktif.</p>
-                    <a href="{{ route('admin.transaksi.peminjaman.index') }}" class="btn btn-sm btn-light font-weight-bold text-success" style="border-radius: 8px;">
+                    <p class="small mb-3" style="color: #d1fae5;">Total buku yang telah diserahkan dan tercatat dalam sirkulasi peminjaman aktif.</p>
+                    <a href="{{ route('admin.transaksi.peminjaman.index') }}" class="btn btn-sm font-weight-bold shadow-sm" style="border-radius: 8px; background: #ffffff; color: #1b382b;">
                         <i class="fas fa-arrow-right mr-1"></i> Kelola Peminjaman
                     </a>
                 </div>
@@ -161,7 +161,7 @@
                     @endphp
 
                     <!-- Segmented Progress Bar -->
-                    <div class="progress mb-4" style="height: 14px; border-radius: 10px; background: #e2e8f0; overflow: hidden;">
+                    <div class="progress mb-4" style="height: 14px; border-radius: 10px; background: #ece5d8; overflow: hidden;">
                         <div class="progress-bar bg-success" role="progressbar" style="width: {{ $persenTersedia }}%" title="Tersedia: {{ $total_buku }}"></div>
                         <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $persenDipinjam }}%" title="Dipinjam: {{ $total_dipinjam }}"></div>
                         <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $persenDibooking }}%" title="Dibooking: {{ $total_dibooking }}"></div>
@@ -216,7 +216,7 @@
                                 <strong class="text-dark">{{ $ks->nama_kategori }}</strong>
                                 <span class="font-weight-bold text-muted">{{ $ks->buku_count }} Judul ({{ $pctKat }}%)</span>
                             </div>
-                            <div class="progress" style="height: 8px; border-radius: 6px; background: #f1f5f9;">
+                            <div class="progress" style="height: 8px; border-radius: 6px; background: #ece5d8;">
                                 <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $pctKat }}%"></div>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Pinjam;
+use App\Models\PinjamDetail;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -22,33 +22,28 @@ class PinjamExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $query = Pinjam::with(['pinjam_detail.buku', 'petugas_pinjam', 'anggota'])
-            ->whereHas('pinjam_detail', function ($q) {
-                $q->where('status', 'Pinjam');
-            });
+        $query = PinjamDetail::with(['pinjam.anggota', 'pinjam.petugas_pinjam', 'buku'])
+            ->where('status', 'Pinjam');
 
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('tgl_pinjam', [$this->startDate, $this->endDate]);
+            $query->whereHas('pinjam', function ($q) {
+                $q->whereBetween('tgl_pinjam', [$this->startDate, $this->endDate]);
+            });
         }
 
         return $query->orderBy('no_pinjam', 'DESC')->get();
     }
 
-    public function map($row): array
+    public function map($detail): array
     {
-        $mappedRows = [];
-        foreach ($row->pinjam_detail as $detail) {
-            $mappedRows[] = [
-                $row->no_pinjam,
-                Carbon::parse($row->tgl_pinjam)->format('d-m-Y'),
-                $row->anggota->nama ?? 'Tidak Ada Anggota',
-                $detail->buku->judul_buku ?? 'Tidak Ada Judul',
-                $detail->status,
-                $row->petugas_pinjam->nama ?? 'Tidak Ada Petugas',
-            ];
-        }
-
-        return $mappedRows;
+        return [
+            $detail->no_pinjam,
+            $detail->pinjam && $detail->pinjam->tgl_pinjam ? Carbon::parse($detail->pinjam->tgl_pinjam)->format('d-m-Y') : '-',
+            $detail->pinjam && $detail->pinjam->anggota ? $detail->pinjam->anggota->nama : 'Tidak Ada Anggota',
+            $detail->buku ? $detail->buku->judul_buku : 'Tidak Ada Judul',
+            $detail->status,
+            $detail->pinjam && $detail->pinjam->petugas_pinjam ? $detail->pinjam->petugas_pinjam->nama : 'Tidak Ada Petugas',
+        ];
     }
 
     public function headings(): array

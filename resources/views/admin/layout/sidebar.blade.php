@@ -1,11 +1,11 @@
 <!-- Brand Logo -->
 <a href="{{ route('admin.dashboard') }}" class="brand-link d-flex align-items-center">
-    <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #38bdf8); flex-shrink: 0;">
-        <i class="fas fa-book-reader text-white" style="font-size: 0.95rem;"></i>
+    <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 36px; height: 36px; background: linear-gradient(135deg, #c59b27, #e9c46a); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 2px 8px rgba(197, 155, 39, 0.35); flex-shrink: 0;">
+        <i class="fas fa-book-reader" style="font-size: 0.95rem; color: #1b1008;"></i>
     </div>
     <div style="line-height: 1.25;">
         <span class="brand-text font-weight-bold text-white d-block" style="font-size: 1.05rem; letter-spacing: -0.02em;">E-Library</span>
-        <small class="text-primary font-weight-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.08em;">Universitas Nusa Mandiri</small>
+        <small class="font-weight-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.08em; color: #d4af37;">Universitas Nusa Mandiri</small>
     </div>
 </a>
 
@@ -114,7 +114,7 @@
                 <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
                     class="img-circle elevation-1 border" style="width: 36px; height: 36px; object-fit: cover; border-color: rgba(255,255,255,0.2) !important;" alt="User Image"
                     onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
-                <span class="badge badge-success position-absolute" style="bottom: 0px; right: 0px; width: 9px; height: 9px; padding: 0; border-radius: 50%; border: 2px solid #090e17;"></span>
+                <span class="badge badge-success position-absolute" style="bottom: 0px; right: 0px; width: 9px; height: 9px; padding: 0; border-radius: 50%; border: 2px solid #120a05;"></span>
             </div>
             <div class="info" style="overflow: hidden; line-height: 1.25; min-width: 0;">
                 <a href="{{ route('admin.profil') }}" class="d-block text-white font-weight-bold text-truncate" style="font-size: 0.82rem;" title="{{ Auth::user()->nama }}">

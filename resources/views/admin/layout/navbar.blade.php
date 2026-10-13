@@ -15,7 +15,7 @@
     <!-- Profile Dropdown Menu -->
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded shadow-none" href="#"
-            id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9999px !important;">
+            id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false" style="background: #fdfbf7; border: 1px solid #e8e2d4; border-radius: 9999px !important;">
             <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
                 class="rounded-circle mr-2 border" height="30" width="30" alt="Avatar" loading="lazy" style="object-fit: cover;"
                 onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';" />

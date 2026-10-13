@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -26,19 +27,18 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if ($user) {
+        if ($user && Hash::check($request->password, $user->password)) {
             if (! $user->is_active) {
                 return redirect()->back()->withInput()->with('error', 'Akun Anda belum aktif! Silakan hubungi admin.');
             }
 
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                $request->session()->regenerate();
+            Auth::login($user);
+            $request->session()->regenerate();
 
-                if (Auth::user()->role_id == 1) {
-                    return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, '.Auth::user()->nama);
-                } else {
-                    return redirect()->route('member.index')->with('success', 'Selamat datang, '.Auth::user()->nama);
-                }
+            if (Auth::user()->role_id == 1) {
+                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang, '.Auth::user()->nama);
+            } else {
+                return redirect()->route('member.index')->with('success', 'Selamat datang, '.Auth::user()->nama);
             }
         }
 

@@ -100,9 +100,9 @@
 
             <!-- Right: Order Summary -->
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px; position: sticky; top: 85px;">
-                    <div class="card-header text-white py-3" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-                        <h6 class="font-weight-bold mb-0"><i class="fas fa-receipt text-warning mr-2"></i> Ringkasan Reservasi</h6>
+                <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px; position: sticky; top: 85px; overflow: hidden; border: 1px solid #e8e2d4 !important;">
+                    <div class="card-header text-white py-3" style="background: linear-gradient(135deg, #1b1008, #2c1a10); border-bottom: 2px solid #c59b27;">
+                        <h6 class="font-weight-bold mb-0" style="color: #fdfbf7; letter-spacing: -0.01em;"><i class="fas fa-receipt mr-2" style="color: #e9c46a;"></i> Ringkasan Reservasi</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-3 pb-2 border-bottom">
@@ -110,7 +110,7 @@
                                 <span class="text-muted">Kuota Reservasi:</span>
                                 <span class="font-weight-bold text-primary">{{ $temp->count() }} / 3 Buku</span>
                             </div>
-                            <div class="progress" style="height: 6px; border-radius: 4px; background: #e2e8f0;">
+                            <div class="progress" style="height: 6px; border-radius: 4px; background: #ece5d8;">
                                 <div class="progress-bar {{ $temp->count() >= 3 ? 'bg-danger' : 'bg-primary' }}" style="width: {{ ($temp->count() / 3) * 100 }}%"></div>
                             </div>
                             @if($temp->count() >= 3)
@@ -155,10 +155,10 @@
         </div>
     @else
         <!-- Empty Cart -->
-        <div class="card border-0 shadow-sm py-5 text-center my-4" style="border-radius: 16px;">
+        <div class="card shadow-sm py-5 text-center my-4" style="border-radius: 16px; border: 1px solid #e8e2d4 !important; background: #ffffff;">
             <div class="card-body py-5">
-                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: #eff6ff;">
-                    <i class="fas fa-shopping-basket fa-3x text-primary"></i>
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: #fdf4eb; border: 1px solid rgba(139, 69, 19, 0.15);">
+                    <i class="fas fa-shopping-basket fa-3x" style="color: #8b4513;"></i>
                 </div>
                 <h4 class="font-weight-bold text-dark mb-2">Keranjang Reservasi Anda Masih Kosong</h4>
                 <p class="text-muted mx-auto mb-4" style="max-width: 480px;">

@@ -27,8 +27,8 @@
                         <input type="hidden" name="id_booking" value="{{ $data_booking[0]->id_booking }}">
 
                         <!-- Alert Instruction -->
-                        <div class="alert alert-info border-0 rounded-lg shadow-sm d-flex align-items-center mb-4" style="background-color: #eff6ff; color: #1e40af; border-left: 4px solid #3b82f6 !important;">
-                            <i class="fas fa-info-circle fa-2x mr-3 text-primary"></i>
+                        <div class="alert border-0 rounded-lg shadow-sm d-flex align-items-center mb-4" style="background-color: #fcf9f2; color: #5c3d19; border: 1px solid #e8e2d4; border-left: 4px solid #c59b27 !important;">
+                            <i class="fas fa-feather-alt fa-2x mr-3 text-warning"></i>
                             <div>
                                 <strong class="d-block mb-1">Instruksi Petugas:</strong>
                                 Periksa fisik buku yang diambil anggota. Tentukan tarif denda harian dan durasi peminjaman untuk masing-masing buku, lalu klik <strong>"Konfirmasi & Proses Pinjam"</strong>.

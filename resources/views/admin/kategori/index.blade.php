@@ -7,9 +7,9 @@
     <!-- KPI Summary Row -->
     <div class="row mb-3">
         <div class="col-sm-6 col-lg-3 mb-2">
-            <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #2563eb !important;">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #8b4513 !important;">
                 <div class="card-body p-3 d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 44px; height: 44px; background: #eff6ff; color: #2563eb;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 44px; height: 44px; background: #fdf4eb; color: #8b4513;">
                         <i class="fas fa-tags"></i>
                     </div>
                     <div>

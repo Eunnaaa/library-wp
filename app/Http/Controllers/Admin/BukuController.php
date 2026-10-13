@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Buku;
 use App\Models\Kategori;
+use App\Models\PinjamDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -138,8 +139,10 @@ class BukuController extends Controller
 
     public function destroy(Buku $buku)
     {
-        if ($buku->dibooking > 0 || $buku->dipinjam > 0) {
-            return redirect()->route('admin.master.buku.index')->with('error', 'Buku tidak dapat dihapus karena masih sedang dipinjam atau dibooking.');
+        $hasLoanHistory = PinjamDetail::where('id_buku', $buku->id)->exists();
+
+        if ($buku->dibooking > 0 || $buku->dipinjam > 0 || $hasLoanHistory) {
+            return redirect()->route('admin.master.buku.index')->with('error', 'Buku tidak dapat dihapus karena masih aktif atau memiliki riwayat peminjaman.');
         }
 
         if ($buku->image && ! str_contains($buku->image, 'book-default')) {

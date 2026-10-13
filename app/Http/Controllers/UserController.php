@@ -150,9 +150,10 @@ class UserController extends Controller
             'no_pinjam',
             Pinjam::where('id_user', $user->id)->pluck('no_pinjam')
         )->where('status', 'Pinjam')->count() > 0;
+        $hasLoanHistory = Pinjam::where('id_user', $user->id)->exists();
 
-        if ($hasActiveBookings || $hasActiveLoans) {
-            return redirect()->route('admin.master.user.index')->with('error', 'User tidak dapat dihapus karena masih memiliki booking atau pinjaman aktif.');
+        if ($hasActiveBookings || $hasActiveLoans || $hasLoanHistory) {
+            return redirect()->route('admin.master.user.index')->with('error', 'User tidak dapat dihapus karena memiliki riwayat peminjaman atau booking.');
         }
 
         if ($user->image && $user->image !== 'profil-pic/default.jpg') {

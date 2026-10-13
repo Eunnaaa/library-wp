@@ -6,10 +6,10 @@
 <div class="container pt-4 pb-5">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
-            <div class="card border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+            <div class="card shadow-sm" style="border-radius: 16px; overflow: hidden; border: 1px solid #e8e2d4 !important; background: #ffffff;">
                 <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 bg-warning-light" style="width: 36px; height: 36px; background: #fef3c7;">
-                        <i class="fas fa-lock text-warning"></i>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mr-2" style="width: 36px; height: 36px; background: #fdf8eb; border: 1px solid rgba(197, 155, 39, 0.25);">
+                        <i class="fas fa-lock" style="color: #997300;"></i>
                     </div>
                     <div>
                         <h5 class="card-title font-weight-bold mb-0 text-dark">Pengaturan Keamanan Password</h5>
@@ -34,7 +34,7 @@
                                 <input type="password" class="form-control border-right-0 @error('password_sekarang') is-invalid @enderror"
                                     id="password_sekarang" name="password_sekarang" placeholder="Masukkan password lama Anda" required>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('password_sekarang', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('password_sekarang', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -51,7 +51,7 @@
                                 <input type="password" class="form-control border-right-0 @error('password_baru') is-invalid @enderror"
                                     id="password_baru" name="password_baru" placeholder="Minimal 6 karakter" required>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('password_baru', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('password_baru', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -68,7 +68,7 @@
                                 <input type="password" class="form-control border-right-0 @error('konfirmasi_password') is-invalid @enderror"
                                     id="konfirmasi_password" name="konfirmasi_password" placeholder="Ulangi password baru yang sama" required>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('konfirmasi_password', this)" title="Lihat password" style="border-color: #cbd5e1 !important;">
+                                    <button class="btn btn-outline-secondary border border-left-0 bg-white text-muted px-2" type="button" onclick="togglePassword('konfirmasi_password', this)" title="Lihat password" style="border-color: #e8e2d4 !important;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>

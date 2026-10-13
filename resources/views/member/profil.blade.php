@@ -8,11 +8,11 @@
         <!-- Digital Library Card & Summary -->
         <div class="col-lg-4 col-md-5 mb-4">
             <!-- Digital Member Card -->
-            <div class="card border-0 shadow-sm text-center mb-4" style="border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%); color: #fff;">
-                <div class="p-3 d-flex justify-content-between align-items-center border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+            <div class="card shadow-sm text-center mb-4" style="border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #1b1008 0%, #2c1a10 50%, #3d2517 100%); border: 1px solid rgba(197, 155, 39, 0.4) !important; color: #fff;">
+                <div class="p-3 d-flex justify-content-between align-items-center border-bottom" style="border-color: rgba(197, 155, 39, 0.25) !important;">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-university text-warning mr-2"></i>
-                        <span class="font-weight-bold small text-uppercase letter-spacing-1 text-white-50" style="font-size: 0.72rem;">Kartu Anggota Digital</span>
+                        <span class="font-weight-bold small text-uppercase letter-spacing-1 text-white-50" style="font-size: 0.72rem; color: #e9c46a !important;">Kartu Anggota Athenaeum</span>
                     </div>
                     <span class="badge badge-success px-2 py-1" style="font-size: 0.68rem; border-radius: 9999px;">
                         <i class="fas fa-check-circle mr-1"></i> AKTIF
@@ -21,12 +21,12 @@
                 <div class="py-4 px-3">
                     <div class="position-relative d-inline-block">
                         <img id="memberAvatarPreview" src="{{ asset('storage/' . ($user->image ?? 'profil-pic/default.jpg')) }}"
-                            class="rounded-circle shadow-lg border border-white" width="110" height="110"
-                            style="object-fit: cover; border-width: 3px !important;" alt="Avatar"
+                            class="rounded-circle shadow-lg border" width="110" height="110"
+                            style="object-fit: cover; border-width: 3px !important; border-color: #c59b27 !important;" alt="Avatar"
                             onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                     </div>
-                    <h5 class="text-white font-weight-bold mt-3 mb-0">{{ $user->nama }}</h5>
-                    <div class="small text-white-50 font-monospace mt-1">ID: UNM-LIB-{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</div>
+                    <h5 class="text-white font-weight-bold mt-3 mb-0" style="letter-spacing: -0.02em;">{{ $user->nama }}</h5>
+                    <div class="small font-monospace mt-1" style="color: #d6cbbf;">ID: UNM-LIB-{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</div>
                 </div>
                 <div class="p-3 bg-dark-subtle text-left" style="background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255,255,255,0.08);">
                     <div class="d-flex justify-content-between small text-white-50 mb-1">

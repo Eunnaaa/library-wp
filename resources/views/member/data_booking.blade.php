@@ -6,7 +6,7 @@
 <div class="container pt-4 pb-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; overflow: hidden;">
+            <div class="card shadow-sm mb-4" style="border-radius: 16px; overflow: hidden; border: 1px solid #e8e2d4 !important; background: #ffffff;">
                 <div class="card-header bg-white py-3 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
                     <div class="mb-2 mb-sm-0">
                         <h4 class="font-weight-bold mb-0 text-dark">
@@ -40,7 +40,7 @@
                         </div>
 
                         <!-- Ticket Details Card -->
-                        <div class="card border mb-4 shadow-sm" style="border-radius: 14px; background: #fafafa; border-left: 5px solid #2563eb !important;">
+                        <div class="card border mb-4 shadow-sm" style="border-radius: 14px; background: #fafafa; border-left: 5px solid #8b4513 !important;">
                             <div class="card-body p-4">
                                 <div class="row align-items-center">
                                     <div class="col-md-3 col-6 mb-3 mb-md-0 border-right">
@@ -111,8 +111,8 @@
                         </div>
                     @empty
                         <div class="text-center py-5">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: #f1f5f9;">
-                                <i class="fas fa-receipt fa-3x text-muted"></i>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; background: #fdf4eb; border: 1px solid rgba(139, 69, 19, 0.15);">
+                                <i class="fas fa-receipt fa-3x" style="color: #8b4513;"></i>
                             </div>
                             <h5 class="font-weight-bold text-dark">Tidak Ada Transaksi Booking Aktif</h5>
                             <p class="text-muted small mx-auto mb-3" style="max-width: 400px;">

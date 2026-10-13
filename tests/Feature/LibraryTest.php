@@ -276,4 +276,116 @@ class LibraryTest extends TestCase
         $responseRole->assertStatus(200);
         $responseRole->assertSee($member->nama);
     }
+
+    public function test_inactive_user_cannot_probe_email(): void
+    {
+        $inactiveUser = User::factory()->create([
+            'password' => 'secret123',
+            'is_active' => 0,
+        ]);
+
+        // Wrong password on inactive user gives generic error
+        $responseWrong = $this->post('/login', [
+            'email' => $inactiveUser->email,
+            'password' => 'wrongpassword',
+        ]);
+        $responseWrong->assertSessionHas('error', 'Email atau password yang Anda masukkan salah!');
+
+        // Correct password on inactive user informs account is inactive
+        $responseCorrect = $this->post('/login', [
+            'email' => $inactiveUser->email,
+            'password' => 'secret123',
+        ]);
+        $responseCorrect->assertSessionHas('error', 'Akun Anda belum aktif! Silakan hubungi admin.');
+    }
+
+    public function test_logout_requires_post_method(): void
+    {
+        $user = User::first();
+        $responseGet = $this->actingAs($user)->get('/logout');
+        $responseGet->assertStatus(405);
+
+        $responsePost = $this->actingAs($user)->post('/logout');
+        $responsePost->assertRedirect('/');
+        $this->assertGuest();
+    }
+
+    public function test_cannot_delete_book_or_user_with_loan_history(): void
+    {
+        $admin = User::where('role_id', 1)->first();
+        $member = User::where('role_id', 2)->first();
+        $buku = Buku::first();
+
+        $no_pinjam = 'P'.date('ymd').rand(100, 999);
+        try {
+            Pinjam::create([
+                'no_pinjam' => $no_pinjam,
+                'tgl_pinjam' => now()->subDays(5),
+                'id_booking' => 'BTEST'.rand(100, 999),
+                'id_user' => $member->id,
+                'total_denda' => 0,
+                'id_petugas_pinjam' => $admin->id,
+            ]);
+
+            PinjamDetail::create([
+                'no_pinjam' => $no_pinjam,
+                'id_buku' => $buku->id,
+                'tgl_kembali' => now()->addDays(2),
+                'tgl_pengembalian' => now(),
+                'denda' => 1000,
+                'lama_pinjam' => 7,
+                'status' => 'Kembali',
+            ]);
+
+            // Attempt to delete user with loan history
+            $responseUser = $this->actingAs($admin)->delete('/admin/master/user/'.$member->id);
+            $responseUser->assertRedirect('/admin/master/user');
+            $responseUser->assertSessionHas('error');
+            $this->assertDatabaseHas('users', ['id' => $member->id]);
+
+            // Attempt to delete book with loan history
+            $responseBook = $this->actingAs($admin)->delete('/admin/master/buku/'.$buku->id);
+            $responseBook->assertRedirect('/admin/master/buku');
+            $responseBook->assertSessionHas('error');
+            $this->assertDatabaseHas('buku', ['id' => $buku->id]);
+        } finally {
+            PinjamDetail::where('no_pinjam', $no_pinjam)->delete();
+            Pinjam::where('no_pinjam', $no_pinjam)->delete();
+        }
+    }
+
+    public function test_cannot_process_expired_booking(): void
+    {
+        $admin = User::where('role_id', 1)->first();
+        $member = User::where('role_id', 2)->first();
+
+        $id_booking = 'B'.date('ymd').rand(100, 999);
+        Booking::create([
+            'id_booking' => $id_booking,
+            'tgl_booking' => now()->subDays(3),
+            'batas_ambil' => now()->subDay(), // Expired
+            'id_user' => $member->id,
+        ]);
+
+        $response = $this->actingAs($admin)->post('/admin/transaksi/peminjaman', [
+            'id_booking' => $id_booking,
+            'lama' => [7],
+            'denda' => [1000],
+        ]);
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('booking', ['id_booking' => $id_booking]);
+        Booking::where('id_booking', $id_booking)->delete();
+    }
+
+    public function test_admin_can_export_excel(): void
+    {
+        $admin = User::where('role_id', 1)->first();
+        $response = $this->actingAs($admin)->get('/admin/transaksi/export-excel-pinjam');
+        $response->assertStatus(200);
+        $this->assertTrue(str_contains(
+            $response->headers->get('content-type'),
+            'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ));
+    }
 }
