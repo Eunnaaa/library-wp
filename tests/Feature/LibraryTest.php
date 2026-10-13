@@ -388,4 +388,19 @@ class LibraryTest extends TestCase
             'vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         ));
     }
+
+    public function test_member_can_view_own_loan_history_and_active_loans(): void
+    {
+        $member = User::where('role_id', 2)->first();
+
+        // 1. Guest cannot access
+        $this->get('/member/peminjaman')->assertRedirect('/login');
+
+        // 2. Member can access
+        $response = $this->actingAs($member)->get('/member/peminjaman');
+        $response->assertStatus(200);
+        $response->assertSee('Sirkulasi Peminjaman Saya');
+        $response->assertSee('Sedang Dipinjam');
+        $response->assertSee('Riwayat Pengembalian');
+    }
 }

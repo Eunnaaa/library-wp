@@ -27,6 +27,11 @@
                                 <i class="fas fa-receipt mr-1 text-warning"></i> Bukti Booking
                             </a>
                         </li>
+                        <li class="nav-item {{ request()->is('member/peminjaman*') ? 'active' : '' }}">
+                            <a class="nav-link px-3 {{ request()->is('member/peminjaman*') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ route('member.peminjaman') }}">
+                                <i class="fas fa-book-reader mr-1" style="color: #e9c46a;"></i> Peminjaman Saya
+                            </a>
+                        </li>
                     @endif
                 @endauth
             </ul>
@@ -73,6 +78,9 @@
                                     <i class="fas fa-tachometer-alt mr-2" style="color: #8b4513;"></i> Panel Admin
                                 </a>
                             @else
+                                <a class="dropdown-item rounded py-2" href="{{ route('member.peminjaman') }}">
+                                    <i class="fas fa-book-reader mr-2" style="color: #8b4513;"></i> Peminjaman Saya
+                                </a>
                                 <a class="dropdown-item rounded py-2" href="{{ route('member.profil') }}">
                                     <i class="fas fa-user-circle mr-2" style="color: #8b4513;"></i> Profil Saya
                                 </a>

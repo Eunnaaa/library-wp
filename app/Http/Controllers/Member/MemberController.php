@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use App\Models\Buku;
 use App\Models\Kategori;
+use App\Models\Pinjam;
+use App\Models\PinjamDetail;
 use App\Models\Temp;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -121,5 +124,52 @@ class MemberController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Password Anda berhasil diubah!');
+    }
+
+    public function peminjamanSaya(Request $request)
+    {
+        $userId = Auth::id();
+
+        // 1. Buku yang sedang aktif dipinjam
+        $pinjamAktif = PinjamDetail::with(['buku.kategori', 'pinjam.petugas_pinjam'])
+            ->whereHas('pinjam', function ($q) use ($userId) {
+                $q->where('id_user', $userId);
+            })
+            ->where('status', 'Pinjam')
+            ->orderBy('tgl_kembali', 'asc')
+            ->get();
+
+        // 2. Riwayat buku yang sudah selesai dikembalikan
+        $riwayatKembali = PinjamDetail::with(['buku.kategori', 'pinjam.petugas_pinjam', 'petugas_kembali'])
+            ->whereHas('pinjam', function ($q) use ($userId) {
+                $q->where('id_user', $userId);
+            })
+            ->where('status', 'Kembali')
+            ->orderBy('tgl_pengembalian', 'desc')
+            ->paginate(10);
+
+        // 3. Statistik ringkasan
+        $totalAktif = $pinjamAktif->count();
+        $totalSelesai = PinjamDetail::whereHas('pinjam', function ($q) use ($userId) {
+            $q->where('id_user', $userId);
+        })->where('status', 'Kembali')->count();
+
+        $totalTerlambat = $pinjamAktif->filter(function ($item) {
+            return Carbon::parse($item->tgl_kembali)->isPast();
+        })->count();
+
+        $totalDendaUser = Pinjam::where('id_user', $userId)->sum('total_denda');
+
+        $jatuhTempoTerdekat = $pinjamAktif->first() ? Carbon::parse($pinjamAktif->first()->tgl_kembali) : null;
+
+        return view('member.peminjaman', compact(
+            'pinjamAktif',
+            'riwayatKembali',
+            'totalAktif',
+            'totalSelesai',
+            'totalTerlambat',
+            'totalDendaUser',
+            'jatuhTempoTerdekat'
+        ));
     }
 }

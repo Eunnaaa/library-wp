@@ -44,6 +44,9 @@ Route::middleware(['auth', 'isMember'])->group(function () {
         Route::post('simpan-booking', [TempController::class, 'simpanBooking'])->name('simpanBooking');
         Route::get('data-booking/{user?}', [MemberBookingController::class, 'dataBooking'])->name('dataBooking');
         Route::get('booking-pdf/{user?}', [MemberBookingController::class, 'bookingPdf'])->name('bookingPdf');
+
+        // Peminjaman Saya & Riwayat
+        Route::get('peminjaman', [MemberController::class, 'peminjamanSaya'])->name('peminjaman');
     });
 });
 
