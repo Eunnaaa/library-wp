@@ -161,7 +161,7 @@
                                 @empty
                                 <tr>
                                     <td colspan="7" class="text-center text-muted py-5">
-                                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #eff6ff;">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #fdf4eb; border: 1px solid rgba(139, 69, 19, 0.15);">
                                             <i class="fas fa-users fa-2x text-primary"></i>
                                         </div>
                                         <h6 class="font-weight-bold text-dark">Tidak Ada Pengguna yang Sesuai</h6>

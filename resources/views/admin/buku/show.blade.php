@@ -103,11 +103,11 @@
                     </div>
                 </div>
 
-                <div class="card-footer bg-light px-4 py-3 border-0 d-flex justify-content-between align-items-center">
-                    <a href="{{ route('admin.master.buku.index') }}" class="btn btn-outline-secondary font-weight-semibold">
+                <div class="card-footer bg-light px-4 py-3 border-0 d-flex justify-content-between align-items-center" style="border-top: 1px solid #e8e2d4 !important;">
+                    <a href="{{ route('admin.master.buku.index') }}" class="btn btn-outline-secondary font-weight-semibold" style="border-radius: 8px;">
                         <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
                     </a>
-                    <a href="{{ route('admin.master.buku.edit', $buku->id) }}" class="btn btn-warning px-4 font-weight-bold text-dark shadow-sm">
+                    <a href="{{ route('admin.master.buku.edit', $buku->id) }}" class="btn btn-primary px-4 font-weight-bold shadow-sm" style="border-radius: 8px;">
                         <i class="fas fa-edit mr-1"></i> Edit Data Buku
                     </a>
                 </div>

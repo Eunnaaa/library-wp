@@ -471,6 +471,66 @@
             border: 1px solid #ddd5c7 !important;
         }
 
+        /* Color Utility Unification */
+        .text-primary {
+            color: var(--primary) !important;
+        }
+        .bg-primary {
+            background-color: var(--primary) !important;
+        }
+        .border-primary {
+            border-color: var(--primary) !important;
+        }
+        .text-gold {
+            color: var(--accent-gold) !important;
+        }
+        .bg-gold {
+            background-color: var(--accent-gold) !important;
+        }
+
+        /* Utility Helpers */
+        .rounded-xl {
+            border-radius: 14px !important;
+        }
+        .rounded-2xl {
+            border-radius: 18px !important;
+        }
+        .rounded-lg {
+            border-radius: 10px !important;
+        }
+        .font-weight-500 {
+            font-weight: 500 !important;
+        }
+        .font-weight-semibold {
+            font-weight: 600 !important;
+        }
+
+        /* Modals Polish */
+        .modal-content {
+            border-radius: 16px !important;
+            border: 1px solid var(--card-border) !important;
+            box-shadow: 0 25px 50px -12px rgba(27, 16, 8, 0.35) !important;
+            overflow: hidden;
+        }
+        .modal-header {
+            border-bottom: 1px solid var(--card-border) !important;
+            padding: 1.1rem 1.5rem;
+        }
+        .modal-header .close {
+            color: #fdfbf7 !important;
+            text-shadow: none;
+            opacity: 0.85;
+            transition: opacity 0.2s ease;
+        }
+        .modal-header .close:hover {
+            opacity: 1;
+        }
+        .modal-footer {
+            border-top: 1px solid var(--card-border) !important;
+            background-color: #fbf9f4 !important;
+            padding: 1rem 1.5rem;
+        }
+
         .btn {
             font-weight: 600;
             border-radius: 8px;
@@ -793,6 +853,9 @@
     </div>
     <!-- ./wrapper -->
 
+    <!-- Modal Scanner QR Code Pengambilan -->
+    @include('admin.layout.modal_scanner')
+
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
@@ -800,6 +863,8 @@
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+    <!-- HTML5 QR Code Scanner -->
+    <script src="{{ asset('assets/plugins/html5-qrcode/html5-qrcode.min.js') }}"></script>
 
     <!-- bs-custom-file-input -->
     <script src="{{ asset('assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>

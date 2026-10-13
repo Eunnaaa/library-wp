@@ -241,25 +241,46 @@
             margin-left: 0;
         }
     }
+
+    .catalog-hero-section {
+        background: linear-gradient(135deg, #180e08 0%, #2a1810 50%, #3e2417 100%);
+        border-bottom: 3px solid #c59b27;
+        overflow: hidden;
+        min-height: calc(100vh - 72px);
+        min-height: calc(100dvh - 72px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 4.5rem;
+        padding-bottom: 4.5rem;
+    }
+    @media (max-width: 767.98px) {
+        .catalog-hero-section {
+            min-height: calc(100vh - 72px);
+            min-height: calc(100dvh - 72px);
+            padding-top: 3.5rem;
+            padding-bottom: 3.5rem;
+        }
+    }
 </style>
 @endpush
 
 @section('content')
-<div class="position-relative text-white py-5 mb-5 shadow-sm" style="background: linear-gradient(135deg, #180e08 0%, #2a1810 50%, #3e2417 100%); border-bottom: 3px solid #c59b27; overflow: hidden;">
+<div class="position-relative text-white mb-5 shadow-sm catalog-hero-section">
     <!-- Ambient glowing accents: Warm Gold & Mahogany -->
     <div class="position-absolute" style="top: -100px; right: -100px; width: 380px; height: 380px; background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
     <div class="position-absolute" style="bottom: -120px; left: -80px; width: 320px; height: 320px; background: radial-gradient(circle, rgba(139, 69, 19, 0.25) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; pointer-events: none;"></div>
 
-    <div class="container-fluid px-3 px-md-4 position-relative text-center py-2">
-        <div class="d-inline-flex align-items-center mb-3 px-3 py-1 rounded-pill" style="background: rgba(197, 155, 39, 0.18); backdrop-filter: blur(8px); border: 1px solid rgba(197, 155, 39, 0.4);">
+    <div class="container-fluid px-3 px-md-4 position-relative text-center my-auto">
+        <div class="d-inline-flex align-items-center mb-4 px-3 py-1 rounded-pill" style="background: rgba(197, 155, 39, 0.18); backdrop-filter: blur(8px); border: 1px solid rgba(197, 155, 39, 0.4);">
             <i class="fas fa-university text-warning mr-2"></i>
             <span class="small font-weight-bold letter-spacing-1 text-uppercase" style="color: #f5e4b3 !important;">Perpustakaan Digital Universitas Nusa Mandiri</span>
         </div>
 
-        <h1 class="display-4 font-weight-bold mb-3 text-white" style="letter-spacing: -0.02em;">
+        <h1 class="display-4 font-weight-bold mb-3 mb-md-4 text-white" style="letter-spacing: -0.02em;">
             <i class="fas fa-book-reader mr-2" style="color: #d4af37;"></i> Katalog E-Library UNM
         </h1>
-        <p class="lead mb-4 mx-auto text-light opacity-90" style="max-width: 680px; font-size: 1.15rem; line-height: 1.6; color: #ede6d8 !important;">
+        <p class="lead mx-auto text-light opacity-90 mb-4 mb-md-5" style="max-width: 680px; font-size: 1.15rem; line-height: 1.6; color: #ede6d8 !important; margin-bottom: 2.5rem !important;">
             Akses ribuan literatur akademik, buku teks informatika, dan referensi riset ilmiah secara praktis dengan reservasi peminjaman online 24 jam.
         </p>
 
@@ -302,7 +323,7 @@
                 </form>
 
                 <!-- Quick Category Filter Pills -->
-                <div class="d-flex flex-wrap justify-content-center align-items-center mt-3 small">
+                <div class="d-flex flex-wrap justify-content-center align-items-center mt-4 pt-2 small" style="gap: 6px;">
                     <span class="mr-2 mb-2 font-weight-bold" style="color: #e5d8c3;">
                         <i class="fas fa-tags mr-1" style="color: #c59b27;"></i> Kategori Populer:
                     </span>
@@ -406,20 +427,30 @@
                                 </button>
                             </div>
                             <div class="col-7 pl-1">
-                                @if ($item->stok > 0)
-                                    @if(Auth::check() && Auth::user()->role_id == 1)
-                                        <a href="{{ route('admin.master.buku.edit', $item->id) }}" class="btn btn-outline-info btn-sm btn-block font-weight-bold shadow-sm" title="Kelola data buku di panel admin">
-                                            <i class="fas fa-edit mr-1"></i> Kelola
-                                        </a>
-                                    @else
-                                        <form action="{{ route('member.tambahKeranjang') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{ $item->id }}">
-                                            <button type="submit" class="btn btn-primary btn-sm btn-block font-weight-bold shadow-sm">
-                                                <i class="fas fa-cart-plus mr-1"></i> Booking
-                                            </button>
-                                        </form>
-                                    @endif
+                                @if(Auth::check() && Auth::user()->role_id == 1)
+                                    <a href="{{ route('admin.master.buku.edit', $item->id) }}" class="btn btn-outline-info btn-sm btn-block font-weight-bold shadow-sm" title="Kelola data buku di panel admin">
+                                        <i class="fas fa-edit mr-1"></i> Kelola
+                                    </a>
+                                @elseif(Auth::check() && in_array($item->id, $userPinjamIds ?? []))
+                                    <button type="button" class="btn btn-secondary btn-sm btn-block font-weight-bold" disabled title="Anda saat ini sedang meminjam buku ini">
+                                        <i class="fas fa-book-reader mr-1"></i> Dipinjam
+                                    </button>
+                                @elseif(Auth::check() && in_array($item->id, $userKeranjangIds ?? []))
+                                    <a href="{{ route('member.dataKeranjang') }}" class="btn btn-warning btn-sm btn-block font-weight-bold shadow-sm text-dark" title="Buku sudah ada di keranjang peminjaman">
+                                        <i class="fas fa-shopping-basket mr-1"></i> Di Keranjang
+                                    </a>
+                                @elseif(Auth::check() && in_array($item->id, $userBookingIds ?? []))
+                                    <a href="{{ route('member.dataBooking') }}" class="btn btn-info btn-sm btn-block font-weight-bold shadow-sm" title="Buku sudah Anda booking">
+                                        <i class="fas fa-receipt mr-1"></i> Dibooking
+                                    </a>
+                                @elseif ($item->stok > 0)
+                                    <form action="{{ route('member.tambahKeranjang') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $item->id }}">
+                                        <button type="submit" class="btn btn-primary btn-sm btn-block font-weight-bold shadow-sm">
+                                            <i class="fas fa-cart-plus mr-1"></i> Booking
+                                        </button>
+                                    </form>
                                 @else
                                     <button class="btn btn-secondary btn-sm btn-block disabled font-weight-bold" disabled>
                                         <i class="fas fa-ban mr-1"></i> Kosong
@@ -520,13 +551,16 @@
                         <i class="fas fa-edit mr-1"></i> Edit Buku di Admin
                     </a>
                 @else
-                    <form id="formTambahKeranjangModal" action="{{ route('member.tambahKeranjang') }}" method="POST" class="d-inline">
-                        @csrf
-                        <input type="hidden" name="id" id="modalBookId" value="">
-                        <button type="submit" class="btn btn-primary btn-sm px-4 font-weight-bold shadow-sm" id="btnTambahKeranjangModal" style="border-radius: 8px;">
-                            <i class="fas fa-cart-plus mr-1"></i> Masukkan ke Keranjang Booking
-                        </button>
-                    </form>
+                    <div id="modalActionContainer" class="d-inline">
+                        <form id="formTambahKeranjangModal" action="{{ route('member.tambahKeranjang') }}" method="POST" class="d-inline">
+                            @csrf
+                            <input type="hidden" name="id" id="modalBookId" value="">
+                            <button type="submit" class="btn btn-primary btn-sm px-4 font-weight-bold shadow-sm" id="btnTambahKeranjangModal" style="border-radius: 8px;">
+                                <i class="fas fa-cart-plus mr-1"></i> Masukkan ke Keranjang Booking
+                            </button>
+                        </form>
+                        <span id="modalExtraBadge" class="d-none"></span>
+                    </div>
                 @endif
             </div>
         </div>
@@ -570,9 +604,24 @@
 
                 if (data.stok > 0) {
                     $('#stok').html('<span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle mr-1"></i> Tersedia ' + data.stok + ' Eksemplar</span>');
-                    $('#btnTambahKeranjangModal').removeClass('d-none');
                 } else {
                     $('#stok').html('<span class="badge badge-danger px-2 py-1"><i class="fas fa-times-circle mr-1"></i> Stok Habis</span>');
+                }
+
+                if (data.is_borrowed_by_user) {
+                    $('#btnTambahKeranjangModal').addClass('d-none');
+                    $('#modalExtraBadge').removeClass('d-none').html('<button type="button" class="btn btn-secondary btn-sm px-3 font-weight-bold" disabled><i class="fas fa-book-reader mr-1"></i> Sedang Anda Pinjam</button>');
+                } else if (data.is_in_cart) {
+                    $('#btnTambahKeranjangModal').addClass('d-none');
+                    $('#modalExtraBadge').removeClass('d-none').html('<a href="' + APP_URL + '/member/data-keranjang" class="btn btn-warning btn-sm px-3 font-weight-bold text-dark"><i class="fas fa-shopping-basket mr-1"></i> Sudah di Keranjang</a>');
+                } else if (data.is_booked_by_user) {
+                    $('#btnTambahKeranjangModal').addClass('d-none');
+                    $('#modalExtraBadge').removeClass('d-none').html('<a href="' + APP_URL + '/member/data-booking" class="btn btn-info btn-sm px-3 font-weight-bold"><i class="fas fa-receipt mr-1"></i> Sedang Anda Booking</a>');
+                } else if (data.stok > 0) {
+                    $('#modalExtraBadge').addClass('d-none');
+                    $('#btnTambahKeranjangModal').removeClass('d-none');
+                } else {
+                    $('#modalExtraBadge').addClass('d-none');
                     $('#btnTambahKeranjangModal').addClass('d-none');
                 }
 

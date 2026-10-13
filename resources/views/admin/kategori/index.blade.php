@@ -80,15 +80,19 @@
                                     </td>
                                     <td class="text-center"><span class="badge badge-info font-weight-bold">{{ $k->buku_count ?? 0 }} Judul Buku</span></td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-outline-warning btn-edit p-1 px-2"
-                                            data-id="{{ $k->id }}" data-nama="{{ $k->nama_kategori }}" title="Edit">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </button>
-                                        <form action="{{ route('admin.master.kategori.destroy', $k->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kategori ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger p-1 px-2" title="Hapus"><i class="fas fa-trash"></i> Hapus</button>
-                                        </form>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-warning btn-edit p-1 px-2"
+                                                data-id="{{ $k->id }}" data-nama="{{ $k->nama_kategori }}" title="Edit Kategori" data-toggle="tooltip">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <form action="{{ route('admin.master.kategori.destroy', $k->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kategori ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger p-1 px-2" title="Hapus Kategori" data-toggle="tooltip" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
@@ -163,7 +167,7 @@
                 </div>
                 <div class="modal-footer bg-light border-top py-3 px-4 d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-secondary font-weight-bold" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-warning px-4 font-weight-bold shadow-sm" style="color: #78350f;"><i class="fas fa-save mr-1"></i> Perbarui</button>
+                    <button type="submit" class="btn btn-primary px-4 font-weight-bold shadow-sm"><i class="fas fa-save mr-1"></i> Perbarui Kategori</button>
                 </div>
             </form>
         </div>
@@ -172,6 +176,10 @@
 
 @push('scripts')
 <script>
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
     $(document).on('click', '.btn-edit', function() {
         var id = $(this).data('id');
         var nama = $(this).data('nama');

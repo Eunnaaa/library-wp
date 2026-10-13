@@ -12,6 +12,13 @@
 
 <!-- Right navbar links -->
 <ul class="navbar-nav ml-auto align-items-center">
+    <!-- Quick Scan QR Loket Button -->
+    <li class="nav-item mr-2">
+        <button type="button" class="btn btn-warning btn-sm font-weight-bold px-3 shadow-sm" data-toggle="modal" data-target="#modalScannerQr" style="border-radius: 8px; color: #1b1008;">
+            <i class="fas fa-camera mr-1"></i> <span class="d-none d-sm-inline">Scan QR Loket</span>
+        </button>
+    </li>
+
     <!-- Profile Dropdown Menu -->
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded shadow-none" href="#"

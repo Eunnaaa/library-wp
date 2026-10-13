@@ -70,6 +70,12 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalScannerQr" class="nav-link text-warning font-weight-bold">
+                            <i class="fas fa-qrcode nav-icon text-warning"></i>
+                            <p>Scan QR Kamera <span class="badge badge-warning right small" style="font-size: 0.65rem; color: #1b1008;">Live</span></p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('admin.transaksi.booking.index') }}"
                             class="nav-link {{ request()->is('admin/transaksi/booking*') ? 'active' : '' }}">
                             <i class="fas fa-receipt nav-icon"></i>

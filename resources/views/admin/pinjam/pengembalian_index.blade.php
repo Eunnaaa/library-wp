@@ -15,7 +15,7 @@
                         <p class="text-muted small mb-0">Arsip pencatatan pengembalian buku dan kalkulasi denda keterlambatan</p>
                     </div>
                     <div class="mt-2 mt-md-0 ml-md-auto">
-                        <a href="{{ route('admin.transaksi.peminjaman.index') }}" class="btn btn-outline-primary btn-sm px-3">
+                        <a href="{{ route('admin.transaksi.peminjaman.index') }}" class="btn btn-outline-primary btn-sm px-3 shadow-sm d-inline-flex align-items-center" style="border-radius: 8px; height: 36px;">
                             <i class="fas fa-exchange-alt mr-1"></i> Data Peminjaman Aktif
                         </a>
                     </div>

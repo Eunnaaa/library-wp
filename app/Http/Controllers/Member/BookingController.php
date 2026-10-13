@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -47,7 +48,8 @@ class BookingController extends Controller
 
         $user = Auth::user();
         $pdf = Pdf::loadView('member.booking_pdf', compact('data_booking'));
+        $safeName = Str::slug($user->nama, '_');
 
-        return $pdf->stream('bukti_booking_'.$user->nama.'.pdf');
+        return $pdf->stream('bukti_booking_'.($safeName ?: 'member').'.pdf');
     }
 }

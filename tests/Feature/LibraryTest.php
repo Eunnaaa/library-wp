@@ -403,4 +403,54 @@ class LibraryTest extends TestCase
         $response->assertSee('Sedang Dipinjam');
         $response->assertSee('Riwayat Pengembalian');
     }
+
+    public function test_admin_can_verify_booking_qr_code(): void
+    {
+        $member = User::where('role_id', 2)->first();
+        $admin = User::where('role_id', 1)->first();
+
+        Temp::where('id_user', $member->id)->delete();
+        Booking::where('id_user', $member->id)->delete();
+        $buku = Buku::where('stok', '>', 0)->first();
+
+        $this->actingAs($member)->post('/member/tambah-ke-keranjang', ['id' => $buku->id]);
+        $this->actingAs($member)->post('/member/simpan-booking', ['id' => $member->id]);
+
+        $booking = Booking::where('id_user', $member->id)->first();
+        $this->assertNotNull($booking);
+
+        // 1. Admin verifies valid QR code
+        $response = $this->actingAs($admin)->post('/admin/transaksi/booking/verifikasi-qr', [
+            'code' => $booking->id_booking,
+        ]);
+        $response->assertStatus(200);
+        $response->assertJson([
+            'status' => 'valid',
+            'code' => $booking->id_booking,
+            'is_expired' => false,
+        ]);
+
+        // 2. Admin verifies QR with full URL format
+        $responseUrl = $this->actingAs($admin)->post('/admin/transaksi/booking/verifikasi-qr', [
+            'code' => url('/admin/transaksi/booking/'.$booking->id_booking),
+        ]);
+        $responseUrl->assertStatus(200);
+        $responseUrl->assertJson(['status' => 'valid', 'code' => $booking->id_booking]);
+
+        // 3. Admin verifies nonexistent code
+        $responseNotFound = $this->actingAs($admin)->post('/admin/transaksi/booking/verifikasi-qr', [
+            'code' => 'B999999999',
+        ]);
+        $responseNotFound->assertStatus(404);
+        $responseNotFound->assertJson(['status' => 'not_found']);
+
+        // 4. Booking PDF renders successfully with QR Code
+        $responsePdf = $this->actingAs($member)->get('/member/booking-pdf/'.$member->id);
+        $responsePdf->assertStatus(200);
+        $this->assertEquals('application/pdf', $responsePdf->headers->get('content-type'));
+
+        // Clean up
+        $booking->booking_detail()->delete();
+        $booking->delete();
+    }
 }

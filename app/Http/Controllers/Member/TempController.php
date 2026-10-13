@@ -23,24 +23,37 @@ class TempController extends Controller
             'id' => 'required|integer|exists:buku,id',
         ]);
 
-        // Cek apakah buku yang diklik booking dengan user yang sedang login sudah ada di tabel temp
+        // Cek apakah buku sudah ada di keranjang user
         $cek_keranjang = Temp::where(['id_buku' => $request->id, 'id_user' => $userId])->count();
+        if ($cek_keranjang > 0) {
+            return redirect()->route('member.index')->with('error', 'Buku ini sudah ada di dalam keranjang peminjaman Anda.');
+        }
+
+        // Cek apakah user sedang meminjam buku ini
         $cek_pinjam = DB::table('pinjam as a')
             ->join('pinjam_detail as b', 'a.no_pinjam', '=', 'b.no_pinjam')
             ->where('a.id_user', $userId)
             ->where('b.id_buku', $request->id)
             ->where('b.status', 'Pinjam')
             ->count();
-
-        // Jika buku yang diklik booking sudah ada di temp atau sedang dipinjam
-        if ($cek_keranjang > 0 || $cek_pinjam > 0) {
-            return redirect()->route('member.index')->with('error', 'Buku sudah ada di keranjang atau sedang dipinjam.');
+        if ($cek_pinjam > 0) {
+            return redirect()->route('member.index')->with('error', 'Anda saat ini sedang meminjam buku ini. Harap kembalikan buku tersebut terlebih dahulu sebelum meminjamnya kembali.');
         }
 
-        // Cek apakah ada data buku yang belum diambil (masih booking)
+        // Cek apakah buku ini sudah dibooking oleh user
+        $cek_booking_buku = DB::table('booking as a')
+            ->join('booking_detail as b', 'a.id_booking', '=', 'b.id_booking')
+            ->where('a.id_user', $userId)
+            ->where('b.id_buku', $request->id)
+            ->count();
+        if ($cek_booking_buku > 0) {
+            return redirect()->route('member.index')->with('error', 'Buku ini sudah Anda booking dan sedang menunggu pengambilan di perpustakaan.');
+        }
+
+        // Cek apakah ada transaksi booking yang belum diambil
         $cek_booking = Booking::where('id_user', $userId)->count();
         if ($cek_booking > 0) {
-            return redirect()->route('member.index')->with('error', 'Masih ada buku yang belum diambil, silakan ambil buku atau menunggu pembatalan otomatis.');
+            return redirect()->route('member.index')->with('error', 'Masih ada buku yang belum diambil dari reservasi booking sebelumnya. Silakan ambil buku di perpustakaan terlebih dahulu.');
         }
 
         // Cek jumlah buku dalam keranjang
@@ -79,8 +92,14 @@ class TempController extends Controller
 
         $user = Auth::user();
         $temp = Temp::with('buku.kategori')->where('id_user', $user->id)->get();
+        $totalPinjam = DB::table('pinjam as a')
+            ->join('pinjam_detail as b', 'a.no_pinjam', '=', 'b.no_pinjam')
+            ->where('a.id_user', $user->id)
+            ->where('b.status', 'Pinjam')
+            ->count();
+        $totalBooking = Booking::where('id_user', $user->id)->count();
 
-        return view('member.keranjang', compact('temp', 'user'));
+        return view('member.keranjang', compact('temp', 'user', 'totalPinjam', 'totalBooking'));
     }
 
     public function hapusKeranjang($buku, ?User $user = null)
@@ -107,6 +126,21 @@ class TempController extends Controller
 
         if ($cek_stok->count() > 3) {
             return redirect()->back()->with('error', 'Jumlah buku yang dibooking melebihi batas maksimal (3 buku).');
+        }
+
+        $total_pinjam = DB::table('pinjam as a')
+            ->join('pinjam_detail as b', 'a.no_pinjam', '=', 'b.no_pinjam')
+            ->where('a.id_user', $userId)
+            ->where('b.status', 'Pinjam')
+            ->count();
+
+        $cek_booking = Booking::where('id_user', $userId)->count();
+        if ($cek_booking > 0) {
+            return redirect()->back()->with('error', 'Anda masih memiliki reservasi booking yang belum diambil. Silakan ambil buku di perpustakaan terlebih dahulu.');
+        }
+
+        if (($total_pinjam + $cek_stok->count()) > 3) {
+            return redirect()->back()->with('error', 'Total kuota buku (sedang dipinjam: '.$total_pinjam.' + di keranjang: '.$cek_stok->count().') melebihi batas maksimal 3 buku.');
         }
 
         $bookIds = $cek_stok->pluck('id_buku')->toArray();

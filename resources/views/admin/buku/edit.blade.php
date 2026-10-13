@@ -155,7 +155,7 @@
                         <a href="{{ route('admin.master.buku.index') }}" class="btn btn-outline-secondary font-weight-semibold" style="border-radius: 8px;">
                             <i class="fas fa-arrow-left mr-1"></i> Kembali ke Daftar
                         </a>
-                        <button type="submit" class="btn btn-warning px-4 font-weight-bold text-dark shadow-sm" style="border-radius: 8px;">
+                        <button type="submit" class="btn btn-primary px-4 font-weight-bold shadow-sm" style="border-radius: 8px;">
                             <i class="fas fa-save mr-1"></i> Simpan Perubahan
                         </button>
                     </div>

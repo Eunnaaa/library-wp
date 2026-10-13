@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,18 +38,54 @@ class MemberController extends Controller
         $kategori = Kategori::all();
 
         $count_keranjang = 0;
+        $userKeranjangIds = [];
+        $userPinjamIds = [];
+        $userBookingIds = [];
+
         if (Auth::check()) {
-            $count_keranjang = Temp::where('id_user', Auth::id())->count();
+            $userId = Auth::id();
+            $count_keranjang = Temp::where('id_user', $userId)->count();
+            $userKeranjangIds = Temp::where('id_user', $userId)->pluck('id_buku')->toArray();
+            $userPinjamIds = PinjamDetail::whereHas('pinjam', function ($q) use ($userId) {
+                $q->where('id_user', $userId);
+            })->where('status', 'Pinjam')->pluck('id_buku')->toArray();
+            $userBookingIds = DB::table('booking as a')
+                ->join('booking_detail as b', 'a.id_booking', '=', 'b.id_booking')
+                ->where('a.id_user', $userId)
+                ->pluck('b.id_buku')
+                ->toArray();
         }
 
-        return view('member.index', compact('buku', 'kategori', 'count_keranjang'));
+        return view('member.index', compact('buku', 'kategori', 'count_keranjang', 'userKeranjangIds', 'userPinjamIds', 'userBookingIds'));
     }
 
     public function detailBuku(Buku $buku)
     {
         $detailBuku = Buku::with('kategori')->find($buku->id);
 
-        return response()->json($detailBuku);
+        $isInCart = false;
+        $isBorrowedByUser = false;
+        $isBookedByUser = false;
+
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $isInCart = Temp::where('id_user', $userId)->where('id_buku', $buku->id)->exists();
+            $isBorrowedByUser = PinjamDetail::whereHas('pinjam', function ($q) use ($userId) {
+                $q->where('id_user', $userId);
+            })->where('status', 'Pinjam')->where('id_buku', $buku->id)->exists();
+            $isBookedByUser = DB::table('booking as a')
+                ->join('booking_detail as b', 'a.id_booking', '=', 'b.id_booking')
+                ->where('a.id_user', $userId)
+                ->where('b.id_buku', $buku->id)
+                ->exists();
+        }
+
+        $data = $detailBuku->toArray();
+        $data['is_in_cart'] = $isInCart;
+        $data['is_borrowed_by_user'] = $isBorrowedByUser;
+        $data['is_booked_by_user'] = $isBookedByUser;
+
+        return response()->json($data);
     }
 
     public function tampilProfil()

@@ -4,23 +4,29 @@
 
 @section('content')
 <div class="container pt-4 pb-5">
-    <!-- Breadcrumb & Step Navigation -->
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px; background: #ffffff;">
-        <div class="card-body py-3 px-4">
+    <!-- Breadcrumb & Step Navigation Wizard -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; background: #ffffff; border: 1px solid #e8e2d4 !important;">
+        <div class="card-body py-3 px-3 px-md-4">
             <div class="row align-items-center">
-                <div class="col-md-6 mb-2 mb-md-0">
-                    <h5 class="font-weight-bold text-dark mb-0">
+                <div class="col-lg-5 mb-3 mb-lg-0">
+                    <h5 class="font-weight-bold text-dark mb-1" style="letter-spacing: -0.02em;">
                         <i class="fas fa-shopping-basket text-primary mr-2"></i> Keranjang Peminjaman Buku
                     </h5>
-                    <small class="text-muted">Periksa kembali daftar buku yang akan Anda booking sebelum konfirmasi akhir.</small>
+                    <small class="text-muted">Periksa kembali daftar buku pilihan Anda sebelum memfinalisasi reservasi.</small>
                 </div>
-                <div class="col-md-6 text-md-right">
-                    <div class="d-inline-flex align-items-center small">
-                        <span class="badge badge-success px-3 py-2 mr-2"><i class="fas fa-check mr-1"></i> 1. Pilih Buku</span>
-                        <i class="fas fa-arrow-right text-muted mr-2"></i>
-                        <span class="badge badge-primary px-3 py-2 mr-2">2. Review Keranjang</span>
-                        <i class="fas fa-arrow-right text-muted mr-2"></i>
-                        <span class="badge badge-secondary px-3 py-2 opacity-50">3. Ambil di Kampus</span>
+                <div class="col-lg-7 text-lg-right">
+                    <div class="d-inline-flex flex-wrap align-items-center justify-content-start justify-content-lg-end" style="gap: 8px;">
+                        <span class="badge badge-success px-3 py-2 font-weight-bold shadow-sm d-inline-flex align-items-center" style="border-radius: 9999px;">
+                            <i class="fas fa-check mr-1"></i> 1. Pilih Koleksi
+                        </span>
+                        <i class="fas fa-chevron-right text-muted small mx-1 d-none d-sm-inline"></i>
+                        <span class="badge badge-warning px-3 py-2 font-weight-bold shadow-sm d-inline-flex align-items-center" style="border-radius: 9999px; border: 1px solid rgba(197, 155, 39, 0.4);">
+                            <i class="fas fa-edit mr-1"></i> 2. Tinjau Keranjang
+                        </span>
+                        <i class="fas fa-chevron-right text-muted small mx-1 d-none d-sm-inline"></i>
+                        <span class="badge badge-secondary px-3 py-2 text-muted d-inline-flex align-items-center" style="border-radius: 9999px; background: #f1ede6; border: 1px solid #e8e2d4;">
+                            <i class="fas fa-university mr-1"></i> 3. Ambil di Kampus
+                        </span>
                     </div>
                 </div>
             </div>
@@ -61,22 +67,22 @@
                                             <td class="text-center font-weight-bold text-muted">{{ $loop->iteration }}</td>
                                             <td>
                                                 <div class="book-cover-thumb book-cover-thumb-md">
-                                                    <img src="{{ asset('storage/' . ($item->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                                    <img src="{{ asset('storage/' . ($item->buku?->image ?? 'cover-buku/book-default-cover.jpg')) }}"
                                                         alt="Cover Buku"
                                                         onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="badge badge-info mb-1">{{ $item->buku->kategori->nama_kategori ?? 'Umum' }}</span>
+                                                <span class="badge badge-info mb-1">{{ $item->buku?->kategori?->nama_kategori ?? 'Umum' }}</span>
                                                 <h6 class="font-weight-bold text-dark mb-1" style="line-height: 1.3;">
-                                                    {{ $item->buku->judul_buku ?? 'Buku Tidak Ditemukan' }}
+                                                    {{ $item->buku?->judul_buku ?? 'Buku Tidak Ditemukan' }}
                                                 </h6>
                                                 <div class="text-muted small">
-                                                    <span><i class="fas fa-user-edit mr-1 text-primary opacity-75"></i> {{ $item->buku->pengarang ?? '-' }}</span> &bull;
-                                                    <span><i class="fas fa-building mr-1 text-secondary opacity-75"></i> {{ $item->buku->penerbit ?? '-' }} ({{ $item->buku->tahun_terbit ?? '-' }})</span>
+                                                    <span><i class="fas fa-user-edit mr-1 text-primary opacity-75"></i> {{ $item->buku?->pengarang ?? '-' }}</span> &bull;
+                                                    <span><i class="fas fa-building mr-1 text-secondary opacity-75"></i> {{ $item->buku?->penerbit ?? '-' }} ({{ $item->buku?->tahun_terbit ?? '-' }})</span>
                                                 </div>
                                                 <div class="small text-secondary mt-1">
-                                                    <span>ISBN: <code>{{ $item->buku->isbn ?? '-' }}</code></span>
+                                                    <span>ISBN: <code>{{ $item->buku?->isbn ?? '-' }}</code></span>
                                                 </div>
                                             </td>
                                             <td class="text-center">
@@ -105,16 +111,47 @@
                         <h6 class="font-weight-bold mb-0" style="color: #fdfbf7; letter-spacing: -0.01em;"><i class="fas fa-receipt mr-2" style="color: #e9c46a;"></i> Ringkasan Reservasi</h6>
                     </div>
                     <div class="card-body p-4">
+                        @php
+                            $totalPinjamCount = $totalPinjam ?? 0;
+                            $totalBookingCount = $totalBooking ?? 0;
+                            $keranjangCount = $temp->count();
+                            $totalUsed = $totalPinjamCount + $keranjangCount;
+                            $exceedLimit = $totalUsed > 3;
+                        @endphp
                         <div class="mb-3 pb-2 border-bottom">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="text-muted">Kuota Reservasi:</span>
-                                <span class="font-weight-bold text-primary">{{ $temp->count() }} / 3 Buku</span>
+                                <span class="text-muted">Total Alokasi Buku:</span>
+                                <span class="font-weight-bold {{ $totalUsed > 3 ? 'text-danger' : 'text-primary' }}">{{ $totalUsed }} / 3 Buku</span>
                             </div>
                             <div class="progress" style="height: 6px; border-radius: 4px; background: #ece5d8;">
-                                <div class="progress-bar {{ $temp->count() >= 3 ? 'bg-danger' : 'bg-primary' }}" style="width: {{ ($temp->count() / 3) * 100 }}%"></div>
+                                <div class="progress-bar {{ $totalUsed > 3 ? 'bg-danger' : 'bg-primary' }}" style="width: {{ min(100, ($totalUsed / 3) * 100) }}%"></div>
                             </div>
-                            @if($temp->count() >= 3)
-                                <small class="text-danger font-weight-bold mt-1 d-block"><i class="fas fa-exclamation-triangle mr-1"></i> Batas maksimal 3 buku tercapai</small>
+                            <div class="mt-2 small text-muted">
+                                <div class="d-flex justify-content-between">
+                                    <span>&bull; Buku di keranjang ini:</span>
+                                    <span class="font-weight-bold text-dark">{{ $keranjangCount }} buku</span>
+                                </div>
+                                @if($totalPinjamCount > 0)
+                                    <div class="d-flex justify-content-between text-warning">
+                                        <span>&bull; Sedang dipinjam aktif:</span>
+                                        <span class="font-weight-bold">{{ $totalPinjamCount }} buku</span>
+                                    </div>
+                                @endif
+                                @if($totalBookingCount > 0)
+                                    <div class="d-flex justify-content-between text-info">
+                                        <span>&bull; Booking belum diambil:</span>
+                                        <span class="font-weight-bold">{{ $totalBookingCount }} buku</span>
+                                    </div>
+                                @endif
+                            </div>
+                            @if($exceedLimit)
+                                <small class="text-danger font-weight-bold mt-2 d-block">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i> Total pinjaman & keranjang melebihi batas 3 buku! Hapus buku dari keranjang.
+                                </small>
+                            @else
+                                <small class="text-success font-weight-bold mt-2 d-block">
+                                    <i class="fas fa-check-circle mr-1"></i> Sisa kuota peminjaman: {{ max(0, 3 - $totalUsed) }} buku
+                                </small>
                             @endif
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
@@ -141,7 +178,7 @@
                         <form action="{{ route('member.simpanBooking') }}" method="POST" id="form-booking">
                             @csrf
                             <input type="hidden" name="id" value="{{ auth()->user()->id }}">
-                            <button type="submit" class="btn btn-success btn-block py-2 font-weight-bold shadow-sm" id="btn-booking" style="border-radius: 10px; font-size: 1rem;">
+                            <button type="submit" class="btn btn-success btn-block py-2 font-weight-bold shadow-sm" id="btn-booking" style="border-radius: 10px; font-size: 1rem;" {{ $exceedLimit ? 'disabled' : '' }}>
                                 <i class="fas fa-check-circle mr-2"></i> Konfirmasi Booking Sekarang
                             </button>
                         </form>

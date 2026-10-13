@@ -2,6 +2,26 @@
 
 @section('title', 'Peminjaman Buku Saya')
 
+@push('styles')
+<style>
+    #pinjamTab .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s ease;
+        background: transparent;
+    }
+    #pinjamTab .nav-link:hover {
+        border-bottom: 3px solid rgba(197, 155, 39, 0.4);
+        color: #8b4513 !important;
+    }
+    #pinjamTab .nav-link.active {
+        border-bottom: 3px solid #8b4513 !important;
+        color: #8b4513 !important;
+        background: transparent !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container-fluid px-3 px-md-4 py-4">
     <!-- Breadcrumb & Page Header -->
@@ -31,7 +51,7 @@
     <!-- Summary Metric Cards -->
     <div class="row mb-4">
         <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; background: #ffffff;">
+            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; border-left: 4px solid #8b4513 !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
                     <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm flex-shrink-0" style="width: 52px; height: 52px; background: rgba(139, 69, 19, 0.12); color: #8b4513; border: 1px solid rgba(139, 69, 19, 0.25);">
                         <i class="fas fa-book-open fa-lg"></i>
@@ -45,7 +65,7 @@
         </div>
 
         <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; background: #ffffff;">
+            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; border-left: 4px solid {{ $totalTerlambat > 0 ? '#dc3545' : '#c59b27' }} !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
                     <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm flex-shrink-0" style="width: 52px; height: 52px; background: {{ $totalTerlambat > 0 ? 'rgba(220, 53, 69, 0.12)' : 'rgba(197, 155, 39, 0.15)' }}; color: {{ $totalTerlambat > 0 ? '#dc3545' : '#c59b27' }}; border: 1px solid {{ $totalTerlambat > 0 ? 'rgba(220, 53, 69, 0.3)' : 'rgba(197, 155, 39, 0.3)' }};">
                         <i class="fas {{ $totalTerlambat > 0 ? 'fa-exclamation-triangle' : 'fa-calendar-alt' }} fa-lg"></i>
@@ -71,7 +91,7 @@
         </div>
 
         <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; background: #ffffff;">
+            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; border-left: 4px solid #2d6a4f !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
                     <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm flex-shrink-0" style="width: 52px; height: 52px; background: rgba(45, 106, 79, 0.12); color: #2d6a4f; border: 1px solid rgba(45, 106, 79, 0.25);">
                         <i class="fas fa-check-circle fa-lg"></i>
@@ -85,7 +105,7 @@
         </div>
 
         <div class="col-xl-3 col-sm-6 mb-3 mb-xl-0">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; background: #ffffff;">
+            <div class="card h-100 shadow-sm border-0" style="border-radius: 14px; border: 1px solid #e8e2d4 !important; border-left: 4px solid #c59b27 !important; background: #ffffff;">
                 <div class="card-body p-3 d-flex align-items-center">
                     <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm flex-shrink-0" style="width: 52px; height: 52px; background: rgba(212, 175, 55, 0.15); color: #8b4513; border: 1px solid rgba(212, 175, 55, 0.35);">
                         <i class="fas fa-coins fa-lg"></i>
@@ -163,8 +183,8 @@
                                             <div class="d-flex align-items-start">
                                                 <!-- Cover Thumbnail -->
                                                 <div class="book-cover-thumb book-cover-thumb-md mr-3 flex-shrink-0 shadow-sm" style="width: 74px; height: 108px;">
-                                                    <img src="{{ asset('storage/' . ($item->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                                        alt="{{ $item->buku->judul_buku ?? 'Buku' }}"
+                                                    <img src="{{ asset('storage/' . ($item->buku?->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                                        alt="{{ $item->buku?->judul_buku ?? 'Buku' }}"
                                                         onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
                                                 </div>
 
@@ -172,20 +192,20 @@
                                                 <div class="flex-grow-1 min-w-0 pr-2">
                                                     <div class="d-flex flex-wrap align-items-center mb-1">
                                                         <span class="badge badge-info px-2 py-1 mr-2 font-weight-bold" style="font-size: 0.72rem; border-radius: 6px;">
-                                                            {{ $item->buku->kategori->nama_kategori ?? 'Koleksi Umum' }}
+                                                            {{ $item->buku?->kategori?->nama_kategori ?? 'Koleksi Umum' }}
                                                         </span>
                                                         <code class="small text-muted font-weight-bold" style="background: #f8f5ee; padding: 2px 6px; border-radius: 4px; border: 1px solid #e8e2d4;">
                                                             {{ $item->no_pinjam }}
                                                         </code>
                                                     </div>
 
-                                                    <h5 class="font-weight-bold text-dark mb-1" style="line-height: 1.35; font-size: 1.05rem;" title="{{ $item->buku->judul_buku }}">
-                                                        {{ $item->buku->judul_buku ?? 'Judul Buku Tidak Ditemukan' }}
+                                                    <h5 class="font-weight-bold text-dark mb-1" style="line-height: 1.35; font-size: 1.05rem;" title="{{ $item->buku?->judul_buku }}">
+                                                        {{ $item->buku?->judul_buku ?? 'Judul Buku Tidak Ditemukan' }}
                                                     </h5>
 
                                                     <div class="text-muted small mb-2 d-flex flex-wrap align-items-center">
-                                                        <span class="mr-3"><i class="fas fa-feather-alt mr-1" style="color: #8b4513;"></i>{{ $item->buku->pengarang ?? '-' }}</span>
-                                                        <span><i class="fas fa-university mr-1" style="color: #746454;"></i>{{ $item->buku->penerbit ?? '-' }} ({{ $item->buku->tahun_terbit ?? '-' }})</span>
+                                                        <span class="mr-3"><i class="fas fa-feather-alt mr-1" style="color: #8b4513;"></i>{{ $item->buku?->pengarang ?? '-' }}</span>
+                                                        <span><i class="fas fa-university mr-1" style="color: #746454;"></i>{{ $item->buku?->penerbit ?? '-' }} ({{ $item->buku?->tahun_terbit ?? '-' }})</span>
                                                     </div>
 
                                                     <div class="p-2 rounded mt-2 small" style="background: #fbf9f4; border: 1px solid #ebd9c0;">
@@ -279,15 +299,15 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="book-cover-thumb book-cover-thumb-sm mr-2 flex-shrink-0" style="width: 38px; height: 54px;">
-                                                        <img src="{{ asset('storage/' . ($r->buku->image ?? 'cover-buku/book-default-cover.jpg')) }}"
-                                                            alt="{{ $r->buku->judul_buku ?? 'Buku' }}"
+                                                        <img src="{{ asset('storage/' . ($r->buku?->image ?? 'cover-buku/book-default-cover.jpg')) }}"
+                                                            alt="{{ $r->buku?->judul_buku ?? 'Buku' }}"
                                                             onerror="this.onerror=null; this.src='{{ asset('storage/cover-buku/book-default-cover.jpg') }}';">
                                                     </div>
                                                     <div>
-                                                        <strong class="text-dark d-block text-truncate" style="max-width: 280px;" title="{{ $r->buku->judul_buku }}">
-                                                            {{ $r->buku->judul_buku ?? 'Judul Tidak Ditemukan' }}
+                                                        <strong class="text-dark d-block text-truncate" style="max-width: 280px;" title="{{ $r->buku?->judul_buku }}">
+                                                            {{ $r->buku?->judul_buku ?? 'Judul Tidak Ditemukan' }}
                                                         </strong>
-                                                        <small class="text-muted">{{ $r->buku->pengarang ?? '-' }} &bull; {{ $r->buku->kategori->nama_kategori ?? 'Umum' }}</small>
+                                                        <small class="text-muted">{{ $r->buku?->pengarang ?? '-' }} &bull; {{ $r->buku?->kategori?->nama_kategori ?? 'Umum' }}</small>
                                                     </div>
                                                 </div>
                                             </td>

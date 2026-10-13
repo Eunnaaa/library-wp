@@ -162,8 +162,18 @@ class PinjamController extends Controller
                 Booking::where('id_booking', $id_booking)->delete();
             });
 
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => 'Data pinjaman berhasil disimpan dan buku resmi diserahkan ke anggota.',
+                ]);
+            }
+
             return redirect()->route('admin.transaksi.peminjaman.index')->with('success', 'Data pinjaman berhasil disimpan dan booking telah diproses.');
         } catch (\Exception $e) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json(['error' => $e->getMessage()], 422);
+            }
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -201,8 +211,10 @@ class PinjamController extends Controller
                     DB::table('pinjam')->where('no_pinjam', $no_pinjam)->increment('total_denda', $totalDenda);
                 }
 
+                $message = 'Buku berhasil dikembalikan.'.($totalDenda > 0 ? ' Denda keterlambatan: Rp '.number_format($totalDenda, 0, ',', '.') : '');
+
                 return response()->json([
-                    'success' => 'Buku berhasil dikembalikan.'.($totalDenda > 0 ? ' Denda keterlambatan: Rp '.number_format($totalDenda, 0, ',', '.') : ''),
+                    'success' => $message,
                 ]);
             }
 

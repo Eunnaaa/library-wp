@@ -149,8 +149,8 @@
                         <td class="text-center">{{ date('d/m/Y', strtotime($pinjam->tgl_pinjam)) }}</td>
                         <td class="text-center">{{ date('d/m/Y', strtotime($detail->tgl_kembali)) }}</td>
                         <td>
-                            <strong>{{ $detail->buku->judul_buku ?? 'Buku Dihapus' }}</strong>
-                            <div style="color: #64748b; font-size: 7.5pt;">ISBN: {{ $detail->buku->isbn ?? '-' }}</div>
+                            <strong>{{ $detail->buku?->judul_buku ?? 'Buku Dihapus' }}</strong>
+                            <div style="color: #64748b; font-size: 7.5pt;">ISBN: {{ $detail->buku?->isbn ?? '-' }}</div>
                         </td>
                         <td class="text-center">
                             <strong>{{ $detail->status }}</strong>

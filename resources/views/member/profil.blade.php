@@ -56,7 +56,7 @@
                         <span class="badge badge-info px-2 py-1"><i class="fas fa-user-graduate mr-1"></i> Mahasiswa / Civitas UNM</span>
                     </div>
 
-                    <a href="{{ route('member.ganti-password') }}" class="btn btn-outline-warning btn-sm btn-block font-weight-bold" style="border-radius: 8px;">
+                    <a href="{{ route('member.ganti-password') }}" class="btn btn-outline-primary btn-sm btn-block font-weight-bold" style="border-radius: 8px;">
                         <i class="fas fa-key mr-1"></i> Ganti Password Akun
                     </a>
                 </div>

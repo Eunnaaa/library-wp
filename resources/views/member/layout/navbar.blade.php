@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm" style="background: #1b1008; border-bottom: 2px solid #c59b27; box-shadow: 0 4px 20px rgba(27, 16, 8, 0.45); z-index: 1030;">
-    <div class="container-fluid px-3 px-md-4">
-        <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}" style="letter-spacing: -0.01em;">
-            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 36px; height: 36px; background: linear-gradient(135deg, #c59b27, #e9c46a); border: 1px solid #d4af37;">
-                <i class="fas fa-book-reader" style="color: #1b1008; font-size: 1.05rem;"></i>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm py-3" style="background: #1b1008; border-bottom: 2px solid #c59b27; box-shadow: 0 4px 20px rgba(27, 16, 8, 0.45); z-index: 1030; min-height: 72px;">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+        <a class="navbar-brand d-flex align-items-center mr-lg-4" href="{{ url('/') }}" style="letter-spacing: -0.01em;">
+            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 shadow-sm" style="width: 38px; height: 38px; background: linear-gradient(135deg, #c59b27, #e9c46a); border: 1px solid #d4af37;">
+                <i class="fas fa-book-reader" style="color: #1b1008; font-size: 1.1rem;"></i>
             </div>
-            <span class="text-white font-weight-bold" style="font-size: 1.25rem; letter-spacing: -0.02em;">E-Library</span>
+            <span class="text-white font-weight-bold" style="font-size: 1.28rem; letter-spacing: -0.02em;">E-Library</span>
             <span class="badge ml-2 px-2 py-1 font-weight-bold" style="background: rgba(197, 155, 39, 0.2); color: #e9c46a; border: 1px solid #c59b27; font-size: 0.72rem; letter-spacing: 0.08em;">UNM</span>
         </a>
 
@@ -14,21 +14,16 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsExample">
-            <ul class="navbar-nav mr-auto pl-lg-3">
-                <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
-                    <a class="nav-link px-3 {{ request()->is('/') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ url('/') }}">
-                        <i class="fas fa-compass mr-1" style="color: #c59b27;"></i> Jelajah Katalog
-                    </a>
-                </li>
+            <ul class="navbar-nav mr-auto pl-lg-2" style="gap: 8px;">
                 @auth
                     @if(Auth::user()->role_id == 2)
                         <li class="nav-item {{ request()->is('member/data-booking*') ? 'active' : '' }}">
-                            <a class="nav-link px-3 {{ request()->is('member/data-booking*') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ route('member.dataBooking') }}">
+                            <a class="nav-link px-3 py-2 {{ request()->is('member/data-booking*') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ route('member.dataBooking') }}">
                                 <i class="fas fa-receipt mr-1 text-warning"></i> Bukti Booking
                             </a>
                         </li>
                         <li class="nav-item {{ request()->is('member/peminjaman*') ? 'active' : '' }}">
-                            <a class="nav-link px-3 {{ request()->is('member/peminjaman*') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ route('member.peminjaman') }}">
+                            <a class="nav-link px-3 py-2 {{ request()->is('member/peminjaman*') ? 'text-warning font-weight-bold' : 'text-light opacity-90' }}" href="{{ route('member.peminjaman') }}">
                                 <i class="fas fa-book-reader mr-1" style="color: #e9c46a;"></i> Peminjaman Saya
                             </a>
                         </li>
@@ -36,15 +31,15 @@
                 @endauth
             </ul>
 
-            <ul class="navbar-nav ml-auto align-items-center mt-3 mt-lg-0">
+            <ul class="navbar-nav ml-auto align-items-center mt-3 mt-lg-0" style="gap: 12px;">
                 @auth
                     @if(Auth::user()->role_id == 2)
                         @php
                             $cartCount = \App\Models\Temp::where('id_user', Auth::id())->count();
                         @endphp
-                        <li class="nav-item mr-lg-3 mb-2 mb-lg-0 w-100 w-lg-auto">
-                            <a class="btn btn-sm d-flex align-items-center justify-content-center" href="{{ route('member.dataKeranjang') }}"
-                                style="background: rgba(197, 155, 39, 0.15); color: #f7f4ec; border: 1px solid rgba(197, 155, 39, 0.4); border-radius: 9999px; padding: 0.4rem 1.1rem;">
+                        <li class="nav-item mb-2 mb-lg-0 w-100 w-lg-auto">
+                            <a class="btn d-flex align-items-center justify-content-center" href="{{ route('member.dataKeranjang') }}"
+                                style="background: rgba(197, 155, 39, 0.15); color: #f7f4ec; border: 1px solid rgba(197, 155, 39, 0.4); border-radius: 9999px; padding: 0.45rem 1.25rem; font-size: 0.88rem;">
                                 <i class="fas fa-shopping-basket mr-2" style="color: #e9c46a;"></i>
                                 <span class="font-weight-semibold">Keranjang</span>
                                 @if($cartCount > 0)
@@ -57,10 +52,10 @@
                     @endif
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center py-1 px-2 rounded" href="#" id="navbarDropdownMenuLink"
+                        <a class="nav-link dropdown-toggle d-flex align-items-center px-3 py-2 rounded" href="#" id="navbarDropdownMenuLink"
                             role="button" data-toggle="dropdown" aria-expanded="false" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(197, 155, 39, 0.3);">
                             <img src="{{ asset('storage/' . (Auth::user()->image ?? 'profil-pic/default.jpg')) }}"
-                                class="rounded-circle border mr-2" height="30" width="30" style="object-fit: cover; border-color: #c59b27 !important;" alt="Avatar"
+                                class="rounded-circle border mr-2" height="32" width="32" style="object-fit: cover; border-color: #c59b27 !important;" alt="Avatar"
                                 onerror="this.onerror=null; this.src='{{ asset('assets/dist/img/default-150x150.png') }}';">
                             <div class="text-left mr-1 d-none d-sm-inline-block" style="line-height: 1.2;">
                                 <span class="d-block text-white font-weight-bold" style="font-size: 0.85rem;">{{ Str::limit(Auth::user()->nama, 18) }}</span>
@@ -99,13 +94,13 @@
                         </div>
                     </li>
                 @else
-                    <li class="nav-item mr-2 mb-2 mb-lg-0">
-                        <a class="btn btn-sm btn-outline-light px-3 font-weight-bold" href="{{ route('login') }}" style="border-radius: 9999px; border-color: rgba(212, 175, 55, 0.6); color: #f7f4ec;">
+                    <li class="nav-item mb-2 mb-lg-0">
+                        <a class="btn btn-outline-light font-weight-bold" href="{{ route('login') }}" style="border-radius: 9999px; border-color: rgba(212, 175, 55, 0.6); color: #f7f4ec; padding: 0.45rem 1.25rem; font-size: 0.88rem;">
                             <i class="fas fa-sign-in-alt mr-1"></i> Masuk
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-sm px-3 shadow-sm font-weight-bold text-white" href="{{ route('register') }}" style="border-radius: 9999px; background: linear-gradient(135deg, #8b4513, #a0522d); border: 1px solid #c59b27;">
+                        <a class="btn shadow-sm font-weight-bold text-white" href="{{ route('register') }}" style="border-radius: 9999px; background: linear-gradient(135deg, #8b4513, #a0522d); border: 1px solid #c59b27; padding: 0.45rem 1.35rem; font-size: 0.88rem;">
                             <i class="fas fa-user-plus mr-1"></i> Daftar Anggota
                         </a>
                     </li>

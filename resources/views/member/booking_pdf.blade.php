@@ -161,24 +161,45 @@
 
     <div class="ticket-badge">
         <div class="ticket-title">Tanda Bukti Reservasi Sirkulasi Buku</div>
-        <table class="info-table">
+        <table style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td class="label">Kode Reservasi:</td>
-                <td class="val"><strong style="color: #8b4513; font-size: 11pt;">{{ $data_booking[0]->id_booking }}</strong></td>
-                <td class="label">Nama Anggota:</td>
-                <td class="val"><strong>{{ $data_booking[0]->anggota->nama ?? '-' }}</strong></td>
-            </tr>
-            <tr>
-                <td class="label">Waktu Booking:</td>
-                <td class="val">{{ date('d F Y, H:i', strtotime($data_booking[0]->tgl_booking)) }} WIB</td>
-                <td class="label">Email Anggota:</td>
-                <td class="val">{{ $data_booking[0]->anggota->email ?? '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Batas Ambil:</td>
-                <td class="val" colspan="3">
-                    <strong style="color: #dc2626;">{{ date('d F Y, H:i', strtotime($data_booking[0]->batas_ambil)) }} WIB</strong>
-                    <span style="color: #64748b; font-size: 8pt;"> (Masa berlaku 1x24 jam)</span>
+                <td style="width: 76%; vertical-align: top; padding-right: 10px;">
+                    <table class="info-table">
+                        <tr>
+                            <td class="label">Kode Reservasi:</td>
+                            <td class="val"><strong style="color: #8b4513; font-size: 11pt;">{{ $data_booking[0]->id_booking }}</strong></td>
+                            <td class="label">Nama Anggota:</td>
+                            <td class="val"><strong>{{ $data_booking[0]->anggota->nama ?? '-' }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Waktu Booking:</td>
+                            <td class="val">{{ date('d F Y, H:i', strtotime($data_booking[0]->tgl_booking)) }} WIB</td>
+                            <td class="label">Email Anggota:</td>
+                            <td class="val">{{ $data_booking[0]->anggota->email ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">Batas Ambil:</td>
+                            <td class="val" colspan="3">
+                                <strong style="color: #dc2626;">{{ date('d F Y, H:i', strtotime($data_booking[0]->batas_ambil)) }} WIB</strong>
+                                <span style="color: #64748b; font-size: 8pt;"> (Masa berlaku 1x24 jam)</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 24%; vertical-align: middle; text-align: center; border-left: 1px dashed #dcd3c3; padding-left: 8px;">
+                    @php
+                        $qrSvg = \SimpleSoftwareIO\QrCode\Facades\QrCode::size(80)->margin(0)->generate($data_booking[0]->id_booking);
+                        $qrBase64 = 'data:image/svg+xml;base64,' . base64_encode($qrSvg);
+                    @endphp
+                    <div style="background: #ffffff; padding: 4px; border: 1px solid #dcd3c3; display: inline-block; border-radius: 4px;">
+                        <img src="{{ $qrBase64 }}" width="80" height="80" alt="QR Code">
+                    </div>
+                    <div style="font-size: 6.5pt; color: #746454; margin-top: 3px; font-weight: bold; letter-spacing: 0.5px;">
+                        SCAN DI LOKET UNM
+                    </div>
+                    <div style="font-size: 6.5pt; color: #8b4513; font-weight: bold;">
+                        {{ $data_booking[0]->id_booking }}
+                    </div>
                 </td>
             </tr>
         </table>
@@ -206,13 +227,13 @@
                     <tr>
                         <td class="center">{{ $no++ }}</td>
                         <td>
-                            <strong>{{ $detail->buku->judul_buku ?? 'Buku Tidak Tersedia' }}</strong>
-                            <div style="color: #64748b; font-size: 7.5pt;">ISBN: {{ $detail->buku->isbn ?? '-' }}</div>
+                            <strong>{{ $detail->buku?->judul_buku ?? 'Buku Tidak Tersedia' }}</strong>
+                            <div style="color: #64748b; font-size: 7.5pt;">ISBN: {{ $detail->buku?->isbn ?? '-' }}</div>
                         </td>
-                        <td>{{ $detail->buku->kategori->nama_kategori ?? '-' }}</td>
-                        <td>{{ $detail->buku->pengarang ?? '-' }}</td>
-                        <td>{{ $detail->buku->penerbit ?? '-' }}</td>
-                        <td class="center">{{ $detail->buku->tahun_terbit ?? '-' }}</td>
+                        <td>{{ $detail->buku?->kategori?->nama_kategori ?? '-' }}</td>
+                        <td>{{ $detail->buku?->pengarang ?? '-' }}</td>
+                        <td>{{ $detail->buku?->penerbit ?? '-' }}</td>
+                        <td class="center">{{ $detail->buku?->tahun_terbit ?? '-' }}</td>
                     </tr>
                 @endforeach
             @endforeach

@@ -68,6 +68,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 
         // Data Transaksi
         Route::prefix('transaksi')->name('transaksi.')->group(function () {
+            Route::post('booking/verifikasi-qr', [AdminBookingController::class, 'verifikasiQr'])->name('booking.verifikasiQr');
             Route::resource('booking', AdminBookingController::class);
             Route::resource('peminjaman', PinjamController::class);
             Route::get('pengembalian', [PinjamController::class, 'pengembalian_index'])->name('peminjaman.pengembalian');

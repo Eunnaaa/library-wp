@@ -14,7 +14,10 @@
                         </h5>
                         <p class="text-muted small mb-0">Verifikasi pengambilan buku fisik dan konfirmasi sirkulasi pinjam sebelum batas waktu kedaluwarsa</p>
                     </div>
-                    <div class="mt-2 mt-md-0">
+                    <div class="mt-2 mt-md-0 d-flex align-items-center">
+                        <button type="button" class="btn btn-warning btn-sm font-weight-bold px-3 shadow-sm mr-2" data-toggle="modal" data-target="#modalScannerQr" style="border-radius: 8px; color: #1b1008;">
+                            <i class="fas fa-camera mr-1"></i> Scan QR Pengambilan
+                        </button>
                         <span class="badge badge-primary px-3 py-2 font-weight-bold" style="border-radius: 8px;">
                             <i class="fas fa-clock mr-1"></i> {{ $booking->count() }} Antrean Aktif
                         </span>
@@ -80,7 +83,7 @@
                                 @empty
                                     <tr>
                                         <td colspan="7" class="text-center text-muted py-5">
-                                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #eff6ff;">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; background: #fdf4eb; border: 1px solid rgba(139, 69, 19, 0.15);">
                                                 <i class="fas fa-receipt fa-2x text-primary"></i>
                                             </div>
                                             <h6 class="font-weight-bold text-dark">Tidak Ada Antrean Booking Aktif</h6>

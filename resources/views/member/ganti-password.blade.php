@@ -81,7 +81,7 @@
                         <a href="{{ route('member.profil') }}" class="btn btn-outline-secondary btn-sm font-weight-bold" style="border-radius: 8px;">
                             <i class="fas fa-arrow-left mr-1"></i> Kembali ke Profil
                         </a>
-                        <button type="submit" class="btn btn-warning px-4 font-weight-bold shadow-sm" style="border-radius: 8px; color: #78350f;">
+                        <button type="submit" class="btn btn-primary px-4 font-weight-bold shadow-sm" style="border-radius: 8px;">
                             <i class="fas fa-save mr-1"></i> Perbarui Password
                         </button>
                     </div>

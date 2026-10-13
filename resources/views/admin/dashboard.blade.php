@@ -20,6 +20,9 @@
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-right">
+                            <button type="button" class="btn btn-sm font-weight-bold mr-2 shadow-sm" data-toggle="modal" data-target="#modalScannerQr" style="border-radius: 8px; background: linear-gradient(135deg, #2d6a4f, #3b8a65); color: #ffffff; border: 1px solid rgba(255,255,255,0.2);">
+                                <i class="fas fa-camera mr-1"></i> Scan QR Loket
+                            </button>
                             <a href="{{ route('admin.master.buku.create') }}" class="btn btn-sm font-weight-bold mr-2 shadow-sm" style="border-radius: 8px; background: #fdfbf7; color: #2c1a10; border: 1px solid #e8e2d4;">
                                 <i class="fas fa-plus mr-1" style="color: #8b4513;"></i> Tambah Buku
                             </a>
@@ -27,6 +30,37 @@
                                 <i class="fas fa-receipt mr-1"></i> Verifikasi Booking
                             </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Feature Banner: Scanner QR Loket Pengambilan -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="border-radius: 16px; background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%); border: 1px solid #e8e2d4 !important; border-left: 5px solid #c59b27 !important;">
+                <div class="card-body p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div class="d-flex align-items-center mb-3 mb-md-0">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center mr-3 shadow-sm flex-shrink-0" style="width: 56px; height: 56px; background: linear-gradient(135deg, #1b1008, #2c1a10); color: #ffd700; border: 2px solid #c59b27;">
+                            <i class="fas fa-qrcode fa-2x"></i>
+                        </div>
+                        <div>
+                            <span class="badge badge-warning px-2 py-1 font-weight-bold mb-1" style="font-size: 0.72rem; color: #1b1008;">
+                                <i class="fas fa-bolt mr-1"></i> SIRKULASI LOKET CEPAT
+                            </span>
+                            <h5 class="font-weight-bold text-dark mb-1" style="font-size: 1.1rem;">
+                                Pemindai Kamera QR Code Pengambilan Buku
+                            </h5>
+                            <p class="small text-muted mb-0">
+                                Arahkan kamera ke QR Code bukti booking anggota (kertas PDF atau layar smartphone) untuk verifikasi instan dan konfirmasi serah-terima buku fisik.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center flex-shrink-0">
+                        <button type="button" class="btn btn-primary px-4 py-2 font-weight-bold shadow-sm" data-toggle="modal" data-target="#modalScannerQr" style="border-radius: 10px; font-size: 0.95rem;">
+                            <i class="fas fa-camera mr-2"></i> Buka Kamera Scanner QR
+                        </button>
                     </div>
                 </div>
             </div>

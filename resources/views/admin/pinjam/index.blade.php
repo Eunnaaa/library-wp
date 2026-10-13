@@ -16,10 +16,10 @@
                         <p class="text-muted small mb-0">Pantau seluruh sirkulasi peminjaman aktif dan kelola pengembalian buku</p>
                     </div>
                     <div class="mt-3 mt-md-0 d-flex align-items-center">
-                        <button type="button" class="btn btn-sm btn-outline-danger font-weight-bold px-3 mr-2 shadow-sm" id="export-pdf" style="border-radius: 8px;">
+                        <button type="button" class="btn btn-sm btn-outline-danger font-weight-bold px-3 mr-2 shadow-sm d-inline-flex align-items-center" id="export-pdf" style="border-radius: 8px; height: 36px;">
                             <i class="far fa-file-pdf mr-1"></i> Unduh PDF
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-success font-weight-bold px-3 shadow-sm" id="export-excel" style="border-radius: 8px;">
+                        <button type="button" class="btn btn-sm btn-outline-success font-weight-bold px-3 shadow-sm d-inline-flex align-items-center" id="export-excel" style="border-radius: 8px; height: 36px;">
                             <i class="far fa-file-excel mr-1"></i> Unduh Excel
                         </button>
                     </div>
@@ -32,19 +32,19 @@
                             <label class="small text-muted font-weight-bold text-uppercase mb-1">
                                 <i class="far fa-calendar-alt mr-1 text-primary"></i> Periode Mulai
                             </label>
-                            <input type="date" id="start_date" class="form-control form-control-sm bg-white" style="border-radius: 8px;">
+                            <input type="date" id="start_date" class="form-control form-control-sm bg-white" style="border-radius: 8px; height: 36px;">
                         </div>
                         <div class="col-md-4 col-lg-3 mb-2 mb-md-0">
                             <label class="small text-muted font-weight-bold text-uppercase mb-1">
                                 <i class="far fa-calendar-check mr-1 text-primary"></i> Periode Sampai
                             </label>
-                            <input type="date" id="end_date" class="form-control form-control-sm bg-white" style="border-radius: 8px;">
+                            <input type="date" id="end_date" class="form-control form-control-sm bg-white" style="border-radius: 8px; height: 36px;">
                         </div>
                         <div class="col-md-4 col-lg-4 mb-2 mb-md-0 d-flex">
-                            <button type="button" id="filter" class="btn btn-sm btn-primary font-weight-bold px-3 mr-2 shadow-sm" style="border-radius: 8px;">
+                            <button type="button" id="filter" class="btn btn-sm btn-primary font-weight-bold px-3 mr-2 shadow-sm d-inline-flex align-items-center justify-content-center" style="border-radius: 8px; height: 36px;">
                                 <i class="fas fa-filter mr-1"></i> Filter Data
                             </button>
-                            <button type="button" id="reset-filter" class="btn btn-sm btn-outline-secondary font-weight-bold px-3 shadow-sm" style="border-radius: 8px;">
+                            <button type="button" id="reset-filter" class="btn btn-sm btn-outline-secondary font-weight-bold px-3 shadow-sm d-inline-flex align-items-center justify-content-center" style="border-radius: 8px; height: 36px;">
                                 <i class="fas fa-redo-alt mr-1"></i> Reset
                             </button>
                         </div>
