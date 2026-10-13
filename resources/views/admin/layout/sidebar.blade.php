@@ -72,7 +72,7 @@
                     <li class="nav-item">
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#modalScannerQr" class="nav-link text-warning font-weight-bold">
                             <i class="fas fa-qrcode nav-icon text-warning"></i>
-                            <p>Scan QR Kamera <span class="badge badge-warning right small" style="font-size: 0.65rem; color: #1b1008;">Live</span></p>
+                            <p>Scan QR Kamera</p>
                         </a>
                     </li>
                     <li class="nav-item">
