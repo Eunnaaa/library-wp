@@ -80,7 +80,7 @@
                                     <i class="fas fa-user-circle mr-2" style="color: #8b4513;"></i> Profil Saya
                                 </a>
                                 <a class="dropdown-item rounded py-2" href="{{ route('member.ganti-password') }}">
-                                    <i class="fas fa-key mr-2 text-warning"></i> Ganti Password
+                                    <i class="fas fa-shield-alt mr-2" style="color: #8b4513;"></i> Ganti Password
                                 </a>
                             @endif
                             <div class="dropdown-divider my-2"></div>
